@@ -59,21 +59,21 @@ export const InitSvgElements = (
 };
 
 export const UpdateSvgElements = (
-  link: d3.Selection<d3.BaseType | SVGLineElement, any, SVGGElement, any>,
-  node: d3.Selection<d3.BaseType | SVGCircleElement, any, SVGGElement, any>,
-  text: d3.Selection<d3.BaseType | SVGTextElement, any, SVGGElement, any>
+  link: React.RefObject<d3.Selection<d3.BaseType | SVGLineElement, any, SVGGElement, any> | null>,
+  node: React.RefObject<d3.Selection<d3.BaseType | SVGCircleElement, any, SVGGElement, any> | null>,
+  text: React.RefObject<d3.Selection<d3.BaseType | SVGTextElement, any, SVGGElement, any> | null>
 ) => {
-  link
+  link.current!
     .attr("x1", (d: any) => d.source.x)
     .attr("y1", (d: any) => d.source.y)
     .attr("x2", (d: any) => d.target.x)
     .attr("y2", (d: any) => d.target.y);
 
-  node
+  node.current!
     .attr("cx", (d: any) => d.x)
     .attr("cy", (d: any) => d.y);
 
-  text
+  text.current!
     .attr("x", (d: any) => d.x)
     .attr("y", (d: any) => d.y);
 };
