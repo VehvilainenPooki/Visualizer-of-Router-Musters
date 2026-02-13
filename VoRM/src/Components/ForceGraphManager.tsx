@@ -77,7 +77,7 @@ const ForceGraph: React.FC = () => {
 
     data.nodes.push({
       id: nodeName,
-      index: data.nodes.length,
+      index: data.nodes.length + 1,
       x: width / 2 + Math.random() * 100 - 50,
       y: height / 2 + Math.random() * 100 - 50,
       vx: 0,
@@ -110,14 +110,55 @@ const ForceGraph: React.FC = () => {
       .attr("dy", 4);
     textRef.current = textSelection.merge(newText)
 
+    simulation.alpha(1).restart()
+
     console.log(nodeName, data.nodes)
+  }
+
+  const handleAddLink = (event: React.SubmitEvent) => {
+    event.preventDefault();
+    const linkSource = event.target.sourcevalue.value;
+    const linkTarget = event.target.targetvalue.value;
+    const sourceNode = data.nodes.find(d => d.id === linkSource)
+    const targetNode = data.nodes.find(d => d.id === linkTarget)
+
+    if (!sourceNode || !targetNode) {
+      console.log("Given nodenames didn't match", linkSource, linkTarget)
+    } else {
+      console.log(data.links, linkSource, sourceNode, linkTarget, targetNode)
+      data.links.push({
+        index: data.links.length,
+        source: sourceNode,
+        target: targetNode
+      })
+
+      simulation.nodes(data.nodes)
+      .force("link", d3.forceLink(data.links).id(d => (d as any).id).distance(50))
+      .alpha(1)
+      .restart()
+
+      const linkSelection = linkRef.current!.data(data.links, (d: any) => d.index);
+      const newLink = linkSelection.enter()
+          .append("line")
+          .attr("stroke-width", 1)
+          .attr("x1", d => d.source.x)
+          .attr("y1", d => d.source.y)
+          .attr("x2", d => d.target.x)
+          .attr("y2", d => d.target.y);
+      linkRef.current = linkSelection.merge(newLink)
+    }
   }
 
   return (
     <div>
       <form onSubmit={handleAddNode}>
-        <input name="nodename"></input>
+        <input placeholder="name" name="nodename"></input>
         <button type="submit">add Node</button>
+      </form>
+      <form onSubmit={handleAddLink}>
+        <input placeholder="source" name="sourcevalue"></input>
+        <input placeholder="target" name="targetvalue"></input>
+        <button type="submit">add Link</button>
       </form>
       <br></br>
       <svg ref={svgRef} />
