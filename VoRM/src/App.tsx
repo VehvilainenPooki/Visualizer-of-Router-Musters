@@ -1,13 +1,16 @@
-import React from 'react';
-import ForceGraph from './Components/ForceGraphManager';
+import type {FC} from 'react'
 
-const App: React.FC = () => {
+import Graph from './Components/Graph'
+import Sidebar from './Components/GraphManager'
+
+const App: FC = () => {
   return (
     <div>
       <h1>Force Graph Visualization</h1>
-      <ForceGraph />
+      <Sidebar />
+      <Graph />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
