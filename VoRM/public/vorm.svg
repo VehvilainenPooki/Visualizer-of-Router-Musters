@@ -1,0 +1,47 @@
+<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      :root {
+        --stroke-width: 15;
+        --gradient-start: #a0d8ef;
+        --gradient-end: #003366;
+      }
+    </style>
+
+    <linearGradient id="circleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--gradient-start)" />
+      <stop offset="100%" stop-color="var(--gradient-end)" />
+    </linearGradient>
+
+    <linearGradient id="nodeGradient" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="var(--gradient-end)" />
+      <stop offset="100%" stop-color="var(--gradient-start)" />
+    </linearGradient>
+
+  </defs>
+
+  <circle cx="150" cy="150" r="140" fill="url(#circleGradient)" />
+
+  <path d="
+    M150 10
+    A140 140 0 1 1 150 290
+    A140 140 0 1 1 150 10
+    M170 75 L195 225
+    M195 225 L90 130
+    M90 130 L170 75
+    M90 130 L13 130
+    M170 75 L100 19
+    M170 75 L250 52
+    M195 225 L281 101
+    M195 225 L250 242
+    M195 225 L64 260
+  " 
+  stroke="url(#nodeGradient)" 
+  stroke-width="var(--stroke-width)" 
+  fill="none" 
+  stroke-linecap="round" />
+
+  <circle cx="170" cy="75" r="30" fill="url(#nodeGradient)" />
+  <circle cx="195" cy="225" r="30" fill="url(#nodeGradient)" />
+  <circle cx="90" cy="130" r="30" fill="url(#nodeGradient)" />
+</svg>
