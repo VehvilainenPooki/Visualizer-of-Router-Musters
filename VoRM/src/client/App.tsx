@@ -2,7 +2,7 @@ import type {FC} from 'react'
 
 import Graph from './Components/Graph'
 import Sidebar from './Components/GraphManager'
-import vorm from '../public/vorm.svg'
+import vorm from '../../public/vorm.svg'
 
 const App: FC = () => {
   return (
