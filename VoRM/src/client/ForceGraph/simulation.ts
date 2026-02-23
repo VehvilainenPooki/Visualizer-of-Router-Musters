@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-import type { NetworkGraphData, NetworkSimulation } from '../types'
+import type { NetworkGraphData, NetworkSimulation } from '../../common/types/network'
 
 const data: NetworkGraphData = {
   nodes: [],
