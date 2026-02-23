@@ -1,4 +1,7 @@
+<img alt="VoRM logo" src="https://github.com/VehvilainenPooki/Visualizer-of-Router-Musters/blob/main/VoRM/public/vorm.svg" style="width:20%; height:auto;">
+
 # Visualizer of Router Musters
+
 Visualizer of Router Musters or VoRM is a WIP project. Its goal is to visualize large musters (groups) of routers that communicate with multiple different routing protocols and possibly with different protocol options.
 
 ## Current Goals
@@ -9,6 +12,7 @@ Visualizer of Router Musters or VoRM is a WIP project. Its goal is to visualize 
 
 ## Pipe dream Goals
 - Multiple transport layer protocols
+
 - Protocol options
 - IPv4 and IPv6
 - Tunneling
