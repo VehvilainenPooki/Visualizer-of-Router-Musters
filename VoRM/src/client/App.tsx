@@ -2,6 +2,7 @@ import type {FC} from 'react'
 
 import Graph from './Components/Graph'
 import GraphManager from './Components/GraphManager'
+import ServerTester from './Components/ServerTester'
 
 const App: FC = () => {
   return (
@@ -12,6 +13,7 @@ const App: FC = () => {
       </h1>
       <GraphManager />
       <Graph />
+      <ServerTester />
     </div>
   )
 }

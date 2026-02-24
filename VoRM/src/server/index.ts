@@ -3,6 +3,12 @@ import express from 'express';
 const app = express();
 const PORT = 3001;
 
+app.use(express.json())
+
+app.post('/api/networkGraphs', (req, res) => {
+  res.json({ message: req.body.content });
+});
+
 app.get('/api/ping', (req, res) => {
   res.json({ message: 'pong' });
 });
