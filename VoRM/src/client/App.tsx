@@ -1,7 +1,7 @@
 import type {FC} from 'react'
 
 import Graph from './Components/Graph'
-import Sidebar from './Components/GraphManager'
+import GraphManager from './Components/GraphManager'
 
 const App: FC = () => {
   return (
@@ -10,7 +10,7 @@ const App: FC = () => {
         <img src="/vorm.svg" alt="" style={{ height: '1.2em', verticalAlign: 'top', marginRight: '10px' }} />
         Visualizer of Router Musters
       </h1>
-      <Sidebar />
+      <GraphManager />
       <Graph />
     </div>
   )

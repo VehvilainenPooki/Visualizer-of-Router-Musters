@@ -4,7 +4,7 @@ import type { FC, SubmitEvent } from 'react'
 
 import * as ForceGraph from '../ForceGraph'
 
-const Sidebar: FC = () => {
+const GraphManager: FC = () => {
   const [nodeName, setNodeName] = useState('')
   const [source, setSource] = useState('')
   const [target, setTarget] = useState('')
@@ -27,10 +27,10 @@ const Sidebar: FC = () => {
   }
 
   return (
-    <div className="sidebar">
+    <div>
       <h2>Graph Controls</h2>
 
-      <div className="section">
+      <div>
         <h3>Add Node</h3>
         <form onSubmit={handleAddNode} >
           <input
@@ -44,16 +44,16 @@ const Sidebar: FC = () => {
         </form>
       </div>
 
-      <div className="section">
+      <div>
         <h3>Add Link</h3>
-        <input
-          type="text"
-          value={source}
-          onChange={(e) => setSource(e.target.value)}
-          placeholder="Source node"
-        />
-        <br/>
         <form onSubmit={handleAddLink}>
+          <input
+            type="text"
+            value={source}
+            onChange={(e) => setSource(e.target.value)}
+            placeholder="Source node"
+          />
+          <br/>
           <input
             type="text"
             value={target}
@@ -68,4 +68,4 @@ const Sidebar: FC = () => {
   )
 }
 
-export default Sidebar
+export default GraphManager
