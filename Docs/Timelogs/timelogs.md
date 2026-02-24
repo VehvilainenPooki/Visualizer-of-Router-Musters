@@ -11,4 +11,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 170226 | 4h | Moving d3 into its own module and refactoring it even more to get it more easily interactable. |
 | 200226 | 2h | cleaning up the code and looking at creating better custom types |
 | 230226 | 5h | Understanding large project structure and preparing project for backend and containerization. Added logo for project |
-|  |  |  |
+| 240226 | 4h | Adding timelogs to repo, adding temporary component to test client server connectivity and containerizing the project dev environment |
