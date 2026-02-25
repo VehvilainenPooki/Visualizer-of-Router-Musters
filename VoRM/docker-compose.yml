@@ -7,7 +7,23 @@ services:
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
     ports:
       - 3001:3001
       - 5173:5173
     container_name: vorm_dev
+
+  db:
+    image: postgres:18.2
+    environment:
+      - PGDATA=/data
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5433:5432
+    volumes:
+      - pg_data:/data
+    container_name: vorm_db
+volumes:
+  pg_data:
+    name: vorm_pg_data
