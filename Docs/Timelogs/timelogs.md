@@ -12,3 +12,5 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 200226 | 2h | cleaning up the code and looking at creating better custom types |
 | 230226 | 5h | Understanding large project structure and preparing project for backend and containerization. Added logo for project |
 | 240226 | 4h | Adding timelogs to repo, adding temporary component to test client server connectivity and containerizing the project dev environment |
+| 250226 | 8h | Starting backend development and containerizing project. Most of the commits haven't been pushed yet, cos node with ts has given me a lot of issues |
+| 090326 | 3h | Getting to know hosting platforms and looking into the node ts problems |
