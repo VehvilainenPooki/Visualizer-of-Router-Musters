@@ -15,3 +15,5 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 250226 | 8h | Starting backend development and containerizing project. Most of the commits haven't been pushed yet, cos node with ts has given me a lot of issues |
 | 090326 | 3h | Getting to know hosting platforms and looking into the node ts problems |
 | 100326 | 2h | Finally figuring out the node ts situation |
+| 150326 | 1h | Looking for hosting options and setting up hosting on hetzner |
+| 160326 | 2h | Continuing hetzner setup with ssh, docker and looking through old ci and what to use for deployment |
