@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently -k \"npm run dev:server\" \"npm run dev:client\"",
     "dev:client": "vite",
-    "dev:server": "nodemon --watch \"src/server/**/*\" -e js,ts --legacy-watch --exec ts-node src/server/index.ts",
+    "dev:server": "nodemon --watch 'src/server/**/*' --legacy-watch -e ts --exec node src/server/index.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
