@@ -6,7 +6,7 @@ router.post('/networkGraphs', (req, res) => {
   res.json({ message: req.body.content });
 });
 
-router.get('/ping', (req, res) => {
+router.get('/ping', (_req, res) => {
   res.json({ message: 'pong' });
 });
 

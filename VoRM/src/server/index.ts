@@ -1,5 +1,5 @@
 import express from 'express';
-import router from './helperRoutes.ts'
+import router from './helperRoutes.js'
 
 const app = express();
 const PORT = 3001;
