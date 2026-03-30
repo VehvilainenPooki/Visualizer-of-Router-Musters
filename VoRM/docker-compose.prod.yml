@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: vorm_prod
+    container_name: vorm_prod
+    environment:
+      - IN_PRODUCTION=true
+    labels:
+      - "traefik.http.routers.vorm.rule=Host(`localhost`)"
+      - "traefik.http.routers.vorm.entrypoints=websecure"
+      - "traefik.http.routers.vorm.tls=true"
+      - "traefik.http.services.vorm.loadbalancer.server.port=3001"
+    networks:
+      - vorm_net
+  proxy:
+    image: traefik
+    command:
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/certs:ro
+    networks:
+      - vorm_net
+networks:
+  vorm_net:
+    driver: bridge

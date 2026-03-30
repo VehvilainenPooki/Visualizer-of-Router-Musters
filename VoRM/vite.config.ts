@@ -14,5 +14,9 @@ export default defineConfig({
         target: 'http://localhost:3001',
       }
     }
+  },
+  build: {
+    outDir: 'build/src/client',
+    sourcemap: true
   }
 })

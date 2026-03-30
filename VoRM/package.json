@@ -7,7 +7,7 @@
     "dev": "concurrently -k \"npm run dev:server\" \"npm run dev:client\"",
     "dev:client": "vite",
     "dev:server": "tsx watch --include src/server src/server/index.ts",
-    "build": "tsc && vite build",
+    "build": "npm run build:server && npm run build:client",
     "build:server": "tsc --build src/server",
     "build:client": "vite build",
     "prod": "node build/src/server/index.js",

@@ -4,6 +4,7 @@
     "moduleResolution": "nodenext",
     "rootDir": ".",
     "outDir": "build",
+    "composite": true
   },
   "exclude": [
     "node_modules"
