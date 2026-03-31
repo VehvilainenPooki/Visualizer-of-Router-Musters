@@ -14,7 +14,9 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 240226 | 4h | Adding timelogs to repo, adding temporary component to test client server connectivity and containerizing the project dev environment |
 | 250226 | 8h | Starting backend development and containerizing project. Most of the commits haven't been pushed yet, cos node with ts has given me a lot of issues |
 | 090326 | 3h | Getting to know hosting platforms and looking into the node ts problems |
-| 100326 | 2h | Finally figuring out the node ts situation |
+| 100326 | 2h | Finally figuring out the node ts situation (lies) |
 | 150326 | 1h | Looking for hosting options and setting up hosting on hetzner |
 | 160326 | 2h | Continuing hetzner setup with ssh, docker and looking through old ci and what to use for deployment |
+| 170326 |2h | fighting with node ts, starting to build the prod docker compose and learning traefik |
 | 290326 | 4h | Fighting with node and ts and finally finding a totally working configuration for dev, build and docker |
+| 300326 | 4h | prod docker and putting the app into hetzner |
