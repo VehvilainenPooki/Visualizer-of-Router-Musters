@@ -1,18 +1,17 @@
-FROM node:24
-
+FROM node:24 AS dependencies
 ENV TZ="Europe/Helsinki"
-
 WORKDIR /usr/src/app
-
-# Setup
 COPY package* ./
 RUN npm ci
 
+FROM dependencies AS builder
 COPY . .
-
 RUN npm run build
 
-# Clean install for production (optional - removes dev dependencies)
+FROM node:24 AS production
+ENV TZ="Europe/Helsinki"
+WORKDIR /usr/src/app
+COPY package* ./
 RUN npm ci --omit=dev
-
+COPY --from=builder /usr/src/app/build ./build
 CMD ["npm", "run", "prod"]

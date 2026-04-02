@@ -18,3 +18,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 150326 | 1h | Looking for hosting options and setting up hosting on hetzner |
 | 160326 | 2h | Continuing hetzner setup with ssh, docker and looking through old ci and what to use for deployment |
 | 290326 | 4h | Fighting with node and ts and finally finding a totally working configuration for dev, build and docker |
+| 020426 | 4h | Domain setup and ssl sertificate, Optimized dockerfile, start of ci |
