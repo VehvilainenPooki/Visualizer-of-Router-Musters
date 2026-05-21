@@ -19,7 +19,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GH_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -28,6 +28,6 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}:latest
 
-      - name: Trigger Dokploy webhook
-        run: |
-          curl -X POST "${{ secrets.DOKPLOY_WEBHOOK_URL }}"
+#      - name: Trigger Dokploy webhook
+#        run: |
+#          curl -X POST "${{ secrets.DOKPLOY_WEBHOOK_URL }}"
