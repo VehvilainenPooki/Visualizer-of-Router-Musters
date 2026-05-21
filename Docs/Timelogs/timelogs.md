@@ -21,3 +21,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 290326 | 4h | Fighting with node and ts and finally finding a totally working configuration for dev, build and docker |
 | 300326 | 4h | prod docker and putting the app into hetzner |
 | 020426 | 4h | Domain setup and ssl sertificate, Optimized dockerfile, start of ci |
+| 210526 | 3h | Choosing CI pipeline -> GH actions and DokPloy - and working on the configuration |
