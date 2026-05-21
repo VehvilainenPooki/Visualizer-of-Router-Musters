@@ -26,7 +26,7 @@ jobs:
         with:
           context: ./VoRM
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/vorm:latest
+          tags: ghcr.io/vehvilainenpooki/vorm:latest
 
 #      - name: Trigger Dokploy webhook
 #        run: |
