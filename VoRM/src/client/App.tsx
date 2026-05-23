@@ -9,7 +9,7 @@ const App: FC = () => {
     <div>
       <h1 style={{ fontSize: '48px' }}>
         <img src="/vorm.svg" alt="" style={{ height: '1.2em', verticalAlign: 'top', marginRight: '10px' }} />
-        Visualizer of Router Musters
+        Visualizer of Router Musters automatically deployed
       </h1>
       <GraphManager />
       <Graph />
