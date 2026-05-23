@@ -28,6 +28,6 @@ jobs:
           push: true
           tags: ghcr.io/vehvilainenpooki/vorm:latest
 
-#      - name: Trigger Dokploy webhook
-#        run: |
-#          curl -X POST "${{ secrets.DOKPLOY_WEBHOOK_URL }}"
+      - name: Trigger deploy webhook
+        run: |
+          curl -X POST "${{ vars.WEBHOOK_URL }}"
