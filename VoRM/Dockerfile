@@ -10,6 +10,8 @@ RUN npm run build
 
 FROM node:24 AS production
 ENV TZ="Europe/Helsinki"
+ENV IN_PRODUCTION=true
+
 WORKDIR /usr/src/app
 COPY package* ./
 RUN npm ci --omit=dev

@@ -6,8 +6,6 @@ services:
       dockerfile: Dockerfile
     image: vorm_prod
     container_name: vorm_prod
-    environment:
-      - IN_PRODUCTION=true
     labels:
       - "traefik.http.routers.vorm.rule=Host(`localhost`)"
       - "traefik.http.routers.vorm.entrypoints=websecure"
