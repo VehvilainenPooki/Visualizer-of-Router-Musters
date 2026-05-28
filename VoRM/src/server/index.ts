@@ -1,25 +1,27 @@
-import express from 'express'
-
-import { connectToDatabase } from './db/connection.ts'
-import usersRouter from './controllers/users.ts'
-import loginRouter from './controllers/login.ts'
+import { connectToDatabase } from './db/connection.js'
+import express from 'express';
+import path from 'path';
+import router from './helperRoutes.js'
 
 const app = express();
 const PORT = 3001;
-
+const inProduction = process.env.IN_PRODUCTION === 'true';
 
 app.use(express.json())
 
-app.use('/api/users', usersRouter)
-app.use('/api/login', loginRouter)
+// Serve static files from Vite build output in production
+if (inProduction) {
+  app.use(express.static(path.join(process.cwd(), 'build/src/client')));
+}
 
-app.post('/api/networkGraphs', (req, res) => {
-  res.json({ message: req.body.content });
-});
+app.use("/api", router)
 
-app.get('/api/ping', (req, res) => {
-  res.json({ message: 'pong' });
-});
+// Fallback to index.html for client-side routing in production
+if (inProduction) {
+  app.get(/.*/, (_req, res) => {
+    res.sendFile(path.join(process.cwd(), 'build/src/client/index.html'));
+  });
+}
 
 const start = async() => {
   await connectToDatabase()
