@@ -1,6 +1,7 @@
 FROM node:24
 
 ENV TZ="Europe/Helsinki"
+ENV PATH="/usr/src/app/node_modules/.bin:$PATH"
 
 WORKDIR /usr/src/app
 

@@ -1,7 +1,15 @@
 {
-  "files": [],
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "rootDir": ".",
+    "outDir": "build",
+    "composite": true
+  },
+  "exclude": [
+    "node_modules"
+  ],
   "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
+    {"path": "./src/server"}
   ]
 }

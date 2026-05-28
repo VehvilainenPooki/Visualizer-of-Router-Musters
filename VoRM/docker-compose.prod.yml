@@ -1,0 +1,39 @@
+#This is what my production compose approximately looks like
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: vorm_prod
+    container_name: vorm_prod
+    labels:
+      - "traefik.http.routers.vorm.rule=Host(`localhost`)"
+      - "traefik.http.routers.vorm.entrypoints=websecure"
+      - "traefik.http.routers.vorm.tls=true"
+      - "traefik.http.routers.vorm.tls.certresolver=letsencrypt"
+    networks:
+      - vorm_net
+
+  proxy:
+    image: traefik
+    command:
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=you@yourdomain.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./letsencrypt:/letsencrypt
+    networks:
+      - vorm_net
+
+networks:
+  vorm_net:
+    driver: bridge
