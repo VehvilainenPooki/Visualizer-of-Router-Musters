@@ -1,33 +1,37 @@
 import { connectToDatabase } from './db/connection.js'
-import express from 'express';
-import path from 'path';
-import router from './helperRoutes.js'
+import express from 'express'
+import path from 'path'
+import helperRouter from './helperRoutes.js'
+import usersRouter from './controllers/users.js'
+import loginRouter from './controllers/login.js'
+import illustrationsRouter from './controllers/illustrations.js'
 
-const app = express();
-const PORT = 3001;
-const inProduction = process.env.IN_PRODUCTION === 'true';
+const app = express()
+const PORT = 3001
+const inProduction = process.env.IN_PRODUCTION === 'true'
 
 app.use(express.json())
 
-// Serve static files from Vite build output in production
 if (inProduction) {
-  app.use(express.static(path.join(process.cwd(), 'build/src/client')));
+  app.use(express.static(path.join(process.cwd(), 'build/src/client')))
 }
 
-app.use("/api", router)
+app.use('/api', helperRouter)
+app.use('/api/users/login', loginRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/illustrations', illustrationsRouter)
 
-// Fallback to index.html for client-side routing in production
 if (inProduction) {
   app.get(/.*/, (_req, res) => {
-    res.sendFile(path.join(process.cwd(), 'build/src/client/index.html'));
-  });
+    res.sendFile(path.join(process.cwd(), 'build/src/client/index.html'))
+  })
 }
 
-const start = async() => {
+const start = async () => {
   await connectToDatabase()
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+    console.log(`Server running on port ${PORT}`)
+  })
 }
 
 start()
