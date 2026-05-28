@@ -1,21 +1,26 @@
 import { Sequelize } from 'sequelize'
 import { Umzug, SequelizeStorage } from 'umzug'
+import { fileURLToPath } from 'url'
+import path from 'path'
 
-const DATABASE_URL = "postgresql://postgres:postgres@db:5432/postgres"
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://postgres:postgres@db:5432/postgres'
+const inProduction = process.env.IN_PRODUCTION === 'true'
 
 export const sequelize = new Sequelize(DATABASE_URL, {
-  dialectOptions: {
+  dialectOptions: inProduction ? {
     ssl: {
       require: true,
       rejectUnauthorized: false
     }
-  },
+  } : {},
 })
 
 export const runMigrations = async () => {
   const migrator = new Umzug({
     migrations: {
-      glob: 'migrations/*.ts',
+      glob: path.join(__dirname, '../migrations/*.[tj]s'),
     },
     storage: new SequelizeStorage({ sequelize, tableName: 'migrations' }),
     context: sequelize.getQueryInterface(),
@@ -34,6 +39,6 @@ export const connectToDatabase = async () => {
   } catch (err) {
     console.log('failed to connect to the database')
     console.log(err)
-    return process.exit(1)
+    process.exit(1)
   }
 }
