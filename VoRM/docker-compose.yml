@@ -13,6 +13,9 @@ services:
       - 3001:3001
       - 5173:5173
     container_name: vorm_dev
+    depends_on:
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:18.2
@@ -24,6 +27,11 @@ services:
     volumes:
       - pg_data:/data
     container_name: vorm_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 volumes:
   pg_data:
     name: vorm_pg_data
