@@ -23,3 +23,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 020426 | 4h | Domain setup and ssl sertificate, Optimized dockerfile, start of ci |
 | 210526 | 3h | Choosing CI pipeline -> GH actions and DokPloy - and working on the configuration |
 | 230526 | 3h | Continuing DokPloy config and CI work and after success protecting it against attackers |
+| 280526 | 3h | Sorting out the branches, adding protections against supply chain attacks, using Claude to do REST backend basics |
