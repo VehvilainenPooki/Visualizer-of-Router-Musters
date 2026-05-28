@@ -1,7 +1,7 @@
 import type { InferAttributes, InferCreationAttributes } from 'sequelize'
 import { Model, DataTypes } from 'sequelize'
 
-import { sequelize } from '../db/connection'
+import { sequelize } from '../db/connection.js'
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: number
