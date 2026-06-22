@@ -13,7 +13,7 @@ const inProduction = process.env.IN_PRODUCTION === 'true'
 app.use(express.json())
 
 if (inProduction) {
-  console.log("PRODUCTION")
+  console.log(`PRODUCTION running on port ${PORT}`)
   app.use(express.static(path.join(process.cwd(), 'build/src/client')))
 }
 
