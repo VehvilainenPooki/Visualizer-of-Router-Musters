@@ -26,3 +26,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 280526 | 3h | Sorting out the branches, adding protections against supply chain attacks, using Claude to do REST backend basics |
 | 080626 | 5h | Thinking and planning... Backend must explode and be reconstructed :) |
 | 090626 | 2h | Learning about tanstack and choosing between react router and tanstack router |
+| 220626 | 8h | DokPloy troubleshooting and thinking about project rework |
