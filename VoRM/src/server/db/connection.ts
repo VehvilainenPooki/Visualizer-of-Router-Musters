@@ -7,6 +7,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://postgres:postgres@db:5432/postgres'
 
+console.log(`AAAAAAAAAAAAAAAAAAA ${DATABASE_URL} AAAAAAAAAAAAAAAAA`)
+
 export const sequelize = new Sequelize(DATABASE_URL)
 
 export const runMigrations = async () => {
