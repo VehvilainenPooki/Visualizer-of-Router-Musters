@@ -7,7 +7,7 @@ import loginRouter from './controllers/login.js'
 import illustrationsRouter from './controllers/illustrations.js'
 
 const app = express()
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT ?? 3001
 const inProduction = process.env.IN_PRODUCTION === 'true'
 
 app.use(express.json())

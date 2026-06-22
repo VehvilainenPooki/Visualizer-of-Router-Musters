@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 import { User } from '../models/index.js'
 
 const router = Router()
-const JWT_SECRET = process.env.JWT_SECRET || 'development-secret'
+const JWT_SECRET = process.env.JWT_SECRET ?? 'development-secret'
 
 router.post('/', async (req, res) => {
   const { username, password } = req.body as { username: string; password: string }

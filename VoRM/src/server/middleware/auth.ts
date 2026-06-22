@@ -13,7 +13,7 @@ declare module 'express' {
   }
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'development-secret'
+const JWT_SECRET = process.env.JWT_SECRET ?? 'development-secret'
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
   const authorization = req.get('Authorization')
