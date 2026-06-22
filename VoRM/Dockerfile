@@ -1,5 +1,4 @@
 FROM node:24 AS dependencies
-ENV TZ="Europe/Helsinki"
 WORKDIR /usr/src/app
 COPY package* ./
 RUN npm ci
@@ -9,8 +8,6 @@ COPY . .
 RUN npm run build
 
 FROM node:24 AS production
-ENV TZ="Europe/Helsinki"
-ENV IN_PRODUCTION=true
 
 WORKDIR /usr/src/app
 COPY package* ./
