@@ -13,4 +13,5 @@ WORKDIR /usr/src/app
 COPY package* ./
 RUN npm ci --omit=dev
 COPY --from=builder /usr/src/app/build ./build
+EXPOSE 3000
 CMD ["npm", "run", "prod"]
