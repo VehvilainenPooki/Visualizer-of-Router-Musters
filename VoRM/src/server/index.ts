@@ -14,7 +14,6 @@ app.use(express.json())
 
 if (inProduction) {
   console.log(`PRODUCTION running on port ${PORT}`)
-  console.log(process.env)
   app.use(express.static(path.join(process.cwd(), 'build/src/client')))
 }
 
