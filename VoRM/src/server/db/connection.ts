@@ -12,7 +12,7 @@ export const sequelize = new Sequelize(DATABASE_URL)
 export const runMigrations = async () => {
   const migrator = new Umzug({
     migrations: {
-      glob: path.join(__dirname, '../migrations/*.[tj]s'),
+      glob: path.join(__dirname, `../migrations/*.${process.env.IN_PRODUCTION ? 'js' : 'ts'}`),
     },
     storage: new SequelizeStorage({ sequelize, tableName: 'migrations' }),
     context: sequelize.getQueryInterface(),
