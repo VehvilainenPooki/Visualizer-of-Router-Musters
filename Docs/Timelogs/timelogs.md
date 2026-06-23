@@ -27,3 +27,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 080626 | 5h | Thinking and planning... Backend must explode and be reconstructed :) |
 | 090626 | 2h | Learning about tanstack and choosing between react router and tanstack router |
 | 220626 | 8h | DokPloy troubleshooting and thinking about project rework |
+| 230626 | 8h | Set up Dokploy database and link it to project, think about the project, start frontend explorations. Database must be redone for nice graph code saving and loading |
