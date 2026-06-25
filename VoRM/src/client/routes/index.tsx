@@ -3,6 +3,7 @@ import { Route as rootRoute } from './__root'
 import Graph from '../Components/Graph'
 import GraphManager from '../Components/GraphManager'
 import ServerTester from '../Components/ServerTester'
+import GraphCode from '../Components/GraphCode'
 import { useAuth } from '../contexts/AuthContext'
 
 export const Route = createRoute({
@@ -28,6 +29,7 @@ function MainView() {
       <p>Welcome, {username}! <Link to="/illustrations">Illustrations</Link></p>
       <GraphManager />
       <Graph />
+      <GraphCode />
       <ServerTester />
     </div>
   )

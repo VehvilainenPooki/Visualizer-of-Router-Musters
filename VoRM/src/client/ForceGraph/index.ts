@@ -10,6 +10,20 @@ const nodeR = 8
 let simulation: any
 let data: any
 
+const subscribers: Array<() => void> = []
+
+export const subscribe = (cb: () => void) => { subscribers.push(cb) }
+
+const notify = () => subscribers.forEach(cb => cb())
+
+export const getData = () => ({
+  nodes: data.nodes.map((n: any) => ({ id: n.id })),
+  links: data.links.map((l: any) => ({
+    source: l.source?.id ?? l.source,
+    target: l.target?.id ?? l.target
+  }))
+})
+
 export const initialize = (svgDOM: SVGSVGElement) => {
 
   ({ simulation, data } = forceSim.initialize(width, height))
@@ -46,6 +60,7 @@ export const addNode = (nodename: string) => {
   rendering.updateElements(data)
   simulation.alpha(1).restart()
   console.log(nodename, data.nodes)
+  notify()
 }
 
 export const addLink = (source: String, target: string) => {
@@ -72,6 +87,7 @@ export const addLink = (source: String, target: string) => {
       .restart()
 
     rendering.updateElements(data)
+    notify()
   }
 }
 
