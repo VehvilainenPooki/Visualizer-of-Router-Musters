@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "rootDir": ".",
     "outDir": "build",
-    "composite": true
+    "composite": true,
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules"
   ],
   "references": [
-    {"path": "./src/server"}
+    { "path": "./src/server" },
+    { "path": "./src/client" }
   ]
 }
