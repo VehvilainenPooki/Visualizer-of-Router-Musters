@@ -29,3 +29,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 220626 | 8h | DokPloy troubleshooting and thinking about project rework |
 | 230626 | 8h | Set up Dokploy database and link it to project, think about the project, start frontend explorations. Database must be redone for nice graph code saving and loading |
 | 250626 | 6h | Add tsconfig to client again, make docker-compose.prod be used for build testing and fix build, ui exploration, some thinking about the project |
+| 290626 | 6h | All the pondering of implementations, looking into security steps like cors, helmet, account email verification, captcha. implemented cors and helmet, looked into data management to keep server storage limit low -> remove accounts and illustrations after x days of inactivity as this is just in development |
