@@ -1,5 +1,6 @@
 import { connectToDatabase } from './db/connection.js'
 import express from 'express'
+import cors from 'cors'
 import path from 'path'
 import helperRouter from './helperRoutes.js'
 import usersRouter from './controllers/users.js'
@@ -10,6 +11,8 @@ const app = express()
 const PORT = process.env.PORT ?? 3001
 const inProduction = process.env.IN_PRODUCTION === 'true'
 
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') ?? []
+app.use(cors({ origin: allowedOrigins }))
 app.use(express.json())
 
 if (inProduction) {

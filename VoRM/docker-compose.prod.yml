@@ -9,6 +9,7 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
       - IN_PRODUCTION=true
+      - ALLOWED_ORIGINS=http://localhost
     labels:
       - "traefik.http.routers.vorm.rule=Host(`localhost`)"
       - "traefik.http.routers.vorm.entrypoints=web"
