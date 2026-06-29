@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import path from 'path'
+import permissionsPolicy from './middleware/permissionsPolicy.js'
 import helperRouter from './helperRoutes.js'
 import usersRouter from './controllers/users.js'
 import loginRouter from './controllers/login.js'
@@ -14,6 +15,7 @@ const inProduction = process.env.IN_PRODUCTION === 'true'
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') ?? []
 app.use(helmet())
+app.use(permissionsPolicy)
 app.use(cors({ origin: allowedOrigins }))
 app.use(express.json())
 

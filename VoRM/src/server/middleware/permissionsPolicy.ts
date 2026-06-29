@@ -1,0 +1,61 @@
+import { Request, Response, NextFunction } from 'express'
+
+const permissionsPolicy = (_req: Request, res: Response, next: NextFunction) => {
+  res.setHeader(
+    'Permissions-Policy',
+    [
+      'accelerometer=()',
+      'ambient-light-sensor=()',
+      'aria-notify=(self)',
+      'attribution-reporting=()',
+      'autoplay=()',
+      'bluetooth=()',
+      'browsing-topics=()',
+      'camera=()',
+      'captured-surface-control=()',
+      'ch-ua-high-entropy-values=()',
+      'compute-pressure=()',
+      'cross-origin-isolated=()',
+      'deferred-fetch=()',
+      'deferred-fetch-minimal=()',
+      'display-capture=()',
+      'encrypted-media=()',
+      'fullscreen=(self)',
+      'gamepad=()',
+      'geolocation=()',
+      'gyroscope=()',
+      'hid=()',
+      'identity-credentials-get=()',
+      'idle-detection=()',
+      'language-detector=()',
+      'local-fonts=()',
+      'local-network=()',
+      'local-network-access=()',
+      'loopback-network=()',
+      'magnetometer=()',
+      'microphone=()',
+      'midi=()',
+      'on-device-speech-recognition=()',
+      'otp-credentials=()',
+      'payment=()',
+      'picture-in-picture=()',
+      'private-state-token-issuance=()',
+      'private-state-token-redemption=()',
+      'publickey-credentials-create=()',
+      'publickey-credentials-get=()',
+      'screen-wake-lock=()',
+      'serial=()',
+      'speaker-selection=()',
+      'storage-access=()',
+      'summarizer=()',
+      'translator=()',
+      'usb=()',
+      'web-share=()',
+      'window-management=()',
+      'xr-spatial-tracking=()',
+    ].join(', ')
+  )
+  next()
+}
+
+export default permissionsPolicy
