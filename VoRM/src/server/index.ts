@@ -13,7 +13,7 @@ const PORT = process.env.PORT ?? 3001
 const inProduction = process.env.IN_PRODUCTION === 'true'
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') ?? []
-app.use(helmet({ contentSecurityPolicy: { useDefaults: true, reportOnly: true } }))
+app.use(helmet())
 app.use(cors({ origin: allowedOrigins }))
 app.use(express.json())
 
