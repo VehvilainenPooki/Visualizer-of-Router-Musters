@@ -12,6 +12,13 @@ router.get('/', authenticateToken, async (req, res) => {
 })
 
 router.post('/', authenticateToken, async (req, res) => {
+  if (!req.user!.isAdmin) {
+    const count = await Illustration.count({ where: { userId: req.user!.id } })
+    if (count >= 5) {
+      res.status(403).json({ error: 'illustration limit reached' })
+      return
+    }
+  }
   const illustration = await Illustration.create({
     userId: req.user!.id
   })

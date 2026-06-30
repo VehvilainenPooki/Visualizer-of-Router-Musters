@@ -32,7 +32,11 @@ function IllustrationsPage() {
   const handleCreate = async () => {
     try {
       const newItem = await illustrationsService.createIllustration(token!)
-      setIllustrations(prev => [...prev, newItem])
+      if (!newItem) {
+        setError('You have reached the maximum of 5 illustrations.')
+        return
+      }
+      setIllustrations(prev => [...prev, newItem!])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create')
     }

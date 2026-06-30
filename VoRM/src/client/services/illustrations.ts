@@ -16,11 +16,12 @@ export const getIllustrations = async (token: string): Promise<Illustration[]> =
   return response.json()
 }
 
-export const createIllustration = async (token: string): Promise<Illustration> => {
+export const createIllustration = async (token: string): Promise<Illustration | null> => {
   const response = await fetch(baseUrl, {
     method: 'POST',
     headers: authHeaders(token)
   })
+  if (response.status === 403) return null
   if (!response.ok) throw new Error('Failed to create illustration')
   return response.json()
 }
