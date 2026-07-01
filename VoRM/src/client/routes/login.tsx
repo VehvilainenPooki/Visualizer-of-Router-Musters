@@ -20,13 +20,13 @@ function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    try {
-      const data = await authService.login(username, password)
-      login(data.token, data.username)
-      navigate({ to: '/' })
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed')
+    const result = await authService.login(username, password)
+    if (!result.ok) {
+      setError(result.error)
+      return
     }
+    login(result.data.token, result.data.username)
+    navigate({ to: '/' })
   }
 
   return (

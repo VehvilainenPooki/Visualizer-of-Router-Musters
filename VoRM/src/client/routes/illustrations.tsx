@@ -24,31 +24,31 @@ function IllustrationsPage() {
 
   useEffect(() => {
     if (!token) return
-    illustrationsService.getIllustrations(token)
-      .then(setIllustrations)
-      .catch(err => setError(err instanceof Error ? err.message : 'Failed to load'))
+    illustrationsService.getIllustrations(token).then(result => {
+      if (!result.ok) {
+        setError(result.error)
+        return
+      }
+      setIllustrations(result.data)
+    })
   }, [token])
 
   const handleCreate = async () => {
-    try {
-      const newItem = await illustrationsService.createIllustration(token!)
-      if (!newItem) {
-        setError('You have reached the maximum of 5 illustrations.')
-        return
-      }
-      setIllustrations(prev => [...prev, newItem!])
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create')
+    const result = await illustrationsService.createIllustration(token!)
+    if (!result.ok) {
+      setError(result.error)
+      return
     }
+    setIllustrations(prev => [...prev, result.data])
   }
 
   const handleDelete = async (id: number) => {
-    try {
-      await illustrationsService.deleteIllustration(token!, id)
-      setIllustrations(prev => prev.filter(i => i.id !== id))
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete')
+    const result = await illustrationsService.deleteIllustration(token!, id)
+    if (!result.ok) {
+      setError(result.error)
+      return
     }
+    setIllustrations(prev => prev.filter(i => i.id !== id))
   }
 
   const handleLogout = () => {

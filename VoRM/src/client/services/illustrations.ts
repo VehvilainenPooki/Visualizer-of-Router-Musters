@@ -1,3 +1,5 @@
+import type { Result } from '../../common/types/result'
+
 const baseUrl = '/api/illustrations'
 
 export interface Illustration {
@@ -10,26 +12,41 @@ const authHeaders = (token: string) => ({
   'Authorization': `Bearer ${token}`
 })
 
-export const getIllustrations = async (token: string): Promise<Illustration[]> => {
-  const response = await fetch(baseUrl, { headers: authHeaders(token) })
-  if (!response.ok) throw new Error('Failed to fetch illustrations')
-  return response.json()
+export const getIllustrations = async (token: string): Promise<Result<Illustration[]>> => {
+  try {
+    const response = await fetch(baseUrl, { headers: authHeaders(token) })
+    if (!response.ok) return { ok: false, error: 'Failed to fetch illustrations', status: response.status }
+    return { ok: true, data: await response.json(), status: response.status }
+  } catch {
+    return { ok: false, error: 'Network error', status: 0 }
+  }
 }
 
-export const createIllustration = async (token: string): Promise<Illustration | null> => {
-  const response = await fetch(baseUrl, {
-    method: 'POST',
-    headers: authHeaders(token)
-  })
-  if (response.status === 403) return null
-  if (!response.ok) throw new Error('Failed to create illustration')
-  return response.json()
+export const createIllustration = async (token: string): Promise<Result<Illustration>> => {
+  try {
+    const response = await fetch(baseUrl, {
+      method: 'POST',
+      headers: authHeaders(token)
+    })
+    if (!response.ok) {
+      const data = await response.json()
+      return { ok: false, error: data.error ?? 'Failed to create illustration', status: response.status }
+    }
+    return { ok: true, data: await response.json(), status: response.status }
+  } catch {
+    return { ok: false, error: 'Network error', status: 0 }
+  }
 }
 
-export const deleteIllustration = async (token: string, id: number): Promise<void> => {
-  const response = await fetch(`${baseUrl}/${id}`, {
-    method: 'DELETE',
-    headers: authHeaders(token)
-  })
-  if (!response.ok) throw new Error('Failed to delete illustration')
+export const deleteIllustration = async (token: string, id: number): Promise<Result<void>> => {
+  try {
+    const response = await fetch(`${baseUrl}/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders(token)
+    })
+    if (!response.ok) return { ok: false, error: 'Failed to delete illustration', status: response.status }
+    return { ok: true, data: undefined, status: response.status }
+  } catch {
+    return { ok: false, error: 'Network error', status: 0 }
+  }
 }

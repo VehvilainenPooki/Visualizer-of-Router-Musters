@@ -8,12 +8,18 @@ import type { FC, SubmitEvent } from 'react'
 const ServerTester: FC = () => {
   const [echo, setEcho] = useState('')
   const [response, setresponse] = useState('')
+  const [error, setError] = useState('')
 
   const handleTest = async ( event: SubmitEvent ) => {
     event.preventDefault()
     if (echo) {
-      const res = await testEcho(echo)
-      setresponse(res.message)
+      const result = await testEcho(echo)
+      if (!result.ok) {
+        setError(result.error)
+        return
+      }
+      setresponse(result.data.message)
+      setError('')
       setEcho('')
     }
   }
@@ -32,6 +38,7 @@ const ServerTester: FC = () => {
           <br/>
           <button type='submit'>Echo</button>
         </form>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <p>latest response {response}</p>
       </div>
     </div>

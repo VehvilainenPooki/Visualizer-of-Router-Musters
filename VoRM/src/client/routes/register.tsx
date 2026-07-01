@@ -20,14 +20,18 @@ function CreateAccountPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    try {
-      await authService.register(username, password)
-      const data = await authService.login(username, password)
-      login(data.token, data.username)
-      navigate({ to: '/' })
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed')
+    const registerResult = await authService.register(username, password)
+    if (!registerResult.ok) {
+      setError(registerResult.error)
+      return
     }
+    const loginResult = await authService.login(username, password)
+    if (!loginResult.ok) {
+      setError(loginResult.error)
+      return
+    }
+    login(loginResult.data.token, loginResult.data.username)
+    navigate({ to: '/' })
   }
 
   return (
