@@ -6,8 +6,8 @@
     "moduleResolution": "bundler",
     "strict": true,
     "composite": true,
-    "declarationDir": "build/types",
-    "outDir": "build"
+    "declarationDir": "../../build/types",
+    "outDir": "../../build"
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "build"]

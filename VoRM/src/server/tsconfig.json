@@ -4,10 +4,16 @@
     "target": "esnext",
     "module": "nodenext",
     "moduleResolution": "nodenext",
+    "composite": true,
+    "declarationDir": "../../build/types",
+    "outDir": "../../build",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true
-  }
+  },
+  "references": [
+    { "path": "../common" }
+  ]
 }
