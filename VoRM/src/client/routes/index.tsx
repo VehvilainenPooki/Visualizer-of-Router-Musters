@@ -1,8 +1,9 @@
 import { createRoute } from '@tanstack/react-router'
-import { Button, CloseButton, Drawer, Group, Stack, Text, UnstyledButton } from '@mantine/core'
-import { useDisclosure } from '@mantine/hooks'
-import { BookOpenText, Share2, User } from 'lucide-react'
+import { Text, Title, UnstyledButton } from '@mantine/core'
+import { useElementSize, useViewportSize } from '@mantine/hooks'
+import { BookOpenText, Share2 } from 'lucide-react'
 import { Route as rootRoute } from './__root'
+import { NavDrawer } from '../Components/NavDrawer'
 
 export const Route = createRoute({
   getParentRoute: () => rootRoute,
@@ -11,49 +12,78 @@ export const Route = createRoute({
 })
 
 function MainView() {
-  const [opened, { open, close }] = useDisclosure(false)
+  const { width, height } = useViewportSize()
+  const { ref: buttonsRef, width: buttonsW, height: buttonsH } = useElementSize()
+
+  const availW = buttonsW * 0.8
+  const availH = buttonsH * 0.8
+  const gap = 0.02 * Math.min(buttonsW, buttonsH)
+  const size = Math.max(0, Math.min(availH, (availW - gap) / 2))
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Group p="md">
-        <UnstyledButton onClick={open}>
-          <img src="/vorm.svg" alt="Open menu" style={{ height: '4em' }} />
-        </UnstyledButton>
-      </Group>
+    <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div style={headerStyle}>
+        <NavDrawer width={width} height={height} defaultOpened={true} />
+        <Title order={1} ta="center" style={titleStyle}>Visualizer of Router Musters</Title>
+      </div>
 
-      <Drawer opened={opened} onClose={close} position="left" withCloseButton={false}>
-        <Group justify="space-between" mb="md">
-          <CloseButton onClick={close} />
-          <Button leftSection={<User size={16} />}>Profile</Button>
-        </Group>
-        <Stack>
-          <Button variant="subtle" fullWidth>Browse</Button>
-          <Button variant="subtle" fullWidth>Create</Button>
-          <Button variant="subtle" fullWidth>About</Button>
-        </Stack>
-      </Drawer>
+      <div style={aboutBoxStyle}>
+        <Text ta="center">
+          This project aims to create an approachable and very visual way to show routing protocols in action. The goal is to have RIP, OSPF and i/eBGP protocols available with packet drop rates and other options easily changeable. This is aimed for educational purposes and won't be implementing every possible protocol detail.
+        </Text>
+      </div>
 
-      <Group grow align="stretch" gap="xl" p="xl" style={{ flex: 1 }}>
-        <UnstyledButton style={actionCardStyle}>
+      <div
+        ref={buttonsRef}
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap
+        }}
+      >
+        <UnstyledButton style={{ ...actionCardStyle, width: size, height: size }}>
           <div style={iconWrapperStyle}>
             <BookOpenText size="100%" />
           </div>
-          <Text ta="center" fw={500} mt="md">Explore networks and simulations</Text>
+          <Text ta="center" fw={500} mt="md" style={{ fontSize: size * 0.06 }}>Explore networks and simulations</Text>
         </UnstyledButton>
-        <UnstyledButton style={actionCardStyle}>
+        <UnstyledButton style={{ ...actionCardStyle, width: size, height: size }}>
           <div style={iconWrapperStyle}>
             <Share2 size="100%" />
           </div>
-          <Text ta="center" fw={500} mt="md">Create your own network visualization</Text>
+          <Text ta="center" fw={500} mt="md" style={{ fontSize: size * 0.06 }}>Create your own network visualization</Text>
         </UnstyledButton>
-      </Group>
+      </div>
     </div>
   )
 }
 
+const headerStyle = {
+  position: 'relative' as const,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: '3rem'
+}
+
+const titleStyle = {
+  whiteSpace: 'nowrap' as const,
+  overflow: 'hidden',
+  fontSize: 'clamp(1rem, 4vw, 2.125rem)'
+}
+
+const aboutBoxStyle = {
+  maxWidth: '600px',
+  margin: 'var(--mantine-spacing-md) auto 0',
+  padding: 'var(--mantine-spacing-md)',
+  border: '1px solid var(--mantine-color-gray-4)',
+  borderRadius: 'var(--mantine-radius-md)'
+}
+
 const actionCardStyle = {
-  height: '100%',
-  width: '100%',
   display: 'flex',
   flexDirection: 'column' as const,
   alignItems: 'center',
