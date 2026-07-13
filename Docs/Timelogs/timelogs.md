@@ -32,3 +32,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 290626 | 6h | All the pondering of implementations, looking into security steps like cors, helmet, account email verification, captcha. implemented cors and helmet, looked into data management to keep server storage limit low -> remove accounts and illustrations after x days of inactivity as this is just in development |
 | 300626 | 4h | Understanding tagged unions and making services use them. Making normal users have 5 illustration limit. |
 | 010626 | 8h | Finish tagged union migration, finally actually choose ui, fix tsconfigging once again, start doing final UI implementation |
+| 130626 | 4h | Reading Mantine and tanstack router docs, making decision, prompting claude for UI/routing |
