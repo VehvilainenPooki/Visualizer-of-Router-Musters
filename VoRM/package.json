@@ -33,6 +33,7 @@
     "umzug": "^3.8.2"
   },
   "devDependencies": {
+    "@tanstack/router-plugin": "^1.168.19",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
     "@types/d3": "^7.4.3",
