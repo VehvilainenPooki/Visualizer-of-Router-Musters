@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react'
-import { createRoute, Link, redirect, useNavigate } from '@tanstack/react-router'
-import { Route as rootRoute } from './__root'
+import { createFileRoute, Link, redirect, useNavigate } from '@tanstack/react-router'
 import { useAuth } from '../contexts/AuthContext'
 import * as illustrationsService from '../services/illustrations'
 import type { Illustration } from '../services/illustrations'
 
-export const Route = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/illustrations',
+export const Route = createFileRoute('/illu')({
   beforeLoad: () => {
     if (!localStorage.getItem('auth_token')) {
       throw redirect({ to: '/login' })

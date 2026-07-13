@@ -5,24 +5,16 @@ import { User } from 'lucide-react'
 const OVERLAY_BLUR = 10
 
 interface NavDrawerProps {
-  width: number
-  height: number
   defaultOpened?: boolean
 }
 
-export function NavDrawer({ width, height, defaultOpened = false }: NavDrawerProps) {
+export function NavDrawer({ defaultOpened = false }: NavDrawerProps) {
   const [opened, { open, close }] = useDisclosure(defaultOpened)
-
-  const iconSize = 0.1 * Math.min(width, height)
-  const padding = iconSize * 0.25
 
   return (
     <>
-      <UnstyledButton
-        onClick={open}
-        style={{ position: 'absolute', top: padding, left: padding }}
-      >
-        <img src="/vorm.svg" alt="Open menu" style={{ width: iconSize, height: iconSize }} />
+      <UnstyledButton onClick={open} style={{ height: '100%', display: 'flex', alignItems: 'center' }}>
+        <img src="/vorm.svg" alt="Open menu" style={{ height: '100%', width: 'auto' }} />
       </UnstyledButton>
 
       <Drawer

@@ -1,12 +1,9 @@
 import { useState } from 'react'
-import { createRoute, Link, useNavigate } from '@tanstack/react-router'
-import { Route as rootRoute } from './__root'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useAuth } from '../contexts/AuthContext'
 import * as authService from '../services/auth'
 
-export const Route = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/login',
+export const Route = createFileRoute('/login')({
   component: LoginPage
 })
 

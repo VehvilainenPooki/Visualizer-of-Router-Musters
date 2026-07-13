@@ -62,6 +62,11 @@ router.get('/:id', authenticateToken, async (req, res) => {
     return
   }
 
+  if (illustration.userId !== req.user!.id) {
+    res.status(403).json({ error: 'not authorized' })
+    return
+  }
+
   res.json(illustration)
 })
 

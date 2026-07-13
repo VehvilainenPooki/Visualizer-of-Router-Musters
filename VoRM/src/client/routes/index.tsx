@@ -1,18 +1,14 @@
-import { createRoute } from '@tanstack/react-router'
-import { Text, Title, UnstyledButton } from '@mantine/core'
-import { useElementSize, useViewportSize } from '@mantine/hooks'
+import { createFileRoute } from '@tanstack/react-router'
+import { Text, UnstyledButton } from '@mantine/core'
+import { useElementSize } from '@mantine/hooks'
 import { BookOpenText, Share2 } from 'lucide-react'
-import { Route as rootRoute } from './__root'
-import { NavDrawer } from '../Components/NavDrawer'
+import { HomeNavbar } from '../Components/Navbar/HomeNavbar'
 
-export const Route = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/',
+export const Route = createFileRoute('/')({
   component: MainView
 })
 
 function MainView() {
-  const { width, height } = useViewportSize()
   const { ref: buttonsRef, width: buttonsW, height: buttonsH } = useElementSize()
 
   const availW = buttonsW * 0.8
@@ -22,10 +18,7 @@ function MainView() {
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <div style={headerStyle}>
-        <NavDrawer width={width} height={height} defaultOpened={true} />
-        <Title order={1} ta="center" style={titleStyle}>Visualizer of Router Musters</Title>
-      </div>
+      <HomeNavbar />
 
       <div style={aboutBoxStyle}>
         <Text ta="center">
@@ -59,20 +52,6 @@ function MainView() {
       </div>
     </div>
   )
-}
-
-const headerStyle = {
-  position: 'relative' as const,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minHeight: '3rem'
-}
-
-const titleStyle = {
-  whiteSpace: 'nowrap' as const,
-  overflow: 'hidden',
-  fontSize: 'clamp(1rem, 4vw, 2.125rem)'
 }
 
 const aboutBoxStyle = {
