@@ -11,7 +11,11 @@ function IllustrationView() {
   return (
     <div>
       <ViewNavbar />
-      <p>Viewing illustration #{illustration.id}</p>
+      <p>id: {illustration.id}</p>
+      <p>userId: {illustration.userId}</p>
+      <p>name: {illustration.name}</p>
+      <p>description: {illustration.description ?? ''}</p>
+      <pre>{JSON.stringify(illustration.graphcode, null, 2)}</pre>
     </div>
   )
 }
