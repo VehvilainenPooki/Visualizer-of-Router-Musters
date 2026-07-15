@@ -80,8 +80,10 @@ router.get('/verify/:token', async (req, res) => {
     return
   }
 
-  user.isVerified = true
-  await user.save()
+  if (!user.isVerified) {
+    user.isVerified = true
+    await user.save()
+  }
   res.status(200).json({ verified: true })
 })
 
