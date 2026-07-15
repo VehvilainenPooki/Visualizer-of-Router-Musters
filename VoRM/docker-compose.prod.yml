@@ -10,6 +10,11 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
       - IN_PRODUCTION=true
       - ALLOWED_ORIGINS=http://localhost
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - APP_URL=http://localhost
     labels:
       - "traefik.http.routers.vorm.rule=Host(`localhost`)"
       - "traefik.http.routers.vorm.entrypoints=web"
