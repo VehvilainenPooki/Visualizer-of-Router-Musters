@@ -1,0 +1,20 @@
+import { DataTypes, QueryInterface } from 'sequelize'
+
+export const up = async ({ context: queryInterface }: { context: QueryInterface }) => {
+  await queryInterface.addColumn('users', 'email', {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true
+  })
+
+  await queryInterface.addColumn('users', 'is_verified', {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true
+  })
+}
+
+export const down = async ({ context: queryInterface }: { context: QueryInterface }) => {
+  await queryInterface.removeColumn('users', 'is_verified')
+  await queryInterface.removeColumn('users', 'email')
+}

@@ -24,16 +24,29 @@ export const login = async (username: string, password: string): Promise<Result<
   }
 }
 
-export const register = async (username: string, password: string): Promise<Result<{ id: number; username: string }>> => {
+export const register = async (username: string, email: string, password: string): Promise<Result<{ id: number; username: string }>> => {
   try {
     const response = await fetch(baseUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username, email, password })
     })
     if (!response.ok) {
       const data = await response.json()
       return { ok: false, error: data.error ?? 'Registration failed', status: response.status }
+    }
+    return { ok: true, data: await response.json(), status: response.status }
+  } catch {
+    return { ok: false, error: 'Network error', status: 0 }
+  }
+}
+
+export const verifyEmail = async (token: string): Promise<Result<{ verified: boolean }>> => {
+  try {
+    const response = await fetch(`${baseUrl}/verify/${token}`)
+    if (!response.ok) {
+      const data = await response.json()
+      return { ok: false, error: data.error ?? 'Verification failed', status: response.status }
     }
     return { ok: true, data: await response.json(), status: response.status }
   } catch {

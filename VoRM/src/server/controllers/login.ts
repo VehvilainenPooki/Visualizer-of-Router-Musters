@@ -20,6 +20,11 @@ router.post('/', async (req, res) => {
     return
   }
 
+  if (!user.isVerified) {
+    res.status(403).json({ error: 'please verify your email before logging in' })
+    return
+  }
+
   const token = jwt.sign(
     { username: user.username, id: user.id, isAdmin: user.isAdmin },
     JWT_SECRET

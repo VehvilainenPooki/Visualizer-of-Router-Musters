@@ -16,6 +16,7 @@ import { Route as IlluRouteImport } from './routes/illu'
 import { Route as IllustrationsRouteRouteImport } from './routes/illustrations/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as IllustrationsIndexRouteImport } from './routes/illustrations/index'
+import { Route as VerifyTokenRouteImport } from './routes/verify.$token'
 import { Route as IllustrationsIllustrationIdRouteRouteImport } from './routes/illustrations/$illustrationId/route'
 import { Route as IllustrationsIllustrationIdIndexRouteImport } from './routes/illustrations/$illustrationId/index'
 import { Route as IllustrationsIllustrationIdEditRouteImport } from './routes/illustrations/$illustrationId/edit'
@@ -55,6 +56,11 @@ const IllustrationsIndexRoute = IllustrationsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => IllustrationsRouteRoute,
 } as any)
+const VerifyTokenRoute = VerifyTokenRouteImport.update({
+  id: '/verify/$token',
+  path: '/verify/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IllustrationsIllustrationIdRouteRoute =
   IllustrationsIllustrationIdRouteRouteImport.update({
     id: '/$illustrationId',
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/testing': typeof TestingRoute
   '/illustrations/$illustrationId': typeof IllustrationsIllustrationIdRouteRouteWithChildren
+  '/verify/$token': typeof VerifyTokenRoute
   '/illustrations/': typeof IllustrationsIndexRoute
   '/illustrations/$illustrationId/edit': typeof IllustrationsIllustrationIdEditRoute
   '/illustrations/$illustrationId/': typeof IllustrationsIllustrationIdIndexRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/testing': typeof TestingRoute
+  '/verify/$token': typeof VerifyTokenRoute
   '/illustrations': typeof IllustrationsIndexRoute
   '/illustrations/$illustrationId/edit': typeof IllustrationsIllustrationIdEditRoute
   '/illustrations/$illustrationId': typeof IllustrationsIllustrationIdIndexRoute
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/testing': typeof TestingRoute
   '/illustrations/$illustrationId': typeof IllustrationsIllustrationIdRouteRouteWithChildren
+  '/verify/$token': typeof VerifyTokenRoute
   '/illustrations/': typeof IllustrationsIndexRoute
   '/illustrations/$illustrationId/edit': typeof IllustrationsIllustrationIdEditRoute
   '/illustrations/$illustrationId/': typeof IllustrationsIllustrationIdIndexRoute
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/testing'
     | '/illustrations/$illustrationId'
+    | '/verify/$token'
     | '/illustrations/'
     | '/illustrations/$illustrationId/edit'
     | '/illustrations/$illustrationId/'
@@ -129,6 +139,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/testing'
+    | '/verify/$token'
     | '/illustrations'
     | '/illustrations/$illustrationId/edit'
     | '/illustrations/$illustrationId'
@@ -141,6 +152,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/testing'
     | '/illustrations/$illustrationId'
+    | '/verify/$token'
     | '/illustrations/'
     | '/illustrations/$illustrationId/edit'
     | '/illustrations/$illustrationId/'
@@ -153,6 +165,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   TestingRoute: typeof TestingRoute
+  VerifyTokenRoute: typeof VerifyTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -205,6 +218,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/illustrations/'
       preLoaderRoute: typeof IllustrationsIndexRouteImport
       parentRoute: typeof IllustrationsRouteRoute
+    }
+    '/verify/$token': {
+      id: '/verify/$token'
+      path: '/verify/$token'
+      fullPath: '/verify/$token'
+      preLoaderRoute: typeof VerifyTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/illustrations/$illustrationId': {
       id: '/illustrations/$illustrationId'
@@ -268,6 +288,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   TestingRoute: TestingRoute,
+  VerifyTokenRoute: VerifyTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

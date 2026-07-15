@@ -6,10 +6,12 @@ import { sequelize } from '../db/connection.js'
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: number
   declare username: string
+  declare email: string
   declare passwordHash: string
   declare lastLogin: Date
   declare creationDate: Date
   declare isAdmin: boolean
+  declare isVerified: boolean
 }
 
 User.init({
@@ -19,6 +21,11 @@ User.init({
     autoIncrement: true
   },
   username: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false
+  },
+  email: {
     type: DataTypes.STRING,
     unique: true,
     allowNull: false
@@ -38,6 +45,11 @@ User.init({
     defaultValue: DataTypes.NOW
   },
   isAdmin: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  isVerified: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false
