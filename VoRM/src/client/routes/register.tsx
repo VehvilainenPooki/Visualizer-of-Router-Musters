@@ -28,7 +28,7 @@ function CreateAccountPage() {
     return (
       <div style={{ maxWidth: '400px', margin: '100px auto', padding: '20px', border: '1px solid #ccc' }}>
         <h2>Check your email</h2>
-        <p>We sent a verification link to {email}. Click it to activate your account, then log in.</p>
+        <p>A verification email has been sent from noreply@pooki.org to {email}. Activate your account by visiting the URL in the email, then you can log in.</p>
         <p><Link to="/login">Go to login</Link></p>
       </div>
     )
