@@ -34,3 +34,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 010626 | 8h | Finish tagged union migration, finally actually choose ui, fix tsconfigging once again, start doing final UI implementation |
 | 130626 | 4h | Reading Mantine and tanstack router docs, making decision, prompting claude for UI/routing |
 | 140626 | 5h | Configuring noreply email for future verification process, refactoring illustrations schema and the routes, learning Mantine themes |
+| 150726 | 8h | Create email verification workflow focusing on backend functionality |
