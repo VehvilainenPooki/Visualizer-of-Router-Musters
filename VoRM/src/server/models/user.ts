@@ -1,17 +1,19 @@
-import type { InferAttributes, InferCreationAttributes } from 'sequelize'
+import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize'
 import { Model, DataTypes } from 'sequelize'
 
 import { sequelize } from '../db/connection.js'
 
+export type NewUserAttrs = Omit<InferCreationAttributes<User>, 'id' | 'isAdmin' | 'isVerified'>
+
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-  declare id: number
+  declare id: CreationOptional<number>
   declare username: string
   declare email: string
   declare passwordHash: string
   declare lastLogin: Date
   declare creationDate: Date
-  declare isAdmin: boolean
-  declare isVerified: boolean
+  declare isAdmin: CreationOptional<boolean>
+  declare isVerified: CreationOptional<boolean>
 }
 
 User.init({
