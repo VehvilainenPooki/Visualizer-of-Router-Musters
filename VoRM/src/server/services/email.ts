@@ -14,6 +14,11 @@ const transporter = nodemailer.createTransport({
   }
 })
 
+transporter.verify().then(
+  () => console.log('SMTP transporter ready'),
+  (err) => console.error('-\n-\n-\nSMTP transporter configuration is invalid:', err)
+)
+
 export const sendVerificationEmail = async (to: string, verificationLink: string): Promise<void> => {
   try {
     await transporter.sendMail({
