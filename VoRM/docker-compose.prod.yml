@@ -53,6 +53,15 @@ services:
     networks:
       - vorm_net
 
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: vorm_mailpit
+    ports:
+      - 8025:8025
+      - 1025:1025
+    networks:
+      - vorm_net
+
 networks:
   vorm_net:
     driver: bridge
