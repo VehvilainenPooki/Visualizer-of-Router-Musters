@@ -15,11 +15,15 @@ const transporter = nodemailer.createTransport({
 })
 
 export const sendVerificationEmail = async (to: string, verificationLink: string): Promise<void> => {
-  await transporter.sendMail({
-    from: process.env.SMTP_USER,
-    to,
-    subject: 'Verify your email address',
-    text: `Welcome! Please verify your email by visiting: ${verificationLink}`,
-    html: `<p>Welcome! Please verify your email by clicking the link below:</p><p><a href="${verificationLink}">${verificationLink}</a></p>`
-  })
+  try {
+    await transporter.sendMail({
+      from: process.env.SMTP_USER,
+      to,
+      subject: 'Verify your email address',
+      text: `Welcome! Please verify your email by visiting: ${verificationLink}`,
+      html: `<p>Welcome! Please verify your email by clicking the link below:</p><p><a href="${verificationLink}">${verificationLink}</a></p>`
+    })
+  } catch (err) {
+    throw new Error(`Failed to send verification email to ${to}`, { cause: err })
+  }
 }

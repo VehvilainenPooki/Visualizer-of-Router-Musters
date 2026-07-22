@@ -54,7 +54,7 @@ router.post('/', async (req, res) => {
     const token = generateVerificationToken(user.id)
     await sendVerificationEmail(user.email, buildVerificationLink(token))
   } catch (err) {
-    console.error('failed to send verification email:', err)
+    console.error(err)
     await user.destroy()
     res.status(500).json({ error: 'failed to send verification email' })
     return
