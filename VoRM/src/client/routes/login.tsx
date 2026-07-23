@@ -22,8 +22,8 @@ function LoginPage() {
       setError(result.error)
       return
     }
-    login(result.data.token, result.data.username)
-    navigate({ to: '/' })
+    login(result.data.token, result.data.username, result.data.isVerified)
+    navigate({ to: result.data.isVerified ? '/' : '/verify-pending' })
   }
 
   return (

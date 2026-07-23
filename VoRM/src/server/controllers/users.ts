@@ -5,6 +5,7 @@ import { User, type NewUserAttrs } from '../models/index.js'
 import { authenticateToken, requireAdmin } from '../middleware/auth.js'
 import { sendVerificationEmail } from '../services/email.js'
 import { generateVerificationToken, verifyVerificationToken } from '../services/verification.js'
+import { buildAuthPayload } from '../services/auth.js'
 
 const router = Router()
 
@@ -50,17 +51,7 @@ router.post('/', async (req, res) => {
     return
   }
 
-  try {
-    const token = generateVerificationToken(user.id)
-    await sendVerificationEmail(user.email, buildVerificationLink(token))
-  } catch (err) {
-    console.error(err)
-    await user.destroy()
-    res.status(500).json({ error: 'failed to send verification email' })
-    return
-  }
-
-  res.status(201).json({ id: user.id, username: user.username })
+  res.status(201).json(buildAuthPayload(user))
 })
 
 router.get('/verify/:token', async (req, res) => {
@@ -84,7 +75,39 @@ router.get('/verify/:token', async (req, res) => {
     user.isVerified = true
     await user.save()
   }
-  res.status(200).json({ verified: true })
+  res.status(200).json(buildAuthPayload(user))
+})
+
+router.post('/refresh-token', authenticateToken, async (req, res) => {
+  const user = await User.findByPk(req.user!.id)
+  if (!user) {
+    res.status(404).json({ error: 'user not found' })
+    return
+  }
+  res.status(200).json(buildAuthPayload(user))
+})
+
+router.post('/verification-email', authenticateToken, async (req, res) => {
+  const user = await User.findByPk(req.user!.id)
+  if (!user) {
+    res.status(404).json({ error: 'user not found' })
+    return
+  }
+  if (user.isVerified) {
+    res.status(400).json({ error: 'email already verified' })
+    return
+  }
+
+  try {
+    const token = generateVerificationToken(user.id)
+    await sendVerificationEmail(user.email, buildVerificationLink(token))
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'failed to send verification email' })
+    return
+  }
+
+  res.status(200).json({})
 })
 
 router.get('/', authenticateToken, requireAdmin, async (_req, res) => {

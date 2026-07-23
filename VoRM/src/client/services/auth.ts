@@ -5,7 +5,12 @@ const baseUrl = '/api/users'
 export interface AuthResponse {
   token: string
   username: string
+  isVerified: boolean
 }
+
+const authHeaders = (token: string) => ({
+  Authorization: `Bearer ${token}`
+})
 
 export const login = async (username: string, password: string): Promise<Result<AuthResponse>> => {
   try {
@@ -24,7 +29,7 @@ export const login = async (username: string, password: string): Promise<Result<
   }
 }
 
-export const register = async (username: string, email: string, password: string): Promise<Result<{ id: number; username: string }>> => {
+export const register = async (username: string, email: string, password: string): Promise<Result<AuthResponse>> => {
   try {
     const response = await fetch(baseUrl, {
       method: 'POST',
@@ -41,12 +46,44 @@ export const register = async (username: string, email: string, password: string
   }
 }
 
-export const verifyEmail = async (token: string): Promise<Result<{ verified: boolean }>> => {
+export const verifyEmail = async (token: string): Promise<Result<AuthResponse>> => {
   try {
     const response = await fetch(`${baseUrl}/verify/${token}`)
     if (!response.ok) {
       const data = await response.json()
       return { ok: false, error: data.error ?? 'Verification failed', status: response.status }
+    }
+    return { ok: true, data: await response.json(), status: response.status }
+  } catch {
+    return { ok: false, error: 'Network error', status: 0 }
+  }
+}
+
+export const sendVerificationEmail = async (token: string): Promise<Result<void>> => {
+  try {
+    const response = await fetch(`${baseUrl}/verification-email`, {
+      method: 'POST',
+      headers: authHeaders(token)
+    })
+    if (!response.ok) {
+      const data = await response.json()
+      return { ok: false, error: data.error ?? 'Failed to send verification email', status: response.status }
+    }
+    return { ok: true, data: undefined, status: response.status }
+  } catch {
+    return { ok: false, error: 'Network error', status: 0 }
+  }
+}
+
+export const refreshToken = async (token: string): Promise<Result<AuthResponse>> => {
+  try {
+    const response = await fetch(`${baseUrl}/refresh-token`, {
+      method: 'POST',
+      headers: authHeaders(token)
+    })
+    if (!response.ok) {
+      const data = await response.json()
+      return { ok: false, error: data.error ?? 'Failed to refresh session', status: response.status }
     }
     return { ok: true, data: await response.json(), status: response.status }
   } catch {

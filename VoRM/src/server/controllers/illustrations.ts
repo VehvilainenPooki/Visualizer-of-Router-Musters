@@ -1,17 +1,17 @@
 import { Router } from 'express'
 import { Illustration } from '../models/index.js'
-import { authenticateToken } from '../middleware/auth.js'
+import { authenticateToken, requireVerified } from '../middleware/auth.js'
 
 const router = Router()
 
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', authenticateToken, requireVerified, async (req, res) => {
   const illustrations = await Illustration.findAll({
     where: { userId: req.user!.id }
   })
   res.json(illustrations)
 })
 
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticateToken, requireVerified, async (req, res) => {
   if (!req.user!.isAdmin) {
     const count = await Illustration.count({ where: { userId: req.user!.id } })
     if (count >= 5) {
@@ -25,7 +25,7 @@ router.post('/', authenticateToken, async (req, res) => {
   res.status(201).json(illustration)
 })
 
-router.delete('/:id', authenticateToken, async (req, res) => {
+router.delete('/:id', authenticateToken, requireVerified, async (req, res) => {
   const illustration = await Illustration.findByPk(Number(req.params.id))
   if (!illustration) {
     res.status(404).json({ error: 'illustration not found' })
@@ -39,7 +39,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
   res.status(204).end()
 })
 
-router.get('/:id', authenticateToken, async (req, res) => {
+router.get('/:id', authenticateToken, requireVerified, async (req, res) => {
   const illustration = await Illustration.findByPk(Number(req.params.id))
 
   if (!illustration) {

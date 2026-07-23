@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { useAuth } from '../contexts/AuthContext'
 import * as authService from '../services/auth'
 
 export const Route = createFileRoute('/verify/$token')({
@@ -8,6 +9,7 @@ export const Route = createFileRoute('/verify/$token')({
 
 function VerifyEmailPage() {
   const { token } = Route.useParams()
+  const { login } = useAuth()
   const [status, setStatus] = useState<'pending' | 'success' | 'error'>('pending')
   const [error, setError] = useState('')
 
@@ -18,6 +20,7 @@ function VerifyEmailPage() {
         setStatus('error')
         return
       }
+      login(result.data.token, result.data.username, result.data.isVerified)
       setStatus('success')
     })
   }, [token])
