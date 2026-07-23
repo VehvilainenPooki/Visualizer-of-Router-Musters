@@ -1,10 +1,9 @@
-import jwt from 'jsonwebtoken'
 import { Router } from 'express'
 import bcrypt from 'bcryptjs'
 import { User } from '../models/index.js'
+import { buildAuthPayload } from '../services/auth.js'
 
 const router = Router()
-const JWT_SECRET = process.env.JWT_SECRET ?? 'development-secret'
 
 router.post('/', async (req, res) => {
   const { username, password } = req.body as { username: string; password: string }
@@ -20,17 +19,7 @@ router.post('/', async (req, res) => {
     return
   }
 
-  if (!user.isVerified) {
-    res.status(403).json({ error: 'please verify your email before logging in' })
-    return
-  }
-
-  const token = jwt.sign(
-    { username: user.username, id: user.id, isAdmin: user.isAdmin },
-    JWT_SECRET
-  )
-
-  res.status(200).json({ token, username: user.username })
+  res.status(200).json(buildAuthPayload(user))
 })
 
 export default router

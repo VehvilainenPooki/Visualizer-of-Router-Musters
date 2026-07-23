@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifyPendingRouteImport } from './routes/verify-pending'
 import { Route as TestingRouteImport } from './routes/testing'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
@@ -21,6 +22,11 @@ import { Route as IllustrationsIllustrationIdRouteRouteImport } from './routes/i
 import { Route as IllustrationsIllustrationIdIndexRouteImport } from './routes/illustrations/$illustrationId/index'
 import { Route as IllustrationsIllustrationIdEditRouteImport } from './routes/illustrations/$illustrationId/edit'
 
+const VerifyPendingRoute = VerifyPendingRouteImport.update({
+  id: '/verify-pending',
+  path: '/verify-pending',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TestingRoute = TestingRouteImport.update({
   id: '/testing',
   path: '/testing',
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/testing': typeof TestingRoute
+  '/verify-pending': typeof VerifyPendingRoute
   '/illustrations/$illustrationId': typeof IllustrationsIllustrationIdRouteRouteWithChildren
   '/verify/$token': typeof VerifyTokenRoute
   '/illustrations/': typeof IllustrationsIndexRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/testing': typeof TestingRoute
+  '/verify-pending': typeof VerifyPendingRoute
   '/verify/$token': typeof VerifyTokenRoute
   '/illustrations': typeof IllustrationsIndexRoute
   '/illustrations/$illustrationId/edit': typeof IllustrationsIllustrationIdEditRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/testing': typeof TestingRoute
+  '/verify-pending': typeof VerifyPendingRoute
   '/illustrations/$illustrationId': typeof IllustrationsIllustrationIdRouteRouteWithChildren
   '/verify/$token': typeof VerifyTokenRoute
   '/illustrations/': typeof IllustrationsIndexRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/testing'
+    | '/verify-pending'
     | '/illustrations/$illustrationId'
     | '/verify/$token'
     | '/illustrations/'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/testing'
+    | '/verify-pending'
     | '/verify/$token'
     | '/illustrations'
     | '/illustrations/$illustrationId/edit'
@@ -151,6 +162,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/testing'
+    | '/verify-pending'
     | '/illustrations/$illustrationId'
     | '/verify/$token'
     | '/illustrations/'
@@ -165,11 +177,19 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   TestingRoute: typeof TestingRoute
+  VerifyPendingRoute: typeof VerifyPendingRoute
   VerifyTokenRoute: typeof VerifyTokenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify-pending': {
+      id: '/verify-pending'
+      path: '/verify-pending'
+      fullPath: '/verify-pending'
+      preLoaderRoute: typeof VerifyPendingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/testing': {
       id: '/testing'
       path: '/testing'
@@ -288,6 +308,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   TestingRoute: TestingRoute,
+  VerifyPendingRoute: VerifyPendingRoute,
   VerifyTokenRoute: VerifyTokenRoute,
 }
 export const routeTree = rootRouteImport

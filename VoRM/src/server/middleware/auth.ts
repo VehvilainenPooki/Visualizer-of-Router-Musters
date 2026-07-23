@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
+import { JWT_SECRET } from '../services/auth.js'
 
 interface TokenPayload {
   username: string
@@ -12,8 +13,6 @@ declare module 'express-serve-static-core' {
     user?: TokenPayload
   }
 }
-
-const JWT_SECRET = process.env.JWT_SECRET ?? 'development-secret'
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
   const authorization = req.get('Authorization')

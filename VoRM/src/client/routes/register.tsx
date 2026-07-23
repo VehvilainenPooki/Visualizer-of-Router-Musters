@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { useAuth } from '../contexts/AuthContext'
 import * as authService from '../services/auth'
 
 export const Route = createFileRoute('/register')({
@@ -11,7 +12,8 @@ function CreateAccountPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [registered, setRegistered] = useState(false)
+  const { login } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,17 +23,8 @@ function CreateAccountPage() {
       setError(registerResult.error)
       return
     }
-    setRegistered(true)
-  }
-
-  if (registered) {
-    return (
-      <div style={{ maxWidth: '400px', margin: '100px auto', padding: '20px', border: '1px solid #ccc' }}>
-        <h2>Check your email</h2>
-        <p>A verification email has been sent from noreply@pooki.org to {email}. Activate your account by visiting the URL in the email, then you can log in.</p>
-        <p><Link to="/login">Go to login</Link></p>
-      </div>
-    )
+    login(registerResult.data.token, registerResult.data.username, registerResult.data.isVerified)
+    navigate({ to: '/verify-pending' })
   }
 
   return (
