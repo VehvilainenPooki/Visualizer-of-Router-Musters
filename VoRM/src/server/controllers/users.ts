@@ -75,16 +75,16 @@ router.get('/verify/:token', async (req, res) => {
     user.isVerified = true
     await user.save()
   }
-  res.status(200).json({ verified: true })
+  res.status(200).json(buildAuthPayload(user))
 })
 
-router.get('/me', authenticateToken, async (req, res) => {
+router.post('/refresh-token', authenticateToken, async (req, res) => {
   const user = await User.findByPk(req.user!.id)
   if (!user) {
     res.status(404).json({ error: 'user not found' })
     return
   }
-  res.status(200).json({ id: user.id, username: user.username, isAdmin: user.isAdmin, isVerified: user.isVerified })
+  res.status(200).json(buildAuthPayload(user))
 })
 
 router.post('/verification-email', authenticateToken, async (req, res) => {

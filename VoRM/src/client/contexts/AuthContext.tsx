@@ -7,7 +7,6 @@ interface AuthContextType {
   isVerified: boolean | null
   login: (token: string, username: string, isVerified: boolean) => void
   logout: () => void
-  setVerified: (isVerified: boolean) => void
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -41,13 +40,8 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     localStorage.removeItem('auth_is_verified')
   }
 
-  const setVerified = (isVerified: boolean) => {
-    setIsVerified(isVerified)
-    localStorage.setItem('auth_is_verified', String(isVerified))
-  }
-
   return (
-    <AuthContext.Provider value={{ token, username, isVerified, login, logout, setVerified }}>
+    <AuthContext.Provider value={{ token, username, isVerified, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

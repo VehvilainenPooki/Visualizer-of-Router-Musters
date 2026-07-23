@@ -9,7 +9,7 @@ export const Route = createFileRoute('/verify/$token')({
 
 function VerifyEmailPage() {
   const { token } = Route.useParams()
-  const { setVerified } = useAuth()
+  const { login } = useAuth()
   const [status, setStatus] = useState<'pending' | 'success' | 'error'>('pending')
   const [error, setError] = useState('')
 
@@ -20,7 +20,7 @@ function VerifyEmailPage() {
         setStatus('error')
         return
       }
-      setVerified(true)
+      login(result.data.token, result.data.username, result.data.isVerified)
       setStatus('success')
     })
   }, [token])

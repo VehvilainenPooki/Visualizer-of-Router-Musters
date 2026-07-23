@@ -8,7 +8,7 @@ export const Route = createFileRoute('/verify-pending')({
 })
 
 function VerifyPendingPage() {
-  const { token, logout, setVerified } = useAuth()
+  const { token, login, logout } = useAuth()
   const navigate = useNavigate()
   const [sendStatus, setSendStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [sendError, setSendError] = useState('')
@@ -30,12 +30,12 @@ function VerifyPendingPage() {
   const handleCheck = async () => {
     if (!token) return
     setCheckMessage('')
-    const result = await authService.getMe(token)
+    const result = await authService.refreshToken(token)
     if (!result.ok) {
       setCheckMessage(result.error)
       return
     }
-    setVerified(result.data.isVerified)
+    login(result.data.token, result.data.username, result.data.isVerified)
     if (result.data.isVerified) {
       navigate({ to: '/' })
       return

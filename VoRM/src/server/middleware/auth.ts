@@ -6,6 +6,7 @@ interface TokenPayload {
   username: string
   id: number
   isAdmin: boolean
+  isVerified: boolean
 }
 
 declare module 'express-serve-static-core' {
@@ -34,6 +35,14 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
 export const requireAdmin = (req: Request, res: Response, next: NextFunction): void => {
   if (!req.user?.isAdmin) {
     res.status(403).json({ error: 'admin access required' })
+    return
+  }
+  next()
+}
+
+export const requireVerified = (req: Request, res: Response, next: NextFunction): void => {
+  if (!req.user?.isVerified) {
+    res.status(403).json({ error: 'email not verified' })
     return
   }
   next()

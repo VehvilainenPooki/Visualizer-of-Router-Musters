@@ -10,7 +10,7 @@ export interface AuthPayload {
 }
 
 export const signAuthToken = (user: User): string =>
-  jwt.sign({ username: user.username, id: user.id, isAdmin: user.isAdmin }, JWT_SECRET)
+  jwt.sign({ username: user.username, id: user.id, isAdmin: user.isAdmin, isVerified: user.isVerified }, JWT_SECRET)
 
 export const buildAuthPayload = (user: User): AuthPayload => ({
   token: signAuthToken(user),

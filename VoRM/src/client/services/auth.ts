@@ -46,7 +46,7 @@ export const register = async (username: string, email: string, password: string
   }
 }
 
-export const verifyEmail = async (token: string): Promise<Result<{ verified: boolean }>> => {
+export const verifyEmail = async (token: string): Promise<Result<AuthResponse>> => {
   try {
     const response = await fetch(`${baseUrl}/verify/${token}`)
     if (!response.ok) {
@@ -75,19 +75,15 @@ export const sendVerificationEmail = async (token: string): Promise<Result<void>
   }
 }
 
-export interface MeResponse {
-  id: number
-  username: string
-  isAdmin: boolean
-  isVerified: boolean
-}
-
-export const getMe = async (token: string): Promise<Result<MeResponse>> => {
+export const refreshToken = async (token: string): Promise<Result<AuthResponse>> => {
   try {
-    const response = await fetch(`${baseUrl}/me`, { headers: authHeaders(token) })
+    const response = await fetch(`${baseUrl}/refresh-token`, {
+      method: 'POST',
+      headers: authHeaders(token)
+    })
     if (!response.ok) {
       const data = await response.json()
-      return { ok: false, error: data.error ?? 'Failed to fetch user', status: response.status }
+      return { ok: false, error: data.error ?? 'Failed to refresh session', status: response.status }
     }
     return { ok: true, data: await response.json(), status: response.status }
   } catch {
