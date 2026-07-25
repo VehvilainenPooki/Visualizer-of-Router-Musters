@@ -36,3 +36,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 140626 | 5h | Configuring noreply email for future verification process, refactoring illustrations schema and the routes, learning Mantine themes |
 | 150726 | 8h | Create email verification workflow focusing on backend functionality |
 | 220726 | 2h | Add mailpit for development and improve email service |
+| 230726 | 3h | Improving verification email flow |
