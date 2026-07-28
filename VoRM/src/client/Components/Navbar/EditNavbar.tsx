@@ -1,7 +1,12 @@
-import { Menu, Menubar } from '@mantine/core'
+import { SegmentedControl } from '@mantine/core'
 import { AppNavbar } from './AppNavbar'
 
-export type EditTool = 'node' | 'link'
+export type EditTool = 'node' | 'link' | 'wifi' | 'test' | 'some'
+
+const TOOL_OPTIONS: { value: EditTool, label: string }[] = [
+  { value: 'node', label: 'Add node' },
+  { value: 'link', label: 'Add link' },
+]
 
 interface EditNavbarProps {
   tool: EditTool
@@ -11,15 +16,11 @@ interface EditNavbarProps {
 export function EditNavbar({ tool, onToolChange }: EditNavbarProps) {
   return (
     <AppNavbar>
-      <Menubar.Menu>
-        <Menubar.Target>Tools</Menubar.Target>
-        <Menubar.Dropdown>
-          <Menu.RadioGroup value={tool} onChange={value => onToolChange(value as EditTool)}>
-            <Menu.RadioItem value="node">Add node</Menu.RadioItem>
-            <Menu.RadioItem value="link">Add link</Menu.RadioItem>
-          </Menu.RadioGroup>
-        </Menubar.Dropdown>
-      </Menubar.Menu>
+      <SegmentedControl
+        value={tool}
+        onChange={value => onToolChange(value as EditTool)}
+        data={TOOL_OPTIONS}
+      />
     </AppNavbar>
   )
 }

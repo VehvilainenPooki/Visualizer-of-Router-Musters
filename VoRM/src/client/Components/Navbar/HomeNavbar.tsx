@@ -1,5 +1,5 @@
 import { Title } from '@mantine/core'
-import { AppNavbar } from './AppNavbar'
+import { AppNavbar, NAVBAR_CONTENT_SIZE } from './AppNavbar'
 
 export function HomeNavbar() {
   return (
@@ -10,7 +10,8 @@ export function HomeNavbar() {
 }
 
 const titleStyle = {
-  whiteSpace: 'nowrap' as const,
-  overflow: 'hidden',
-  fontSize: 'clamp(1rem, 4vw, 2.125rem)'
+  fontSize: NAVBAR_CONTENT_SIZE,
+  lineHeight: 1,
+  margin: 0,
+  textWrap: 'nowrap' as const
 }

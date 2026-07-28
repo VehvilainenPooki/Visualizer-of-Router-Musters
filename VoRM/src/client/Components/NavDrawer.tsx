@@ -4,6 +4,10 @@ import { User } from 'lucide-react'
 
 const OVERLAY_BLUR = 10
 
+export function NavDrawerIcon() {
+  return <img src="/vorm.svg" alt="" style={{ height: 'var(--navbar-content-size)', width: 'auto' }} />
+}
+
 interface NavDrawerProps {
   defaultOpened?: boolean
 }
@@ -13,8 +17,12 @@ export function NavDrawer({ defaultOpened = false }: NavDrawerProps) {
 
   return (
     <>
-      <UnstyledButton onClick={open} style={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-        <img src="/vorm.svg" alt="Open menu" style={{ height: '100%', width: 'auto' }} />
+      <UnstyledButton
+        onClick={open}
+        aria-label="Open menu"
+        style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}
+      >
+        <NavDrawerIcon />
       </UnstyledButton>
 
       <Drawer

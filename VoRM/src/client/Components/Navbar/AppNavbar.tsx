@@ -1,26 +1,40 @@
-import type { ReactNode } from 'react'
-import { Menubar } from '@mantine/core'
-import { NavDrawer } from '../NavDrawer'
+import type { CSSProperties, ReactNode } from 'react'
+import { Paper } from '@mantine/core'
+import { FitContent } from '../FitContent'
+import { NavDrawer, NavDrawerIcon } from '../NavDrawer'
 
 interface AppNavbarProps {
   children?: ReactNode
 }
 
+export const NAVBAR_CONTENT_SIZE = '2.7rem'
+const NAVBAR_PADDING = `calc(${NAVBAR_CONTENT_SIZE} * 0.1)`
+
 export function AppNavbar({ children }: AppNavbarProps) {
   return (
-    <Menubar
-      h="3rem"
-      px="md"
+    <Paper
+      component="header"
       bg="var(--mantine-color-body)"
+      shadow="xs"
+      radius={0}
       style={{
-        display: 'flex',
+        display: 'grid',
+        gridTemplateColumns: 'auto 1fr auto',
         alignItems: 'center',
-        gap: 'var(--mantine-spacing-md)',
+        gap: NAVBAR_PADDING,
+        padding: NAVBAR_PADDING,
         borderBottom: '1px solid var(--mantine-color-default-border)',
-      }}
+        '--navbar-content-size': NAVBAR_CONTENT_SIZE,
+      } as CSSProperties}
     >
       <NavDrawer />
-      {children}
-    </Menubar>
+      <div style={{ minWidth: 0, height: NAVBAR_CONTENT_SIZE }}>
+        <FitContent>{children}</FitContent>
+      </div>
+      {/* A bit of a jank centering trick for navbar elements */}
+      <div aria-hidden style={{ visibility: 'hidden', pointerEvents: 'none' }}>
+        <NavDrawerIcon />
+      </div>
+    </Paper>
   )
 }
