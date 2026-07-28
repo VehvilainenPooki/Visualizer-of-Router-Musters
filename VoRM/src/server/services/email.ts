@@ -28,8 +28,8 @@ export const sendVerificationEmail = async (to: string, verificationLink: string
       from: process.env.SMTP_USER,
       to,
       subject: 'Verify your email address',
-      text: `Welcome! Please verify your email by visiting: ${verificationLink}`,
-      html: `<p>Welcome! Please verify your email by clicking the link below:</p><p><a href="${verificationLink}">${verificationLink}</a></p>`
+      text: `Welcome to vorm.pooki.org! Please verify your email by visiting the URL below: ${verificationLink}`,
+      html: `<h3>Welcome to vorm.pooki.org!</h3><p>Please verify your email by visiting the URL below:</p><p><a href="${verificationLink}">${verificationLink}</a></p>`
     })
   } catch (err) {
     throw new Error(`Failed to send verification email to ${to}`, { cause: err })
