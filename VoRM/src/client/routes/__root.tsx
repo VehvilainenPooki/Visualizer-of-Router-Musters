@@ -1,4 +1,4 @@
-import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { createRootRoute, Outlet, useRouterState } from '@tanstack/react-router'
 import { MantineProvider } from '@mantine/core'
 import { Notifications } from '@mantine/notifications'
 import '@mantine/core/styles.css'
@@ -19,9 +19,11 @@ export const Route = createRootRoute({
 
 function RootContent() {
   const { token, isVerified } = useAuth()
+  const pathname = useRouterState({ select: state => state.location.pathname })
+  const isVerifyRoute = pathname.startsWith('/verify/')
   return (
     <>
-      <VerifyPendingModal opened={!!token && isVerified === false} />
+      <VerifyPendingModal opened={!isVerifyRoute && !!token && isVerified === false} />
       <Outlet />
     </>
   )
