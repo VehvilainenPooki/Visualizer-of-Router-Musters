@@ -4,7 +4,7 @@ import * as illustrationsService from '../../services/illustrations'
 export const Route = createFileRoute('/illustrations')({
   beforeLoad: () => {
     if (!localStorage.getItem('auth_token')) {
-      throw redirect({ to: '/login' })
+      throw redirect({ to: '/' })
     }
   },
   loader: async () => {

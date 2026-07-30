@@ -7,7 +7,7 @@ import type { Illustration } from '../services/illustrations'
 export const Route = createFileRoute('/illu')({
   beforeLoad: () => {
     if (!localStorage.getItem('auth_token')) {
-      throw redirect({ to: '/login' })
+      throw redirect({ to: '/' })
     }
   },
   component: IllustrationsPage
@@ -50,7 +50,7 @@ function IllustrationsPage() {
 
   const handleLogout = () => {
     logout()
-    navigate({ to: '/login' })
+    navigate({ to: '/' })
   }
 
   return (

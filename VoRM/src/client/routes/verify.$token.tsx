@@ -32,7 +32,7 @@ function VerifyEmailPage() {
       {status === 'success' && (
         <>
           <p>Your email has been verified.</p>
-          <p><Link to="/login">Go to login</Link></p>
+          <p><Link to="/">Go to homepage</Link></p>
         </>
       )}
       {status === 'error' && <p style={{ color: 'red' }}>{error}</p>}

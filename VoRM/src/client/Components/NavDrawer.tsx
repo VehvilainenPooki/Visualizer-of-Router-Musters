@@ -1,8 +1,10 @@
 import { Button, CloseButton, Drawer, Group, Stack, UnstyledButton } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { User } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
+import { AuthModal, ProfileModal } from './AuthModal'
 
-const OVERLAY_BLUR = 10
+export const OVERLAY_BLUR = 10
 
 export function NavDrawerIcon() {
   return <img src="/vorm.svg" alt="" style={{ height: 'var(--navbar-content-size)', width: 'auto' }} />
@@ -14,6 +16,13 @@ interface NavDrawerProps {
 
 export function NavDrawer({ defaultOpened = false }: NavDrawerProps) {
   const [opened, { open, close }] = useDisclosure(defaultOpened)
+  const [authModalOpened, { open: openAuthModal, close: closeAuthModal }] = useDisclosure(false)
+  const { token } = useAuth()
+
+  const handleProfileClick = () => {
+    close()
+    openAuthModal()
+  }
 
   return (
     <>
@@ -34,7 +43,9 @@ export function NavDrawer({ defaultOpened = false }: NavDrawerProps) {
       >
         <Group justify="space-between" mb="md">
           <CloseButton onClick={close} />
-          <Button leftSection={<User size={16} />}>Profile</Button>
+          <Button leftSection={<User size={16} />} onClick={handleProfileClick}>
+            {token ? 'Profile' : 'Login'}
+          </Button>
         </Group>
         <Stack>
           <Button variant="subtle" fullWidth>Browse</Button>
@@ -42,6 +53,12 @@ export function NavDrawer({ defaultOpened = false }: NavDrawerProps) {
           <Button variant="subtle" fullWidth>About</Button>
         </Stack>
       </Drawer>
+
+      {token ? (
+        <ProfileModal opened={authModalOpened} onClose={closeAuthModal} />
+      ) : (
+        <AuthModal opened={authModalOpened} onClose={closeAuthModal} />
+      )}
     </>
   )
 }

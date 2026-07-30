@@ -10,7 +10,7 @@ import { useAuth } from '../contexts/AuthContext'
 export const Route = createFileRoute('/testing')({
   beforeLoad: () => {
     if (!localStorage.getItem('auth_token')) {
-      throw redirect({ to: '/login' })
+      throw redirect({ to: '/' })
     }
   },
   component: MainView

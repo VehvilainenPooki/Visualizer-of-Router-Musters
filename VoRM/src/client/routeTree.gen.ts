@@ -9,10 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as VerifyPendingRouteImport } from './routes/verify-pending'
 import { Route as TestingRouteImport } from './routes/testing'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as LoginRouteImport } from './routes/login'
 import { Route as IlluRouteImport } from './routes/illu'
 import { Route as IllustrationsRouteRouteImport } from './routes/illustrations/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -22,24 +19,9 @@ import { Route as IllustrationsIllustrationIdRouteRouteImport } from './routes/i
 import { Route as IllustrationsIllustrationIdIndexRouteImport } from './routes/illustrations/$illustrationId/index'
 import { Route as IllustrationsIllustrationIdEditRouteImport } from './routes/illustrations/$illustrationId/edit'
 
-const VerifyPendingRoute = VerifyPendingRouteImport.update({
-  id: '/verify-pending',
-  path: '/verify-pending',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const TestingRoute = TestingRouteImport.update({
   id: '/testing',
   path: '/testing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IlluRoute = IlluRouteImport.update({
@@ -90,10 +72,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/illustrations': typeof IllustrationsRouteRouteWithChildren
   '/illu': typeof IlluRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
   '/testing': typeof TestingRoute
-  '/verify-pending': typeof VerifyPendingRoute
   '/illustrations/$illustrationId': typeof IllustrationsIllustrationIdRouteRouteWithChildren
   '/verify/$token': typeof VerifyTokenRoute
   '/illustrations/': typeof IllustrationsIndexRoute
@@ -103,10 +82,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/illu': typeof IlluRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
   '/testing': typeof TestingRoute
-  '/verify-pending': typeof VerifyPendingRoute
   '/verify/$token': typeof VerifyTokenRoute
   '/illustrations': typeof IllustrationsIndexRoute
   '/illustrations/$illustrationId/edit': typeof IllustrationsIllustrationIdEditRoute
@@ -117,10 +93,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/illustrations': typeof IllustrationsRouteRouteWithChildren
   '/illu': typeof IlluRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
   '/testing': typeof TestingRoute
-  '/verify-pending': typeof VerifyPendingRoute
   '/illustrations/$illustrationId': typeof IllustrationsIllustrationIdRouteRouteWithChildren
   '/verify/$token': typeof VerifyTokenRoute
   '/illustrations/': typeof IllustrationsIndexRoute
@@ -133,10 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/illustrations'
     | '/illu'
-    | '/login'
-    | '/register'
     | '/testing'
-    | '/verify-pending'
     | '/illustrations/$illustrationId'
     | '/verify/$token'
     | '/illustrations/'
@@ -146,10 +116,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/illu'
-    | '/login'
-    | '/register'
     | '/testing'
-    | '/verify-pending'
     | '/verify/$token'
     | '/illustrations'
     | '/illustrations/$illustrationId/edit'
@@ -159,10 +126,7 @@ export interface FileRouteTypes {
     | '/'
     | '/illustrations'
     | '/illu'
-    | '/login'
-    | '/register'
     | '/testing'
-    | '/verify-pending'
     | '/illustrations/$illustrationId'
     | '/verify/$token'
     | '/illustrations/'
@@ -174,41 +138,17 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   IllustrationsRouteRoute: typeof IllustrationsRouteRouteWithChildren
   IlluRoute: typeof IlluRoute
-  LoginRoute: typeof LoginRoute
-  RegisterRoute: typeof RegisterRoute
   TestingRoute: typeof TestingRoute
-  VerifyPendingRoute: typeof VerifyPendingRoute
   VerifyTokenRoute: typeof VerifyTokenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/verify-pending': {
-      id: '/verify-pending'
-      path: '/verify-pending'
-      fullPath: '/verify-pending'
-      preLoaderRoute: typeof VerifyPendingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/testing': {
       id: '/testing'
       path: '/testing'
       fullPath: '/testing'
       preLoaderRoute: typeof TestingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/illu': {
@@ -305,10 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   IllustrationsRouteRoute: IllustrationsRouteRouteWithChildren,
   IlluRoute: IlluRoute,
-  LoginRoute: LoginRoute,
-  RegisterRoute: RegisterRoute,
   TestingRoute: TestingRoute,
-  VerifyPendingRoute: VerifyPendingRoute,
   VerifyTokenRoute: VerifyTokenRoute,
 }
 export const routeTree = rootRouteImport
