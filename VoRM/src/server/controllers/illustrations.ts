@@ -39,6 +39,24 @@ router.delete('/:id', authenticateToken, requireVerified, async (req, res) => {
   res.status(204).end()
 })
 
+router.patch('/:id/public', authenticateToken, requireVerified, async (req, res) => {
+  const illustration = await Illustration.findByPk(Number(req.params.id))
+
+  if (!illustration) {
+    res.status(404).json({ error: 'illustration not found' })
+    return
+  }
+
+  if (illustration.userId !== req.user!.id) {
+    res.status(403).json({ error: 'not authorized' })
+    return
+  }
+
+  illustration.public = !illustration.public
+  await illustration.save()
+  res.json(illustration)
+})
+
 router.get('/:id', authenticateToken, requireVerified, async (req, res) => {
   const illustration = await Illustration.findByPk(Number(req.params.id))
 

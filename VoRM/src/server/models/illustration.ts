@@ -8,6 +8,7 @@ class Illustration extends Model<InferAttributes<Illustration>, InferCreationAtt
   declare name: CreationOptional<string>
   declare description: string | null
   declare graphcode: CreationOptional<object>
+  declare public: CreationOptional<boolean>
 }
 
 Illustration.init({
@@ -33,6 +34,11 @@ Illustration.init({
     type: DataTypes.JSONB,
     allowNull: false,
     defaultValue: {}
+  },
+  public: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   }
 }, {
   sequelize,
