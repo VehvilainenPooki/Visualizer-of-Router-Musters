@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { Anchor, Center, Loader, Paper, Stack, Text, Title } from '@mantine/core'
+import { CircleCheck, CircleX } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import * as authService from '../services/auth'
+import { HomeNavbar } from '../Components/Navbar/HomeNavbar'
 
 export const Route = createFileRoute('/verify/$token')({
   component: VerifyEmailPage
@@ -26,16 +29,34 @@ function VerifyEmailPage() {
   }, [token])
 
   return (
-    <div style={{ maxWidth: '400px', margin: '100px auto', padding: '20px', border: '1px solid #ccc' }}>
-      <h2>Email Verification</h2>
-      {status === 'pending' && <p>Verifying your email...</p>}
-      {status === 'success' && (
-        <>
-          <p>Your email has been verified.</p>
-          <p><Link to="/">Go to homepage</Link></p>
-        </>
-      )}
-      {status === 'error' && <p style={{ color: 'red' }}>{error}</p>}
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <HomeNavbar />
+      <Center style={{ flex: 1 }}>
+        <Paper withBorder shadow="sm" p="xl" radius="md" w={400}>
+          <Stack align="center" ta="center">
+            <Title order={2}>Email Verification</Title>
+            {status === 'pending' && (
+              <>
+                <Loader />
+                <Text>Verifying your email...</Text>
+              </>
+            )}
+            {status === 'success' && (
+              <>
+                <CircleCheck color="var(--mantine-color-green-6)" size={48} />
+                <Text>Your email has been verified.</Text>
+                <Anchor component={Link} to="/">Go to homepage</Anchor>
+              </>
+            )}
+            {status === 'error' && (
+              <>
+                <CircleX color="var(--mantine-color-red-6)" size={48} />
+                <Text c="red">{error}</Text>
+              </>
+            )}
+          </Stack>
+        </Paper>
+      </Center>
     </div>
   )
 }
