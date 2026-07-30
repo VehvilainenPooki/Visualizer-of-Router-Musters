@@ -37,3 +37,5 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 150726 | 8h | Create email verification workflow focusing on backend functionality |
 | 220726 | 2h | Add mailpit for development and improve email service |
 | 230726 | 3h | Improving verification email flow |
+| 290726 | 3h | Prompting and reading code |
+| 300726 | 4h | Verifying earlier code changes and prompting more cos sonnet 5 has been doing a good job |
