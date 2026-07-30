@@ -35,9 +35,16 @@ export function VerifyPendingModal({ opened }: VerifyPendingModalProps) {
       return
     }
     login(result.data.token, result.data.username, result.data.isVerified)
-    if (!result.data.isVerified) {
+    if (result.data.isVerified) {
+      notifications.show({ color: 'green', title: 'Email verified', message: 'Your email has been verified.' })
+    } else {
       notifications.show({ color: 'yellow', title: 'Not verified yet', message: 'Still not verified — check your email.' })
     }
+  }
+
+  const handleLogout = () => {
+    logout()
+    notifications.show({ color: 'blue', title: 'Logged out', message: 'You have been logged out.' })
   }
 
   return (
@@ -59,7 +66,7 @@ export function VerifyPendingModal({ opened }: VerifyPendingModalProps) {
         <Button variant="light" onClick={handleCheck} fullWidth>
           I've verified — continue
         </Button>
-        <Button color="red" variant="subtle" onClick={logout} fullWidth>
+        <Button color="red" variant="subtle" onClick={handleLogout} fullWidth>
           Log out
         </Button>
       </Stack>
@@ -110,6 +117,11 @@ export function AuthModal({ opened, onClose }: AuthModalProps) {
       return
     }
     login(result.data.token, result.data.username, result.data.isVerified)
+    notifications.show({
+      color: 'green',
+      title: mode === 'login' ? 'Logged in' : 'Account created',
+      message: mode === 'login' ? `Welcome back, ${result.data.username}.` : `Welcome, ${result.data.username}.`
+    })
     handleClose()
     if (mode === 'login' && result.data.isVerified) {
       navigate({ to: '/' })
@@ -152,6 +164,7 @@ export function ProfileModal({ opened, onClose }: ProfileModalProps) {
 
   const handleLogout = () => {
     logout()
+    notifications.show({ color: 'blue', title: 'Logged out', message: 'You have been logged out.' })
     onClose()
     navigate({ to: '/' })
   }
