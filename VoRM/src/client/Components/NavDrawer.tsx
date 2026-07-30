@@ -1,5 +1,6 @@
 import { Button, CloseButton, Drawer, Group, Stack, UnstyledButton } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
+import { useNavigate } from '@tanstack/react-router'
 import { User } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { AuthModal, ProfileModal } from './AuthModal'
@@ -18,10 +19,16 @@ export function NavDrawer({ defaultOpened = false }: NavDrawerProps) {
   const [opened, { open, close }] = useDisclosure(defaultOpened)
   const [authModalOpened, { open: openAuthModal, close: closeAuthModal }] = useDisclosure(false)
   const { token } = useAuth()
+  const navigate = useNavigate()
 
   const handleProfileClick = () => {
     close()
     openAuthModal()
+  }
+
+  const handleAboutClick = () => {
+    close()
+    navigate({ to: '/' })
   }
 
   return (
@@ -50,7 +57,7 @@ export function NavDrawer({ defaultOpened = false }: NavDrawerProps) {
         <Stack>
           <Button variant="subtle" fullWidth>Browse</Button>
           <Button variant="subtle" fullWidth>Create</Button>
-          <Button variant="subtle" fullWidth>About</Button>
+          <Button variant="subtle" fullWidth onClick={handleAboutClick}>About</Button>
         </Stack>
       </Drawer>
 
