@@ -32,6 +32,22 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   }
 }
 
+export const optionalAuth = (req: Request, _res: Response, next: NextFunction): void => {
+  const authorization = req.get('Authorization')
+  if (!authorization || !authorization.toLowerCase().startsWith('bearer ')) {
+    next()
+    return
+  }
+
+  const token = authorization.substring(7)
+  try {
+    req.user = jwt.verify(token, JWT_SECRET) as TokenPayload
+  } catch {
+    // ignore invalid token, treat request as anonymous
+  }
+  next()
+}
+
 export const requireAdmin = (req: Request, res: Response, next: NextFunction): void => {
   if (!req.user?.isAdmin) {
     res.status(403).json({ error: 'admin access required' })
