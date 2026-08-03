@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { Text, UnstyledButton } from '@mantine/core'
 import { useElementSize } from '@mantine/hooks'
 import { BookOpenText, Share2 } from 'lucide-react'
@@ -37,13 +37,13 @@ function MainView() {
           gap
         }}
       >
-        <UnstyledButton style={{ ...actionCardStyle, width: size, height: size }}>
+        <UnstyledButton component={Link} to="/illustrations" style={{ ...actionCardStyle, width: size, height: size }}>
           <div style={iconWrapperStyle}>
             <BookOpenText size="100%" />
           </div>
           <Text ta="center" fw={500} mt="md" style={{ fontSize: size * 0.06 }}>Explore networks and simulations</Text>
         </UnstyledButton>
-        <UnstyledButton style={{ ...actionCardStyle, width: size, height: size }}>
+        <UnstyledButton component={Link} to="/illustrations/new" style={{ ...actionCardStyle, width: size, height: size }}>
           <div style={iconWrapperStyle}>
             <Share2 size="100%" />
           </div>
