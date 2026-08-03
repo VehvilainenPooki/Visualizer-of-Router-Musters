@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { Illustration } from '../models/index.js'
-import { authenticateToken, requireVerified } from '../middleware/auth.js'
+import { authenticateToken, optionalAuth, requireVerified } from '../middleware/auth.js'
 
 const router = Router()
 
@@ -57,7 +57,7 @@ router.patch('/:id/public', authenticateToken, requireVerified, async (req, res)
   res.json(illustration)
 })
 
-router.get('/:id', authenticateToken, requireVerified, async (req, res) => {
+router.get('/:id', optionalAuth, async (req, res) => {
   const illustration = await Illustration.findByPk(Number(req.params.id))
 
   if (!illustration) {
@@ -65,7 +65,7 @@ router.get('/:id', authenticateToken, requireVerified, async (req, res) => {
     return
   }
 
-  if (illustration.userId !== req.user!.id) {
+  if (!illustration.public && illustration.userId !== req.user?.id) {
     res.status(403).json({ error: 'not authorized' })
     return
   }
