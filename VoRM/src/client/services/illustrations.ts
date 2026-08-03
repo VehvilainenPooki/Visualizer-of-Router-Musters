@@ -18,9 +18,19 @@ export const getIllustrations = async (token: string): Promise<Result<Illustrati
   }
 }
 
-export const getIllustration = async (token: string, id: number): Promise<Result<Illustration>> => {
+export const getPublicIllustrations = async (): Promise<Result<Illustration[]>> => {
   try {
-    const response = await fetch(`${baseUrl}/${id}`, { headers: authHeaders(token) })
+    const response = await fetch(`${baseUrl}/public`)
+    if (!response.ok) return { ok: false, error: 'Failed to fetch illustrations', status: response.status }
+    return { ok: true, data: await response.json(), status: response.status }
+  } catch {
+    return { ok: false, error: 'Network error', status: 0 }
+  }
+}
+
+export const getIllustration = async (token: string | null, id: number): Promise<Result<Illustration>> => {
+  try {
+    const response = await fetch(`${baseUrl}/${id}`, { headers: token ? authHeaders(token) : undefined })
     if (!response.ok) return { ok: false, error: 'Failed to fetch illustration', status: response.status }
     return { ok: true, data: await response.json(), status: response.status }
   } catch {

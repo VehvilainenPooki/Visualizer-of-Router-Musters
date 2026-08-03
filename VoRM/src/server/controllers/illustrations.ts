@@ -57,6 +57,13 @@ router.patch('/:id/public', authenticateToken, requireVerified, async (req, res)
   res.json(illustration)
 })
 
+router.get('/public', async (_req, res) => {
+  const illustrations = await Illustration.findAll({
+    where: { public: true }
+  })
+  res.json(illustrations)
+})
+
 router.get('/:id', optionalAuth, async (req, res) => {
   const illustration = await Illustration.findByPk(Number(req.params.id))
 
