@@ -4,4 +4,5 @@ export interface Illustration {
   name: string
   description: string | null
   graphcode: object
+  public: boolean
 }
