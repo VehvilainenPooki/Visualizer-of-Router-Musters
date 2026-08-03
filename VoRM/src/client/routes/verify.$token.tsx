@@ -4,7 +4,7 @@ import { Anchor, Center, Loader, Paper, Stack, Text, Title } from '@mantine/core
 import { CircleCheck, CircleX } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import * as authService from '../services/auth'
-import { HomeNavbar } from '../Components/Navbar/HomeNavbar'
+import { TitleNavbar } from '../Components/Navbar/TitleNavbar'
 
 export const Route = createFileRoute('/verify/$token')({
   component: VerifyEmailPage
@@ -30,7 +30,7 @@ function VerifyEmailPage() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <HomeNavbar />
+      <TitleNavbar title="Visualizer of Router Musters" />
       <Center style={{ flex: 1 }}>
         <Paper withBorder shadow="sm" p="xl" radius="md" w={400}>
           <Stack align="center" ta="center">

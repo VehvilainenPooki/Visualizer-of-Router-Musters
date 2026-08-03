@@ -2,7 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { Text, UnstyledButton } from '@mantine/core'
 import { useElementSize } from '@mantine/hooks'
 import { BookOpenText, Share2 } from 'lucide-react'
-import { HomeNavbar } from '../Components/Navbar/HomeNavbar'
+import { TitleNavbar } from '../Components/Navbar/TitleNavbar'
 
 export const Route = createFileRoute('/')({
   component: MainView
@@ -18,7 +18,7 @@ function MainView() {
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <HomeNavbar />
+      <TitleNavbar title="Visualizer of Router Musters" />
 
       <div style={aboutBoxStyle}>
         <Text ta="center">

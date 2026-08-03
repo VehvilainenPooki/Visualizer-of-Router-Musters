@@ -1,10 +1,14 @@
 import { Title } from '@mantine/core'
 import { AppNavbar, NAVBAR_CONTENT_SIZE } from './AppNavbar'
 
-export function HomeNavbar() {
+interface TitleNavbarProps {
+  title: string
+}
+
+export function TitleNavbar({ title }: TitleNavbarProps) {
   return (
     <AppNavbar>
-      <Title order={1} style={titleStyle}>Visualizer of Router Musters</Title>
+      <Title order={1} style={titleStyle}>{title}</Title>
     </AppNavbar>
   )
 }
