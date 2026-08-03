@@ -16,7 +16,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as IllustrationsIndexRouteImport } from './routes/illustrations/index'
 import { Route as VerifyTokenRouteImport } from './routes/verify.$token'
 import { Route as IllustrationsIllustrationIdRouteRouteImport } from './routes/illustrations/$illustrationId/route'
+import { Route as IllustrationsNewIndexRouteImport } from './routes/illustrations/new/index'
 import { Route as IllustrationsIllustrationIdIndexRouteImport } from './routes/illustrations/$illustrationId/index'
+import { Route as IllustrationsNewEditRouteImport } from './routes/illustrations/new/edit'
 import { Route as IllustrationsIllustrationIdEditRouteImport } from './routes/illustrations/$illustrationId/edit'
 
 const TestingRoute = TestingRouteImport.update({
@@ -55,12 +57,22 @@ const IllustrationsIllustrationIdRouteRoute =
     path: '/$illustrationId',
     getParentRoute: () => IllustrationsRouteRoute,
   } as any)
+const IllustrationsNewIndexRoute = IllustrationsNewIndexRouteImport.update({
+  id: '/new/',
+  path: '/new/',
+  getParentRoute: () => IllustrationsRouteRoute,
+} as any)
 const IllustrationsIllustrationIdIndexRoute =
   IllustrationsIllustrationIdIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => IllustrationsIllustrationIdRouteRoute,
   } as any)
+const IllustrationsNewEditRoute = IllustrationsNewEditRouteImport.update({
+  id: '/new/edit',
+  path: '/new/edit',
+  getParentRoute: () => IllustrationsRouteRoute,
+} as any)
 const IllustrationsIllustrationIdEditRoute =
   IllustrationsIllustrationIdEditRouteImport.update({
     id: '/edit',
@@ -77,7 +89,9 @@ export interface FileRoutesByFullPath {
   '/verify/$token': typeof VerifyTokenRoute
   '/illustrations/': typeof IllustrationsIndexRoute
   '/illustrations/$illustrationId/edit': typeof IllustrationsIllustrationIdEditRoute
+  '/illustrations/new/edit': typeof IllustrationsNewEditRoute
   '/illustrations/$illustrationId/': typeof IllustrationsIllustrationIdIndexRoute
+  '/illustrations/new/': typeof IllustrationsNewIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,7 +100,9 @@ export interface FileRoutesByTo {
   '/verify/$token': typeof VerifyTokenRoute
   '/illustrations': typeof IllustrationsIndexRoute
   '/illustrations/$illustrationId/edit': typeof IllustrationsIllustrationIdEditRoute
+  '/illustrations/new/edit': typeof IllustrationsNewEditRoute
   '/illustrations/$illustrationId': typeof IllustrationsIllustrationIdIndexRoute
+  '/illustrations/new': typeof IllustrationsNewIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,7 +114,9 @@ export interface FileRoutesById {
   '/verify/$token': typeof VerifyTokenRoute
   '/illustrations/': typeof IllustrationsIndexRoute
   '/illustrations/$illustrationId/edit': typeof IllustrationsIllustrationIdEditRoute
+  '/illustrations/new/edit': typeof IllustrationsNewEditRoute
   '/illustrations/$illustrationId/': typeof IllustrationsIllustrationIdIndexRoute
+  '/illustrations/new/': typeof IllustrationsNewIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,7 +129,9 @@ export interface FileRouteTypes {
     | '/verify/$token'
     | '/illustrations/'
     | '/illustrations/$illustrationId/edit'
+    | '/illustrations/new/edit'
     | '/illustrations/$illustrationId/'
+    | '/illustrations/new/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -120,7 +140,9 @@ export interface FileRouteTypes {
     | '/verify/$token'
     | '/illustrations'
     | '/illustrations/$illustrationId/edit'
+    | '/illustrations/new/edit'
     | '/illustrations/$illustrationId'
+    | '/illustrations/new'
   id:
     | '__root__'
     | '/'
@@ -131,7 +153,9 @@ export interface FileRouteTypes {
     | '/verify/$token'
     | '/illustrations/'
     | '/illustrations/$illustrationId/edit'
+    | '/illustrations/new/edit'
     | '/illustrations/$illustrationId/'
+    | '/illustrations/new/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -193,12 +217,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IllustrationsIllustrationIdRouteRouteImport
       parentRoute: typeof IllustrationsRouteRoute
     }
+    '/illustrations/new/': {
+      id: '/illustrations/new/'
+      path: '/new'
+      fullPath: '/illustrations/new/'
+      preLoaderRoute: typeof IllustrationsNewIndexRouteImport
+      parentRoute: typeof IllustrationsRouteRoute
+    }
     '/illustrations/$illustrationId/': {
       id: '/illustrations/$illustrationId/'
       path: '/'
       fullPath: '/illustrations/$illustrationId/'
       preLoaderRoute: typeof IllustrationsIllustrationIdIndexRouteImport
       parentRoute: typeof IllustrationsIllustrationIdRouteRoute
+    }
+    '/illustrations/new/edit': {
+      id: '/illustrations/new/edit'
+      path: '/new/edit'
+      fullPath: '/illustrations/new/edit'
+      preLoaderRoute: typeof IllustrationsNewEditRouteImport
+      parentRoute: typeof IllustrationsRouteRoute
     }
     '/illustrations/$illustrationId/edit': {
       id: '/illustrations/$illustrationId/edit'
@@ -230,12 +268,16 @@ const IllustrationsIllustrationIdRouteRouteWithChildren =
 interface IllustrationsRouteRouteChildren {
   IllustrationsIllustrationIdRouteRoute: typeof IllustrationsIllustrationIdRouteRouteWithChildren
   IllustrationsIndexRoute: typeof IllustrationsIndexRoute
+  IllustrationsNewEditRoute: typeof IllustrationsNewEditRoute
+  IllustrationsNewIndexRoute: typeof IllustrationsNewIndexRoute
 }
 
 const IllustrationsRouteRouteChildren: IllustrationsRouteRouteChildren = {
   IllustrationsIllustrationIdRouteRoute:
     IllustrationsIllustrationIdRouteRouteWithChildren,
   IllustrationsIndexRoute: IllustrationsIndexRoute,
+  IllustrationsNewEditRoute: IllustrationsNewEditRoute,
+  IllustrationsNewIndexRoute: IllustrationsNewIndexRoute,
 }
 
 const IllustrationsRouteRouteWithChildren =
