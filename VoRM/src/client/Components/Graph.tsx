@@ -2,11 +2,17 @@ import {useEffect, useRef} from 'react'
 
 import type { FC } from 'react'
 
+import type { PlainNetworkGraphData } from '../../common/types/network'
+
 import * as ForceGraph from '../ForceGraph'
 
-const Graph: FC = () => {
+interface GraphProps {
+  data?: PlainNetworkGraphData
+}
+
+const Graph: FC<GraphProps> = ({ data }) => {
   const svgRef = useRef<SVGSVGElement>(null)
-  
+
   useEffect(() => {
     if (!svgRef.current) {
         console.log("not ref")
@@ -14,7 +20,10 @@ const Graph: FC = () => {
       }
 
       ForceGraph.initialize(svgRef.current)
-      
+      if (data) {
+        ForceGraph.loadData(data)
+      }
+
       return () => {
         ForceGraph.stop()
       }

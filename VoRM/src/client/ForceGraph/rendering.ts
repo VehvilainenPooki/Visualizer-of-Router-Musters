@@ -5,13 +5,14 @@ import * as simulation from "./simulation"
 let nodeSelection: d3.Selection<d3.BaseType, unknown, SVGGElement, unknown>
 let textSelection: d3.Selection<d3.BaseType, unknown, SVGGElement, unknown>
 let linkSelection: d3.Selection<d3.BaseType, unknown, SVGGElement, unknown>
+let linkLabelSelection: d3.Selection<d3.BaseType, unknown, SVGGElement, unknown>
 
 export const initialize = (
   data: any,
   svgDOM: SVGSVGElement,
   width: number,
   height: number
-) => {  
+) => {
   d3.select(svgDOM).selectAll("*").remove()
 
   const svg = d3.select(svgDOM)
@@ -37,6 +38,10 @@ export const initialize = (
     .attr("class", "labels")
     .selectAll("text")
 
+  linkLabelSelection = svg.append("g")
+    .attr("class", "link-labels")
+    .selectAll("text")
+
 
     updateElements(data)
 }
@@ -55,6 +60,10 @@ export const tick = () => {
   textSelection!
     .attr("x", (d: any) => d.x)
     .attr("y", (d: any) => d.y)
+
+  linkLabelSelection!
+    .attr("x", (d: any) => (d.source.x + d.target.x) / 2)
+    .attr("y", (d: any) => (d.source.y + d.target.y) / 2)
 }
 
 export const updateElements = (data) => {
@@ -74,7 +83,7 @@ export const updateElements = (data) => {
 
   textSelection = textSelection.data(data.nodes)
     .join("text")
-    .text((d: any) => d.id)
+    .text((d: any) => d.name ?? d.id)
     .attr("font-size", "12px")
     .attr("dx", 12)
     .attr("dy", 4)
@@ -86,6 +95,13 @@ export const updateElements = (data) => {
     .attr("x2", d => d.target.x)
     .attr("y2", d => d.target.y)
     .attr("stroke-width", 1)
+
+  linkLabelSelection = linkLabelSelection.data(data.links)
+    .join("text")
+    .text((d: any) => d.name ?? d.id)
+    .attr("font-size", "10px")
+    .attr("fill", "#666")
+    .attr("text-anchor", "middle")
 }
 
 const dragstarted = (event: d3.D3DragEvent<SVGCircleElement, any, any>) => {

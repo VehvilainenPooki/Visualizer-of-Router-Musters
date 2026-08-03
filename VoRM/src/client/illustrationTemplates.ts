@@ -1,37 +1,34 @@
+import type { PlainNetworkGraphData } from '../common/types/network'
+
 export type TemplateId = 'blank' | 'basic' | 'complex'
 
-interface TemplateGraphData {
-  nodes: { id: string }[]
-  links: { source: string, target: string }[]
-}
-
-export const illustrationTemplates: Record<TemplateId, TemplateGraphData> = {
+export const illustrationTemplates: Record<TemplateId, PlainNetworkGraphData> = {
   blank: {
     nodes: [],
     links: []
   },
   basic: {
     nodes: [
-      { id: 'Router' },
-      { id: 'Desktop' }
+      { id: 'router', name: 'Router' },
+      { id: 'desktop', name: 'Desktop' }
     ],
     links: [
-      { source: 'Router', target: 'Desktop' }
+      { id: 'router-desktop-lan', name: 'LAN', source: 'router', target: 'desktop' }
     ]
   },
   complex: {
     nodes: [
-      { id: 'Router' },
-      { id: 'Desktop 1' },
-      { id: 'Desktop 2' },
-      { id: 'Laptop' },
-      { id: 'Access Point' }
+      { id: 'router', name: 'Router' },
+      { id: 'desktop-1', name: 'Desktop 1' },
+      { id: 'desktop-2', name: 'Desktop 2' },
+      { id: 'laptop', name: 'Laptop' },
+      { id: 'access-point', name: 'Access Point' }
     ],
     links: [
-      { source: 'Router', target: 'Desktop 1' },
-      { source: 'Router', target: 'Desktop 2' },
-      { source: 'Router', target: 'Access Point' },
-      { source: 'Access Point', target: 'Laptop' }
+      { id: 'router-desktop-1-lan', name: 'LAN', source: 'router', target: 'desktop-1' },
+      { id: 'router-desktop-2-lan', name: 'LAN', source: 'router', target: 'desktop-2' },
+      { id: 'router-access-point-lan', name: 'LAN', source: 'router', target: 'access-point' },
+      { id: 'access-point-laptop-wifi5', name: '5GHz Wi-Fi', source: 'access-point', target: 'laptop' }
     ]
   }
 }
