@@ -39,3 +39,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 230726 | 3h | Improving verification email flow |
 | 290726 | 3h | Prompting and reading code |
 | 300726 | 4h | Verifying earlier code changes and prompting more cos sonnet 5 has been doing a good job |
+| 030826 | 5h | Working on illustrations routes and starting to work on the editor. Looking at codemirror |
