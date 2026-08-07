@@ -15,7 +15,6 @@ export function AppNavbar({ children }: AppNavbarProps) {
     <Paper
       component="header"
       bg="var(--mantine-color-body)"
-      shadow="xs"
       radius={0}
       style={{
         display: 'grid',
@@ -25,6 +24,7 @@ export function AppNavbar({ children }: AppNavbarProps) {
         padding: NAVBAR_PADDING,
         borderBottom: '1px solid var(--mantine-color-default-border)',
         '--navbar-content-size': NAVBAR_CONTENT_SIZE,
+        boxShadow: 'var(--shadow-even-xs)'
       } as CSSProperties}
     >
       <NavDrawer />
