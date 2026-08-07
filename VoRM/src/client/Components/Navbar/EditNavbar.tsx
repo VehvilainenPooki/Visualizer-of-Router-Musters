@@ -1,4 +1,4 @@
-import { SegmentedControl } from '@mantine/core'
+import { SegmentedControl, Box } from '@mantine/core'
 import { AppNavbar } from './AppNavbar'
 
 export type EditTool = 'node' | 'link' | 'wifi' | 'test' | 'some'
@@ -15,12 +15,14 @@ interface EditNavbarProps {
 
 export function EditNavbar({ tool, onToolChange }: EditNavbarProps) {
   return (
-    <AppNavbar>
-      <SegmentedControl
-        value={tool}
-        onChange={value => onToolChange(value as EditTool)}
-        data={TOOL_OPTIONS}
-      />
-    </AppNavbar>
+    <Box style={{ position: 'relative', zIndex: 1, isolation: 'isolate' }}>
+      <AppNavbar>
+        <SegmentedControl
+          value={tool}
+          onChange={value => onToolChange(value as EditTool)}
+          data={TOOL_OPTIONS}
+        />
+      </AppNavbar>
+    </Box>
   )
 }

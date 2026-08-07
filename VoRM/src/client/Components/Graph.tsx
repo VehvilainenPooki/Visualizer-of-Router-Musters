@@ -30,7 +30,7 @@ const Graph: FC<GraphProps> = ({ data }) => {
   }, [])
   
   return (
-    <div>
+    <div style={{ flex: 1, height: '100%' }}>
       <svg ref={svgRef} />
     </div>
   )
