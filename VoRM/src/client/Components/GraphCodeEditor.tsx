@@ -6,7 +6,7 @@ import CodeMirror from '@uiw/react-codemirror';
 
 
 
-export default function GraphCodeEditor() {
+export default function GraphCodeEditor({ editorWidth }: { editorWidth: number }) {
   useEffect(() => {
     setValue(JSON.stringify(ForceGraph.getData(), null, 2))
     ForceGraph.subscribe(() => {
@@ -20,7 +20,7 @@ export default function GraphCodeEditor() {
     setValue(val);
   }, []);
   return (
-    <Paper style={{boxShadow:'var(--shadow-even-xs)', width: '30%', height: '100%', minWidth: 0, minHeight: 0, overflow: 'hidden'}}>
+    <Paper style={{boxShadow:'var(--shadow-even-xs)', width: `${editorWidth}%`, height: '100%', minWidth: 0, minHeight: 0, overflow: 'hidden'}}>
       <CodeMirror value={value} height='100%' style={{ height: '100%', overflow: 'auto' }} onChange={onChange} />
     </Paper>
   )
