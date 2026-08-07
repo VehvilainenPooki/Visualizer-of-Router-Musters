@@ -3,6 +3,7 @@ import { MantineProvider } from '@mantine/core'
 import { Notifications } from '@mantine/notifications'
 import '@mantine/core/styles.css'
 import '@mantine/notifications/styles.css'
+import '../theme/root.css'
 import { AuthProvider, useAuth } from '../contexts/AuthContext'
 import { VerifyPendingModal } from '../Components/AuthModal'
 
