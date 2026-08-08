@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useNavigate } from '@tanstack/react-router'
 import { Anchor, Button, Modal, PasswordInput, Stack, Text, TextInput } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 import { useAuth } from '../contexts/AuthContext'
@@ -86,7 +85,6 @@ export function AuthModal({ opened, onClose }: AuthModalProps) {
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const { login } = useAuth()
-  const navigate = useNavigate()
 
   const reset = () => {
     setMode('login')
@@ -123,9 +121,6 @@ export function AuthModal({ opened, onClose }: AuthModalProps) {
       message: mode === 'login' ? `Welcome back, ${result.data.username}.` : `Welcome, ${result.data.username}.`
     })
     handleClose()
-    if (mode === 'login' && result.data.isVerified) {
-      navigate({ to: '/' })
-    }
   }
 
   return (
@@ -160,13 +155,11 @@ interface ProfileModalProps {
 
 export function ProfileModal({ opened, onClose }: ProfileModalProps) {
   const { username, logout } = useAuth()
-  const navigate = useNavigate()
 
   const handleLogout = () => {
     logout()
     notifications.show({ color: 'blue', title: 'Logged out', message: 'You have been logged out.' })
     onClose()
-    navigate({ to: '/' })
   }
 
   return (
