@@ -1,5 +1,7 @@
 import { useRef } from 'react'
 import { useDrag } from '@mantine/hooks'
+import { Paper } from '@mantine/core'
+import { GripVertical } from 'lucide-react'
 
 interface SplitAdjusterProps {
   containerRef: React.RefObject<HTMLElement | null>
@@ -26,16 +28,26 @@ export default function SplitAdjuster({ containerRef, width, onWidthChange, min 
   )
 
   return (
-    <div
+    <Paper
       ref={ref}
       style={{
-        width: 6,
+        width: 30,
+        marginLeft: -15,
         flexShrink: 0,
+        position: 'relative',
+        zIndex: 0,
         cursor: 'col-resize',
         touchAction: 'none',
         userSelect: 'none',
-        background: active ? 'var(--mantine-color-gray-filled)' : 'transparent',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        paddingRight: 1,
+        background: active ? 'var(--mantine-color-gray-filled)' : 'var(--mantine-color-white-filled)',
+        boxShadow: 'var(--shadow-even-xs)'
       }}
-    />
+    >
+      <GripVertical size={12} color="var(--mantine-color-gray-5)" />
+    </Paper>
   )
 }

@@ -15,7 +15,7 @@ interface EditNavbarProps {
 
 export function EditNavbar({ tool, onToolChange }: EditNavbarProps) {
   return (
-    <Box style={{ position: 'relative', zIndex: 1, isolation: 'isolate' }}>
+    <Box style={{ position: 'relative', zIndex: 100, isolation: 'isolate' }}>
       <AppNavbar>
         <SegmentedControl
           value={tool}
