@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import { SegmentedControl, Box, Group, Text, UnstyledButton } from '@mantine/core'
+import { SegmentedControl, Box, Group } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { Settings } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import { AppNavbar } from './AppNavbar'
 import { EditIllustrationInfoModal } from '../EditIllustrationInfoModal'
@@ -9,6 +8,7 @@ import { AuthModal } from '../AuthModal'
 import { SaveModal } from '../SaveModal'
 import { SaveStatusButton } from './SaveStatusButton'
 import type { SaveStatus, SaveTarget } from './SaveStatusButton'
+import { TitleButton } from './TitleButton'
 
 export type visibilityStatus = 'private' | 'public'
 
@@ -35,7 +35,6 @@ export function EditNavbar({
   onDescriptionChange
 }: EditNavbarProps) {
   const [infoModalOpened, { open: openInfoModal, close: closeInfoModal }] = useDisclosure(false)
-  const [titleHovered, setTitleHovered] = useState(false)
   const [saveModalOpened, { open: openSaveModal, close: closeSaveModal }] = useDisclosure(false)
   const [authModalOpened, { open: openAuthModal, close: closeAuthModal }] = useDisclosure(false)
   const [saveTarget, setSaveTarget] = useState<SaveTarget>('none')
@@ -60,21 +59,7 @@ export function EditNavbar({
         <Group justify="space-between" wrap="nowrap" gap="md">
           <Group gap="xs" wrap="nowrap">
             <SaveStatusButton saveTarget={saveTarget} saveStatus={saveStatus} onClick={openSaveModal} />
-            <UnstyledButton
-              onClick={openInfoModal}
-              onMouseEnter={() => setTitleHovered(true)}
-              onMouseLeave={() => setTitleHovered(false)}
-              style={{
-                borderRadius: 'var(--mantine-radius-sm)',
-                padding: '0.25rem 0.5rem',
-                background: titleHovered ? 'var(--mantine-color-default-hover)' : 'transparent'
-              }}
-            >
-              <Group gap="xs" wrap="nowrap">
-                <Text fw={600} truncate>{name}</Text>
-                <Settings size={'1em'} />
-              </Group>
-            </UnstyledButton>
+            <TitleButton name={name} onClick={openInfoModal} />
           </Group>
           <SegmentedControl
             value={visibility}
