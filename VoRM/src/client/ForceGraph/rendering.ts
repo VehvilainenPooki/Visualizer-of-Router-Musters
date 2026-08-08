@@ -38,10 +38,14 @@ export const initialize = (
 
   textSelection = svg.append("g")
     .attr("class", "labels")
+    .style("user-select", "none")
+    .style("pointer-events", "none")
     .selectAll<d3.BaseType, NetworkNode>("text")
 
   linkLabelSelection = svg.append("g")
     .attr("class", "link-labels")
+    .style("user-select", "none")
+    .style("pointer-events", "none")
     .selectAll<d3.BaseType, NetworkLink>("text")
 
 
