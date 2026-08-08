@@ -35,7 +35,7 @@ export const restart = (alpha: number) => {
   return true
 }
 
-const boundaryForceX = (alpha: number) => {
+const boundaryForceX = (_alpha: number) => {
   for (const node of data.nodes) {
     if (node.x! < node.nodeR) {
       node.x = node.nodeR
@@ -47,7 +47,7 @@ const boundaryForceX = (alpha: number) => {
   }
 }
 
-const boundaryForceY = (alpha: number) => {
+const boundaryForceY = (_alpha: number) => {
   for (const node of data.nodes) {
     if (node.y! < node.nodeR) {
       node.y = node.nodeR

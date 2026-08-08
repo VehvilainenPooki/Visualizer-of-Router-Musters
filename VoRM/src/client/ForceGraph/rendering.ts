@@ -1,14 +1,16 @@
 import * as d3 from "d3"
 
+import type { NetworkGraphData, NetworkNode, NetworkLink } from "../../common/types/network"
+
 import * as simulation from "./simulation"
 
-let nodeSelection: d3.Selection<d3.BaseType, unknown, SVGGElement, unknown>
-let textSelection: d3.Selection<d3.BaseType, unknown, SVGGElement, unknown>
-let linkSelection: d3.Selection<d3.BaseType, unknown, SVGGElement, unknown>
-let linkLabelSelection: d3.Selection<d3.BaseType, unknown, SVGGElement, unknown>
+let nodeSelection: d3.Selection<d3.BaseType, NetworkNode, SVGGElement, unknown>
+let textSelection: d3.Selection<d3.BaseType, NetworkNode, SVGGElement, unknown>
+let linkSelection: d3.Selection<d3.BaseType, NetworkLink, SVGGElement, unknown>
+let linkLabelSelection: d3.Selection<d3.BaseType, NetworkLink, SVGGElement, unknown>
 
 export const initialize = (
-  data: any,
+  data: NetworkGraphData,
   svgDOM: SVGSVGElement,
   width: number,
   height: number
@@ -25,22 +27,22 @@ export const initialize = (
     .attr("class", "links")
     .attr("stroke", "#999")
     .attr("stroke-opacity", 0.6)
-    .selectAll("line")
+    .selectAll<d3.BaseType, NetworkLink>("line")
 
     nodeSelection = svg.append("g")
     .attr("class", "nodes")
     .attr("stroke", "#000000")
     .attr("stroke-width", 1.5)
-    .selectAll("circle")
+    .selectAll<d3.BaseType, NetworkNode>("circle")
 
 
   textSelection = svg.append("g")
     .attr("class", "labels")
-    .selectAll("text")
+    .selectAll<d3.BaseType, NetworkNode>("text")
 
   linkLabelSelection = svg.append("g")
     .attr("class", "link-labels")
-    .selectAll("text")
+    .selectAll<d3.BaseType, NetworkLink>("text")
 
 
     updateElements(data)
@@ -66,15 +68,15 @@ export const tick = () => {
     .attr("y", (d: any) => (d.source.y + d.target.y) / 2)
 }
 
-export const updateElements = (data) => {
+export const updateElements = (data: NetworkGraphData) => {
   const color = d3.scaleOrdinal(d3.schemeCategory10)
   console.log(data)
 
   nodeSelection = nodeSelection.data(data.nodes)
     .join("circle")
-    .attr("cx", d => d.x)
-    .attr("cy", d => d.y)
-    .attr("r", d => d.nodeR)
+    .attr("cx", (d: any) => d.x)
+    .attr("cy", (d: any) => d.y)
+    .attr("r", (d: any) => d.nodeR)
     .attr("fill", (d: any) => color(d.group || 0))
     .call(d3.drag<any, any, any>()
       .on("start", dragstarted)
@@ -90,10 +92,10 @@ export const updateElements = (data) => {
 
   linkSelection = linkSelection.data(data.links)
     .join("line")
-    .attr("x1", d => d.source.x)
-    .attr("y1", d => d.source.y)
-    .attr("x2", d => d.target.x)
-    .attr("y2", d => d.target.y)
+    .attr("x1", (d: any) => d.source.x)
+    .attr("y1", (d: any) => d.source.y)
+    .attr("x2", (d: any) => d.target.x)
+    .attr("y2", (d: any) => d.target.y)
     .attr("stroke-width", 1)
 
   linkLabelSelection = linkLabelSelection.data(data.links)

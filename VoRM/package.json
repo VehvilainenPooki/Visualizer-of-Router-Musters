@@ -11,7 +11,7 @@
     "build:server": "tsc --build src/server",
     "build:client": "vite build",
     "prod": "node build/src/server/index.js",
-    "tsc": "tsc"
+    "tsc": "tsc -p src/common --noEmit && tsc -p src/server --noEmit && tsc -p src/client --noEmit"
   },
   "dependencies": {
     "@mantine/core": "^9.4.1",

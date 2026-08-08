@@ -72,8 +72,8 @@ export const addLink = (source: String, target: string, name?: string) => {
   if (!simulation) {
     return false
   }
-  const sourceNode = data.nodes.find(d => d.id === source)
-  const targetNode = data.nodes.find(d => d.id === target)
+  const sourceNode = data.nodes.find((d: any) => d.id === source)
+  const targetNode = data.nodes.find((d: any) => d.id === target)
 
   if (!sourceNode || !targetNode) {
     console.log("Given nodenames didn't match", source, target)
@@ -97,6 +97,7 @@ export const addLink = (source: String, target: string, name?: string) => {
     rendering.updateElements(data)
     notify()
   }
+  return true
 }
 
 export const loadData = (newData: PlainNetworkGraphData) => {
