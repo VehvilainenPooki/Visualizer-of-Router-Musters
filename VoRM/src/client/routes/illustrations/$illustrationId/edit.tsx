@@ -14,6 +14,8 @@ function IllustrationEdit() {
         nodes: illustration.graphcode.nodes ?? [],
         links: illustration.graphcode.links ?? []
       }}
+      initialName={illustration.name}
+      initialDescription={illustration.description}
     />
   )
 }
