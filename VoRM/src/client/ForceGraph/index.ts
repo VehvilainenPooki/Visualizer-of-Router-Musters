@@ -19,8 +19,8 @@ export const subscribe = (cb: () => void) => { subscribers.push(cb) }
 const notify = () => subscribers.forEach(cb => cb())
 
 export const getData = (): PlainNetworkGraphData => ({
-  nodes: data.nodes.map((n: any) => ({ id: n.id, name: n.name ?? n.id })),
-  links: data.links.map((l: any) => ({
+  nodes: (data?.nodes ?? []).map((n: any) => ({ id: n.id, name: n.name ?? n.id })),
+  links: (data?.links ?? []).map((l: any) => ({
     id: l.id ?? `${l.source?.id ?? l.source}-${l.target?.id ?? l.target}`,
     name: l.name ?? l.id ?? `${l.source?.id ?? l.source}-${l.target?.id ?? l.target}`,
     source: l.source?.id ?? l.source,
