@@ -8,11 +8,20 @@ import CodeMirror from '@uiw/react-codemirror';
 
 export default function GraphCodeEditor({ editorWidth }: { editorWidth: number }) {
   const data = useSyncExternalStore(ForceGraph.subscribeToData, ForceGraph.getData)
-  const [value, setValue] = useState(() => JSON.stringify(data, null, 2));
+  const selectedNodeId = useSyncExternalStore(ForceGraph.subscribeToSelection, ForceGraph.getSelectedNodeId)
+
+  const visibleData = selectedNodeId
+    ? {
+        nodes: data.nodes.filter(n => n.id === selectedNodeId),
+        links: data.links.filter(l => l.source === selectedNodeId || l.target === selectedNodeId)
+      }
+    : data
+
+  const [value, setValue] = useState(() => JSON.stringify(visibleData, null, 2));
 
   useEffect(() => {
-    setValue(JSON.stringify(data, null, 2))
-  }, [data])
+    setValue(JSON.stringify(visibleData, null, 2))
+  }, [data, selectedNodeId])
 
   const onChange = useCallback((val:any, _viewUpdate:any) => {
     console.log('val:', val);
