@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useSyncExternalStore } from 'react'
 import { Paper } from '@mantine/core'
 import * as ForceGraph from '../ForceGraph'
 import CodeMirror from '@uiw/react-codemirror';
+import { protectedJsonValues } from './protectedJsonValues'
 
 
 
@@ -38,7 +39,7 @@ export default function GraphCodeEditor({ editorWidth }: { editorWidth: number }
       zIndex: 1,
       borderRadius: '0 var(--mantine-radius-default) var(--mantine-radius-default) 0'
       }}>
-      <CodeMirror value={value} height='100%' style={{ height: '100%', overflow: 'auto' }} onChange={onChange} />
+      <CodeMirror extensions={[protectedJsonValues()]} value={value} height='100%' style={{ height: '100%', overflow: 'auto' }} onChange={onChange} />
     </Paper>
   )
 }
