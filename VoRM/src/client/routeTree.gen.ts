@@ -9,8 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TestingRouteImport } from './routes/testing'
-import { Route as IlluRouteImport } from './routes/illu'
 import { Route as IllustrationsRouteRouteImport } from './routes/illustrations/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as IllustrationsIndexRouteImport } from './routes/illustrations/index'
@@ -21,16 +19,6 @@ import { Route as IllustrationsIllustrationIdIndexRouteImport } from './routes/i
 import { Route as IllustrationsNewEditRouteImport } from './routes/illustrations/new/edit'
 import { Route as IllustrationsIllustrationIdEditRouteImport } from './routes/illustrations/$illustrationId/edit'
 
-const TestingRoute = TestingRouteImport.update({
-  id: '/testing',
-  path: '/testing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IlluRoute = IlluRouteImport.update({
-  id: '/illu',
-  path: '/illu',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IllustrationsRouteRoute = IllustrationsRouteRouteImport.update({
   id: '/illustrations',
   path: '/illustrations',
@@ -83,8 +71,6 @@ const IllustrationsIllustrationIdEditRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/illustrations': typeof IllustrationsRouteRouteWithChildren
-  '/illu': typeof IlluRoute
-  '/testing': typeof TestingRoute
   '/illustrations/$illustrationId': typeof IllustrationsIllustrationIdRouteRouteWithChildren
   '/verify/$token': typeof VerifyTokenRoute
   '/illustrations/': typeof IllustrationsIndexRoute
@@ -95,8 +81,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/illu': typeof IlluRoute
-  '/testing': typeof TestingRoute
   '/verify/$token': typeof VerifyTokenRoute
   '/illustrations': typeof IllustrationsIndexRoute
   '/illustrations/$illustrationId/edit': typeof IllustrationsIllustrationIdEditRoute
@@ -108,8 +92,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/illustrations': typeof IllustrationsRouteRouteWithChildren
-  '/illu': typeof IlluRoute
-  '/testing': typeof TestingRoute
   '/illustrations/$illustrationId': typeof IllustrationsIllustrationIdRouteRouteWithChildren
   '/verify/$token': typeof VerifyTokenRoute
   '/illustrations/': typeof IllustrationsIndexRoute
@@ -123,8 +105,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/illustrations'
-    | '/illu'
-    | '/testing'
     | '/illustrations/$illustrationId'
     | '/verify/$token'
     | '/illustrations/'
@@ -135,8 +115,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/illu'
-    | '/testing'
     | '/verify/$token'
     | '/illustrations'
     | '/illustrations/$illustrationId/edit'
@@ -147,8 +125,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/illustrations'
-    | '/illu'
-    | '/testing'
     | '/illustrations/$illustrationId'
     | '/verify/$token'
     | '/illustrations/'
@@ -161,27 +137,11 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   IllustrationsRouteRoute: typeof IllustrationsRouteRouteWithChildren
-  IlluRoute: typeof IlluRoute
-  TestingRoute: typeof TestingRoute
   VerifyTokenRoute: typeof VerifyTokenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/testing': {
-      id: '/testing'
-      path: '/testing'
-      fullPath: '/testing'
-      preLoaderRoute: typeof TestingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/illu': {
-      id: '/illu'
-      path: '/illu'
-      fullPath: '/illu'
-      preLoaderRoute: typeof IlluRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/illustrations': {
       id: '/illustrations'
       path: '/illustrations'
@@ -286,8 +246,6 @@ const IllustrationsRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   IllustrationsRouteRoute: IllustrationsRouteRouteWithChildren,
-  IlluRoute: IlluRoute,
-  TestingRoute: TestingRoute,
   VerifyTokenRoute: VerifyTokenRoute,
 }
 export const routeTree = rootRouteImport
