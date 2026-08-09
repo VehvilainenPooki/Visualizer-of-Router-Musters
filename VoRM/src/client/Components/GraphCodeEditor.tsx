@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useSyncExternalStore } from 'react'
 import { Paper } from '@mantine/core'
 import * as ForceGraph from '../ForceGraph'
 import CodeMirror from '@uiw/react-codemirror';
@@ -7,14 +7,12 @@ import CodeMirror from '@uiw/react-codemirror';
 
 
 export default function GraphCodeEditor({ editorWidth }: { editorWidth: number }) {
-  const [value, setValue] = useState("");
+  const data = useSyncExternalStore(ForceGraph.subscribeToData, ForceGraph.getData)
+  const [value, setValue] = useState(() => JSON.stringify(data, null, 2));
 
   useEffect(() => {
-    setValue(JSON.stringify(ForceGraph.getData(), null, 2))
-    ForceGraph.subscribe(() => {
-        setValue(JSON.stringify(ForceGraph.getData(), null, 2))
-    })
-  }, [])
+    setValue(JSON.stringify(data, null, 2))
+  }, [data])
 
   const onChange = useCallback((val:any, _viewUpdate:any) => {
     console.log('val:', val);

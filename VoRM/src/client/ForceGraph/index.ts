@@ -4,6 +4,7 @@ import type { PlainNetworkGraphData } from "../../common/types/network"
 
 import * as forceSim from "./simulation"
 import * as rendering from "./rendering"
+import { makeSubscription } from "./subscription"
 
 const width = 928
 const height = 600
@@ -12,14 +13,19 @@ const nodeR = 8
 let simulation: any
 let data: any
 let selectedNodeId: string | null = null
+let dataSnapshot: PlainNetworkGraphData = { nodes: [], links: [] }
 
-const subscribers: Array<() => void> = []
+const dataStore = makeSubscription()
+const selectionStore = makeSubscription()
 
-export const subscribe = (cb: () => void) => { subscribers.push(cb) }
+export const subscribeToData = dataStore.subscribe
+export const subscribeToSelection = selectionStore.subscribe
 
-const notify = () => subscribers.forEach(cb => cb())
+export const getSelectedNodeId = () => selectedNodeId
 
-export const getData = (): PlainNetworkGraphData => ({
+export const getData = () => dataSnapshot
+
+const computeDataSnapshot = (): PlainNetworkGraphData => ({
   nodes: (data?.nodes ?? []).map((n: any) => ({ id: n.id, name: n.name ?? n.id })),
   links: (data?.links ?? []).map((l: any) => ({
     id: l.id ?? `${l.source?.id ?? l.source}-${l.target?.id ?? l.target}`,
@@ -28,6 +34,11 @@ export const getData = (): PlainNetworkGraphData => ({
     target: l.target?.id ?? l.target
   }))
 })
+
+const notifyDataChanged = () => {
+  dataSnapshot = computeDataSnapshot()
+  dataStore.notify()
+}
 
 export const initialize = (svgDOM: SVGSVGElement) => {
 
@@ -44,6 +55,7 @@ export const initialize = (svgDOM: SVGSVGElement) => {
   rendering.setOnNodeClick((id: string | null) => {
     selectedNodeId = id
     rendering.setSelectedNode(id)
+    selectionStore.notify()
   })
 
     simulation.on("tick", () => {
@@ -71,7 +83,7 @@ export const addNode = (nodename: string) => {
   rendering.updateElements(data)
   simulation.alpha(1).restart()
   console.log(nodename, data.nodes)
-  notify()
+  notifyDataChanged()
 }
 
 export const addLink = (source: String, target: string, name?: string) => {
@@ -101,7 +113,7 @@ export const addLink = (source: String, target: string, name?: string) => {
       .restart()
 
     rendering.updateElements(data)
-    notify()
+    notifyDataChanged()
   }
   return true
 }
@@ -142,6 +154,6 @@ export const loadData = (newData: PlainNetworkGraphData) => {
     .restart()
 
   rendering.updateElements(data)
-  notify()
+  notifyDataChanged()
 }
 
