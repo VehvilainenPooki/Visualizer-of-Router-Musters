@@ -9,6 +9,30 @@ let textSelection: d3.Selection<d3.BaseType, NetworkNode, SVGGElement, unknown>
 let linkSelection: d3.Selection<d3.BaseType, NetworkLink, SVGGElement, unknown>
 let linkLabelSelection: d3.Selection<d3.BaseType, NetworkLink, SVGGElement, unknown>
 
+const color = d3.scaleOrdinal(d3.schemeCategory10)
+const SELECTED_STROKE = d3.schemeCategory10[3]
+const SELECTED_FILL = d3.schemeCategory10[1]
+
+const CLICK_MAX_DISTANCE_PX = 5
+const CLICK_MAX_DURATION_MS = 300
+let backgroundPointerDown: { x: number, y: number, time: number } | null = null
+let selectedNodeId: string | null = null
+let onNodeClick: (id: string | null) => void = () => {}
+
+export const setOnNodeClick = (cb: (id: string | null) => void) => {
+  onNodeClick = cb
+}
+
+export const setSelectedNode = (id: string | null) => {
+  selectedNodeId = id
+  if (nodeSelection) {
+    nodeSelection
+      .attr("stroke", (d: any) => d.id === selectedNodeId ? SELECTED_STROKE : "#000000")
+      .attr("stroke-width", (d: any) => d.id === selectedNodeId ? 3 : 1.5)
+      .attr("fill", (d: any) => d.id === selectedNodeId ? SELECTED_FILL : color(d.group || 0))
+  }
+}
+
 export const initialize = (
   data: NetworkGraphData,
   svgDOM: SVGSVGElement,
@@ -22,6 +46,20 @@ export const initialize = (
     .attr("height", height)
     .attr("viewBox", [0, 0, width, height])
     .attr("style", "max-width: 100%; height: auto;")
+    .on("mousedown", (event: MouseEvent) => {
+      backgroundPointerDown = { x: event.clientX, y: event.clientY, time: Date.now() }
+    })
+    .on("mouseup", (event: MouseEvent) => {
+      if (!backgroundPointerDown) return
+      const dx = event.clientX - backgroundPointerDown.x
+      const dy = event.clientY - backgroundPointerDown.y
+      const distance = Math.hypot(dx, dy)
+      const duration = Date.now() - backgroundPointerDown.time
+      backgroundPointerDown = null
+      if (distance <= CLICK_MAX_DISTANCE_PX && duration <= CLICK_MAX_DURATION_MS) {
+        onNodeClick(null)
+      }
+    })
 
   linkSelection = svg.append("g")
     .attr("class", "links")
@@ -73,7 +111,6 @@ export const tick = () => {
 }
 
 export const updateElements = (data: NetworkGraphData) => {
-  const color = d3.scaleOrdinal(d3.schemeCategory10)
   console.log(data)
 
   nodeSelection = nodeSelection.data(data.nodes)
@@ -81,11 +118,17 @@ export const updateElements = (data: NetworkGraphData) => {
     .attr("cx", (d: any) => d.x)
     .attr("cy", (d: any) => d.y)
     .attr("r", (d: any) => d.nodeR)
-    .attr("fill", (d: any) => color(d.group || 0))
+    .attr("fill", (d: any) => d.id === selectedNodeId ? SELECTED_FILL : color(d.group || 0))
+    .attr("stroke", (d: any) => d.id === selectedNodeId ? SELECTED_STROKE : "#000000")
+    .attr("stroke-width", (d: any) => d.id === selectedNodeId ? 3 : 1.5)
     .call(d3.drag<any, any, any>()
       .on("start", dragstarted)
       .on("drag", dragged)
       .on("end", dragended))
+    .on("click", (event: MouseEvent, d: any) => {
+      event.stopPropagation()
+      onNodeClick(d.id === selectedNodeId ? null : d.id)
+    })
 
   textSelection = textSelection.data(data.nodes)
     .join("text")

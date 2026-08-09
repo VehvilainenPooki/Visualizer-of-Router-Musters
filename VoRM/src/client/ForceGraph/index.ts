@@ -11,6 +11,7 @@ const nodeR = 8
 
 let simulation: any
 let data: any
+let selectedNodeId: string | null = null
 
 const subscribers: Array<() => void> = []
 
@@ -39,6 +40,11 @@ export const initialize = (svgDOM: SVGSVGElement) => {
     width,
     height
   )
+
+  rendering.setOnNodeClick((id: string | null) => {
+    selectedNodeId = id
+    rendering.setSelectedNode(id)
+  })
 
     simulation.on("tick", () => {
       rendering.tick()
