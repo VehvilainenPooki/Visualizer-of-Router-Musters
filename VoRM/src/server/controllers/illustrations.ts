@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { Illustration } from '../models/index.js'
 import { authenticateToken, optionalAuth, requireVerified } from '../middleware/auth.js'
+import type { Illustration as IllustrationDto } from '../../common/types/illustration.js'
 
 const router = Router()
 
@@ -19,8 +20,13 @@ router.post('/', authenticateToken, requireVerified, async (req, res) => {
       return
     }
   }
+  const { name, description, graphcode, public: isPublic } = req.body as Partial<IllustrationDto>
   const illustration = await Illustration.create({
-    userId: req.user!.id
+    userId: req.user!.id,
+    ...(name !== undefined && { name }),
+    ...(description !== undefined && { description }),
+    ...(graphcode !== undefined && { graphcode }),
+    ...(isPublic !== undefined && { public: isPublic })
   })
   res.status(201).json(illustration)
 })
@@ -37,6 +43,67 @@ router.delete('/:id', authenticateToken, requireVerified, async (req, res) => {
   }
   await illustration.destroy()
   res.status(204).end()
+})
+
+router.put('/:id', authenticateToken, requireVerified, async (req, res) => {
+  const illustration = await Illustration.findByPk(Number(req.params.id))
+
+  if (!illustration) {
+    res.status(404).json({ error: 'illustration not found' })
+    return
+  }
+  if (illustration.userId !== req.user!.id) {
+    res.status(403).json({ error: 'not authorized' })
+    return
+  }
+
+  const { name, description, graphcode, public: isPublic } = req.body as Partial<IllustrationDto>
+  if (name !== undefined) illustration.name = name
+  if (description !== undefined) illustration.description = description
+  if (graphcode !== undefined) illustration.graphcode = graphcode
+  if (isPublic !== undefined) illustration.public = isPublic
+
+  await illustration.save()
+  res.json(illustration)
+})
+
+router.patch('/:id/metadata', authenticateToken, requireVerified, async (req, res) => {
+  const illustration = await Illustration.findByPk(Number(req.params.id))
+
+  if (!illustration) {
+    res.status(404).json({ error: 'illustration not found' })
+    return
+  }
+  if (illustration.userId !== req.user!.id) {
+    res.status(403).json({ error: 'not authorized' })
+    return
+  }
+
+  const { name, description } = req.body as Pick<IllustrationDto, 'name' | 'description'>
+  if (name !== undefined) illustration.name = name
+  if (description !== undefined) illustration.description = description
+
+  await illustration.save()
+  res.json(illustration)
+})
+
+router.patch('/:id/graphcode', authenticateToken, requireVerified, async (req, res) => {
+  const illustration = await Illustration.findByPk(Number(req.params.id))
+
+  if (!illustration) {
+    res.status(404).json({ error: 'illustration not found' })
+    return
+  }
+  if (illustration.userId !== req.user!.id) {
+    res.status(403).json({ error: 'not authorized' })
+    return
+  }
+
+  const { graphcode } = req.body as Pick<IllustrationDto, 'graphcode'>
+  illustration.graphcode = graphcode
+
+  await illustration.save()
+  res.json(illustration)
 })
 
 router.patch('/:id/toggle-visibility', authenticateToken, requireVerified, async (req, res) => {
