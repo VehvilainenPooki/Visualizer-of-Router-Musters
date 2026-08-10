@@ -35,7 +35,7 @@ export default function SplitAdjuster({ containerRef, width, onWidthChange, min 
         marginLeft: -15,
         flexShrink: 0,
         position: 'relative',
-        zIndex: 0,
+        zIndex: 1,
         cursor: 'col-resize',
         touchAction: 'none',
         userSelect: 'none',

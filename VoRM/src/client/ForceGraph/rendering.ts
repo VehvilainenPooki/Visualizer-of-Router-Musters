@@ -19,6 +19,25 @@ let backgroundPointerDown: { x: number, y: number, time: number } | null = null
 let selectedNodeId: string | null = null
 let onNodeClick: (id: string | null) => void = () => {}
 
+let svgSelection: d3.Selection<SVGSVGElement, unknown, null, undefined>
+let zoomBehavior: d3.ZoomBehavior<SVGSVGElement, unknown>
+let worldWidth = 0
+let worldHeight = 0
+let currentViewWidth = 0
+let currentViewHeight = 0
+
+const MAX_SCALE = 15
+const PAN_MARGIN_RATIO = 0.9
+
+const calculateMinScale = (viewWidth: number, viewHeight: number) =>
+  Math.min(viewWidth / worldWidth, viewHeight / worldHeight)
+
+const calculateTranslateExtent = (scale: number): [[number, number], [number, number]] => {
+  const marginX = (PAN_MARGIN_RATIO * currentViewWidth) / scale
+  const marginY = (PAN_MARGIN_RATIO * currentViewHeight) / scale
+  return [[-marginX, -marginY], [worldWidth + marginX, worldHeight + marginY]]
+}
+
 export const setOnNodeClick = (cb: (id: string | null) => void) => {
   onNodeClick = cb
 }
@@ -37,15 +56,17 @@ export const initialize = (
   data: NetworkGraphData,
   svgDOM: SVGSVGElement,
   width: number,
-  height: number
+  height: number,
+  viewWidth: number,
+  viewHeight: number
 ) => {
   d3.select(svgDOM).selectAll("*").remove()
 
   const svg = d3.select(svgDOM)
-    .attr("width", width)
-    .attr("height", height)
-    .attr("viewBox", [0, 0, width, height])
-    .attr("style", "max-width: 100%; height: auto;")
+    .attr("width", viewWidth)
+    .attr("height", viewHeight)
+    .attr("viewBox", [0, 0, viewWidth, viewHeight])
+    .attr("style", "display: block; width: 100%; height: 100%;")
     .on("mousedown", (event: MouseEvent) => {
       backgroundPointerDown = { x: event.clientX, y: event.clientY, time: Date.now() }
     })
@@ -61,33 +82,100 @@ export const initialize = (
       }
     })
 
-  linkSelection = svg.append("g")
+  const viewport = svg.append("g").attr("class", "viewport")
+
+  viewport.append("rect")
+    .attr("class", "simulation-bounds")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", width)
+    .attr("height", height)
+    .attr("fill", "#ffffff")
+    .attr("stroke", "#ccc")
+    .attr("stroke-width", 2)
+    .attr("stroke-dasharray", "6,6")
+
+  worldWidth = width
+  worldHeight = height
+  currentViewWidth = viewWidth
+  currentViewHeight = viewHeight
+
+  const zoom = d3.zoom<SVGSVGElement, unknown>()
+    .scaleExtent([calculateMinScale(viewWidth, viewHeight), MAX_SCALE])
+    .extent([[0, 0], [viewWidth, viewHeight]])
+    .translateExtent(calculateTranslateExtent(1))
+    .on("zoom", (event: d3.D3ZoomEvent<SVGSVGElement, unknown>) => {
+      const { k: scale } = event.transform
+      viewport.attr("transform", event.transform.toString())
+      zoomBehavior.translateExtent(calculateTranslateExtent(scale))
+    })
+
+  svg.call(zoom)
+
+  svgSelection = svg
+  zoomBehavior = zoom
+
+  linkSelection = viewport.append("g")
     .attr("class", "links")
     .attr("stroke", "#999")
     .attr("stroke-opacity", 0.6)
     .selectAll<d3.BaseType, NetworkLink>("line")
 
-    nodeSelection = svg.append("g")
+    nodeSelection = viewport.append("g")
     .attr("class", "nodes")
     .attr("stroke", "#000000")
     .attr("stroke-width", 1.5)
     .selectAll<d3.BaseType, NetworkNode>("circle")
 
-
-  textSelection = svg.append("g")
+  textSelection = viewport.append("g")
     .attr("class", "labels")
     .style("user-select", "none")
     .style("pointer-events", "none")
     .selectAll<d3.BaseType, NetworkNode>("text")
 
-  linkLabelSelection = svg.append("g")
+  linkLabelSelection = viewport.append("g")
     .attr("class", "link-labels")
     .style("user-select", "none")
     .style("pointer-events", "none")
     .selectAll<d3.BaseType, NetworkLink>("text")
 
-
     updateElements(data)
+}
+
+export const resize = (viewWidth: number, viewHeight: number) => {
+  if (!svgSelection || !zoomBehavior) {
+    return
+  }
+
+  const deltaWidth = viewWidth - currentViewWidth
+  currentViewWidth = viewWidth
+  currentViewHeight = viewHeight
+
+  svgSelection
+    .attr("width", viewWidth)
+    .attr("height", viewHeight)
+    .attr("viewBox", [0, 0, viewWidth, viewHeight])
+
+  const minScale = calculateMinScale(viewWidth, viewHeight)
+  zoomBehavior
+    .extent([[0, 0], [viewWidth, viewHeight]])
+    .scaleExtent([minScale, MAX_SCALE])
+
+  const {x: currentX, y: currentY, k: currentScale} = d3.zoomTransform(svgSelection.node()!)
+  const scale = Math.min(MAX_SCALE, Math.max(minScale, currentScale))
+
+  const [[worldMinX, worldMinY], [worldMaxX, worldMaxY]] = calculateTranslateExtent(scale)
+  zoomBehavior.translateExtent([[worldMinX, worldMinY], [worldMaxX, worldMaxY]])
+
+  const minX = viewWidth - scale * worldMaxX
+  const maxX = -scale * worldMinX
+  const x = Math.min(maxX, Math.max(minX, currentX + deltaWidth))
+
+  const minY = viewHeight - scale * worldMaxY
+  const maxY = -scale * worldMinY
+  const y = Math.min(maxY, Math.max(minY, currentY))
+
+  svgSelection.call(zoomBehavior.transform, d3.zoomIdentity.translate(x, y).scale(scale))
 }
 
 export const tick = () => {

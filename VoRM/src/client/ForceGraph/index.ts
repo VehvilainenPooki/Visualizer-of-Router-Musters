@@ -6,8 +6,8 @@ import * as forceSim from "./simulation"
 import * as rendering from "./rendering"
 import { makeSubscription } from "./subscription"
 
-const width = 928
-const height = 600
+const width = 4000
+const height = 4000
 const nodeR = 8
 
 let simulation: any
@@ -40,7 +40,7 @@ const notifyDataChanged = () => {
   dataStore.notify()
 }
 
-export const initialize = (svgDOM: SVGSVGElement) => {
+export const initialize = (svgDOM: SVGSVGElement, viewWidth: number, viewHeight: number) => {
 
   ({ simulation, data } = forceSim.initialize(width, height))
 
@@ -49,7 +49,9 @@ export const initialize = (svgDOM: SVGSVGElement) => {
     data,
     svgDOM,
     width,
-    height
+    height,
+    viewWidth,
+    viewHeight
   )
 
   rendering.setOnNodeClick((id: string | null) => {
@@ -61,6 +63,10 @@ export const initialize = (svgDOM: SVGSVGElement) => {
     simulation.on("tick", () => {
       rendering.tick()
     })
+}
+
+export const resize = (viewWidth: number, viewHeight: number) => {
+  rendering.resize(viewWidth, viewHeight)
 }
 
 export const stop = () => {

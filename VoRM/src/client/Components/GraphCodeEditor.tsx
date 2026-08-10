@@ -36,7 +36,7 @@ export default function GraphCodeEditor({ editorWidth }: { editorWidth: number }
       minHeight: 0,
       overflow: 'hidden',
       position: 'relative',
-      zIndex: 1,
+      zIndex: 2,
       borderRadius: '0 var(--mantine-radius-default) var(--mantine-radius-default) 0'
       }}>
       <CodeMirror extensions={[protectedJsonValues()]} value={value} height='100%' style={{ height: '100%', overflow: 'auto' }} onChange={onChange} />
