@@ -38,15 +38,91 @@ export const getIllustration = async (token: string | null, id: number): Promise
   }
 }
 
-export const createIllustration = async (token: string): Promise<Result<Illustration>> => {
+export const createIllustration = async (token: string, jsonCode: Illustration): Promise<Result<Illustration>> => {
   try {
     const response = await fetch(baseUrl, {
       method: 'POST',
-      headers: authHeaders(token)
+      headers: authHeaders(token),
+      body: JSON.stringify(jsonCode) 
     })
     if (!response.ok) {
       const data = await response.json()
       return { ok: false, error: data.error ?? 'Failed to create illustration', status: response.status }
+    }
+    return { ok: true, data: await response.json(), status: response.status }
+  } catch {
+    return { ok: false, error: 'Network error', status: 0 }
+  }
+}
+
+export const updateIllustration = async (token: string, jsonCode: Illustration): Promise<Result<Illustration>> => {
+  try {
+    const response = await fetch(`${baseUrl}/${jsonCode.id}`, {
+      method: 'PUT',
+      headers: authHeaders(token),
+      body: JSON.stringify(jsonCode) 
+    })
+    if (!response.ok) {
+      const data = await response.json()
+      return { ok: false, error: data.error ?? 'Failed to update illustration', status: response.status }
+    }
+    return { ok: true, data: await response.json(), status: response.status }
+  } catch {
+    return { ok: false, error: 'Network error', status: 0 }
+  }
+}
+
+export const updateIllustrationMetadata = async (
+  token: string,
+  id: number,
+  metadata: Pick<Illustration, 'name' | 'description'>
+): Promise<Result<Illustration>> => {
+  try {
+    const response = await fetch(`${baseUrl}/${id}/metadata`, {
+      method: 'PATCH',
+      headers: authHeaders(token),
+      body: JSON.stringify(metadata)
+    })
+    if (!response.ok) {
+      const data = await response.json()
+      return { ok: false, error: data.error ?? 'Failed to update illustration metadata', status: response.status }
+    }
+    return { ok: true, data: await response.json(), status: response.status }
+  } catch {
+    return { ok: false, error: 'Network error', status: 0 }
+  }
+}
+
+export const updateIllustrationGraphcode = async (
+  token: string,
+  id: number,
+  graphcode: Illustration['graphcode']
+): Promise<Result<Illustration>> => {
+  try {
+    const response = await fetch(`${baseUrl}/${id}/graphcode`, {
+      method: 'PATCH',
+      headers: authHeaders(token),
+      body: JSON.stringify({ graphcode })
+    })
+    if (!response.ok) {
+      const data = await response.json()
+      return { ok: false, error: data.error ?? 'Failed to update illustration graphcode', status: response.status }
+    }
+    return { ok: true, data: await response.json(), status: response.status }
+  } catch {
+    return { ok: false, error: 'Network error', status: 0 }
+  }
+}
+
+export const toggleIllustrationVisibility = async (token: string, id: number): Promise<Result<Illustration>> => {
+  try {
+    const response = await fetch(`${baseUrl}/${id}`, {
+      method: 'PATCH',
+      headers: authHeaders(token)
+    })
+    if (!response.ok) {
+      const data = await response.json()
+      return { ok: false, error: data.error ?? 'Failed to update illustration visibility', status: response.status }
     }
     return { ok: true, data: await response.json(), status: response.status }
   } catch {
