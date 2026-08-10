@@ -4,7 +4,7 @@ import type { PlainNetworkGraphData } from '../../common/types/network'
 import { EditNavbar, type visibilityStatus } from './Navbar/EditNavbar'
 import Graph from './Graph'
 import GraphCodeEditor from './GraphCodeEditor'
-import SplitAdjuster from './SplitAdjuster'
+import SplitAdjuster from './Primitives/SplitAdjuster'
 import * as ForceGraph from '../ForceGraph'
 
 interface IllustrationEditorProps {

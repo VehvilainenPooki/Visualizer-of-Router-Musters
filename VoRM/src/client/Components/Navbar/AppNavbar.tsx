@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react'
 import { Paper } from '@mantine/core'
-import { FitContent } from '../FitContent'
+import { FitContent } from '../Primitives/FitContent'
 import { NavDrawer, NavDrawerIcon } from './Components/NavDrawer'
 
 interface AppNavbarProps {
