@@ -132,7 +132,7 @@ export const updateElements = (data: NetworkGraphData) => {
 
   textSelection = textSelection.data(data.nodes)
     .join("text")
-    .text((d: any) => d.name ?? d.id)
+    .text((d: any) => d.label ?? d.id)
     .attr("font-size", "12px")
     .attr("dx", 12)
     .attr("dy", 4)
@@ -147,7 +147,7 @@ export const updateElements = (data: NetworkGraphData) => {
 
   linkLabelSelection = linkLabelSelection.data(data.links)
     .join("text")
-    .text((d: any) => d.name ?? d.id)
+    .text((d: any) => d.label ?? d.id)
     .attr("font-size", "10px")
     .attr("fill", "#666")
     .attr("text-anchor", "middle")

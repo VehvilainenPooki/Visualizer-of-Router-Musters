@@ -9,26 +9,26 @@ export const illustrationTemplates: Record<TemplateId, PlainNetworkGraphData> = 
   },
   basic: {
     nodes: [
-      { id: 'router', name: 'Router' },
-      { id: 'desktop', name: 'Desktop' }
+      { id: 'router', label: 'Router' },
+      { id: 'desktop', label: 'Desktop' }
     ],
     links: [
-      { id: 'router-desktop-lan', name: 'LAN', source: 'router', target: 'desktop' }
+      { id: 'router-desktop-lan', label: 'LAN', source: 'router', target: 'desktop' }
     ]
   },
   complex: {
     nodes: [
-      { id: 'router', name: 'Router' },
-      { id: 'desktop-1', name: 'Desktop 1' },
-      { id: 'desktop-2', name: 'Desktop 2' },
-      { id: 'laptop', name: 'Laptop' },
-      { id: 'access-point', name: 'Access Point' }
+      { id: 'router', label: 'Router' },
+      { id: 'desktop-1', label: 'Desktop 1' },
+      { id: 'desktop-2', label: 'Desktop 2' },
+      { id: 'laptop', label: 'Laptop' },
+      { id: 'access-point', label: 'Access Point' }
     ],
     links: [
-      { id: 'router-desktop-1-lan', name: 'LAN', source: 'router', target: 'desktop-1' },
-      { id: 'router-desktop-2-lan', name: 'LAN', source: 'router', target: 'desktop-2' },
-      { id: 'router-access-point-lan', name: 'LAN', source: 'router', target: 'access-point' },
-      { id: 'access-point-laptop-wifi5', name: '5GHz Wi-Fi', source: 'access-point', target: 'laptop' }
+      { id: 'router-desktop-1-lan', label: 'LAN', source: 'router', target: 'desktop-1' },
+      { id: 'router-desktop-2-lan', label: 'LAN', source: 'router', target: 'desktop-2' },
+      { id: 'router-access-point-lan', label: 'LAN', source: 'router', target: 'access-point' },
+      { id: 'access-point-laptop-wifi5', label: '5GHz Wi-Fi', source: 'access-point', target: 'laptop' }
     ]
   }
 }

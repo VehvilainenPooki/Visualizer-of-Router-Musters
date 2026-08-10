@@ -22,12 +22,12 @@ export type NetworkSimulation = d3.Simulation<NetworkNode, NetworkLink>
 
 export interface PlainNetworkNode {
   id: string
-  name: string
+  label: string
 }
 
 export interface PlainNetworkLink {
   id: string
-  name: string
+  label: string
   source: string
   target: string
 }

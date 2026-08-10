@@ -26,10 +26,10 @@ export const getSelectedNodeId = () => selectedNodeId
 export const getData = () => dataSnapshot
 
 const computeDataSnapshot = (): PlainNetworkGraphData => ({
-  nodes: (data?.nodes ?? []).map((n: any) => ({ id: n.id, name: n.name ?? n.id })),
+  nodes: (data?.nodes ?? []).map((n: any) => ({ id: n.id, label: n.label ?? n.id })),
   links: (data?.links ?? []).map((l: any) => ({
     id: l.id ?? `${l.source?.id ?? l.source}-${l.target?.id ?? l.target}`,
-    name: l.name ?? l.id ?? `${l.source?.id ?? l.source}-${l.target?.id ?? l.target}`,
+    label: l.label ?? l.id ?? `${l.source?.id ?? l.source}-${l.target?.id ?? l.target}`,
     source: l.source?.id ?? l.source,
     target: l.target?.id ?? l.target
   }))
@@ -67,10 +67,11 @@ export const stop = () => {
   simulation.stop()
 }
 
+//TODO: update to current spec
 export const addNode = (nodename: string) => {
   data.nodes.push({
     id: nodename,
-    name: nodename,
+    label: nodename,
     nodeR: nodeR,
     index: data.nodes.length + 1,
     x: width / 2 + Math.random() * 100 - 50,
@@ -86,6 +87,7 @@ export const addNode = (nodename: string) => {
   notifyDataChanged()
 }
 
+//TODO: update to current spec
 export const addLink = (source: String, target: string, name?: string) => {
   if (!simulation) {
     return false
@@ -101,7 +103,7 @@ export const addLink = (source: String, target: string, name?: string) => {
     const linkName = name ?? `${source}-${target}`
     data.links.push({
       id: `${source}-${target}-${data.links.length}`,
-      name: linkName,
+      label: linkName,
       index: data.links.length,
       source: sourceNode,
       target: targetNode
@@ -129,7 +131,7 @@ export const loadData = (newData: PlainNetworkGraphData) => {
   newData.nodes.forEach((n, i) => {
     data.nodes.push({
       id: n.id,
-      name: n.name,
+      label: n.label,
       nodeR,
       index: i,
       x: width / 2 + Math.random() * 100 - 50,
@@ -145,7 +147,7 @@ export const loadData = (newData: PlainNetworkGraphData) => {
     if (!sourceNode || !targetNode) {
       return
     }
-    data.links.push({ id: l.id, name: l.name, index: i, source: sourceNode, target: targetNode })
+    data.links.push({ id: l.id, label: l.label, index: i, source: sourceNode, target: targetNode })
   })
 
   simulation.nodes(data.nodes)
