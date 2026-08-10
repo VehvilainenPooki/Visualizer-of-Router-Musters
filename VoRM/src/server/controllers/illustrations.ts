@@ -39,7 +39,7 @@ router.delete('/:id', authenticateToken, requireVerified, async (req, res) => {
   res.status(204).end()
 })
 
-router.patch('/:id/public', authenticateToken, requireVerified, async (req, res) => {
+router.patch('/:id/toggle-visibility', authenticateToken, requireVerified, async (req, res) => {
   const illustration = await Illustration.findByPk(Number(req.params.id))
 
   if (!illustration) {
