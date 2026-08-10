@@ -2,10 +2,9 @@ import { Button, CloseButton, Drawer, Group, Stack, UnstyledButton } from '@mant
 import { useDisclosure } from '@mantine/hooks'
 import { useNavigate } from '@tanstack/react-router'
 import { User } from 'lucide-react'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../../../contexts/AuthContext'
 import { AuthModal, ProfileModal } from './AuthModal'
-
-export const OVERLAY_BLUR = 10
+import { OVERLAY_BLUR } from '../../../theme/constants'
 
 export function NavDrawerIcon() {
   return <img src="/vorm.svg" alt="" style={{ height: 'var(--navbar-content-size)', width: 'auto' }} />
