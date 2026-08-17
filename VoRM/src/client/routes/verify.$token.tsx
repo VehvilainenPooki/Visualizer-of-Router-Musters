@@ -4,7 +4,7 @@ import { Anchor, Center, Loader, Paper, Stack, Text, Title } from '@mantine/core
 import { CircleCheck, CircleX } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import * as authService from '../services/auth'
-import { TitleNavbar } from '../Components/Navbar/TitleNavbar'
+import { TitleNavbar } from '../Components/Primitives/Navbar/TitleNavbar'
 
 export const Route = createFileRoute('/verify/$token')({
   component: VerifyEmailPage

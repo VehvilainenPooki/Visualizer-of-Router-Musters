@@ -1,5 +1,5 @@
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
-import { IllustrationEditor } from '../../../Components/IllustrationEditor'
+import { IllustrationEditor } from '../../../Components/EditView/IllustrationEditor'
 
 export const Route = createFileRoute('/illustrations/$illustrationId/edit')({
   component: IllustrationEdit

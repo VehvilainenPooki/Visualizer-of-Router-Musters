@@ -1,5 +1,5 @@
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
-import { ViewNavbar } from '../../../Components/Navbar/ViewNavbar'
+import { ViewNavbar } from '../../../Components/Primitives/Navbar/ViewNavbar'
 
 export const Route = createFileRoute('/illustrations/$illustrationId/')({
   component: IllustrationView

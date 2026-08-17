@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Button, Group, Modal, Stack, Textarea, TextInput } from '@mantine/core'
-import { OVERLAY_BLUR } from '../../../theme/constants'
+import { OVERLAY_BLUR } from '../../../../theme/constants'
 
 interface EditIllustrationInfoModalProps {
   opened: boolean

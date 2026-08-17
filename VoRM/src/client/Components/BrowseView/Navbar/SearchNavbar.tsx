@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Group, TextInput } from '@mantine/core'
 import { Search } from 'lucide-react'
-import { AppNavbar } from './AppNavbar'
+import { AppNavbar } from '../../Primitives/Navbar/AppNavbar'
 
 interface SearchNavbarProps {
   value: string

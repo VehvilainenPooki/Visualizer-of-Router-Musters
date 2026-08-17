@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useSyncExternalStore } from 'react'
 import { Paper } from '@mantine/core'
-import * as ForceGraph from '../ForceGraph'
+import * as ForceGraph from '../../ForceGraph'
 import CodeMirror from '@uiw/react-codemirror';
 import { protectedJsonValues } from './protectedJsonValues'
 

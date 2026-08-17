@@ -1,7 +1,7 @@
 import { Button, Modal, Stack, Text } from '@mantine/core'
 import { CloudUpload, FolderDown } from 'lucide-react'
-import { useAuth } from '../../../contexts/AuthContext'
-import { OVERLAY_BLUR } from '../../../theme/constants'
+import { useAuth } from '../../../../contexts/AuthContext'
+import { OVERLAY_BLUR } from '../../../../theme/constants'
 import type { SaveTarget } from './SaveStatusButton'
 
 interface SaveModalProps {

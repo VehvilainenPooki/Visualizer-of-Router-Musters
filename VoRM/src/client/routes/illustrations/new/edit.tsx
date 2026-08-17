@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { IllustrationEditor } from '../../../Components/IllustrationEditor'
+import { IllustrationEditor } from '../../../Components/EditView/IllustrationEditor'
 import { illustrationTemplates, type TemplateId } from '../../../illustrationTemplates'
 
 export const Route = createFileRoute('/illustrations/new/edit')({

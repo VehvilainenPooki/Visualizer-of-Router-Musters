@@ -2,9 +2,9 @@ import {useEffect, useRef} from 'react'
 
 import type { FC } from 'react'
 
-import type { PlainNetworkGraphData } from '../../common/types/network'
+import type { PlainNetworkGraphData } from '../../../common/types/network'
 
-import * as ForceGraph from '../ForceGraph'
+import * as ForceGraph from '../../ForceGraph'
 
 interface GraphProps {
   data?: PlainNetworkGraphData

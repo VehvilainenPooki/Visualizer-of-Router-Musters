@@ -2,7 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { Text, UnstyledButton } from '@mantine/core'
 import { useElementSize } from '@mantine/hooks'
 import { BookOpenText, Share2 } from 'lucide-react'
-import { TitleNavbar } from '../Components/Navbar/TitleNavbar'
+import { TitleNavbar } from '../Components/Primitives/Navbar/TitleNavbar'
 
 export const Route = createFileRoute('/')({
   component: MainView

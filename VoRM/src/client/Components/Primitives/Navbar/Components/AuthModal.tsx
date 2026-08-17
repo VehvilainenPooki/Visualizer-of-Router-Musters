@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Anchor, Button, Modal, PasswordInput, Stack, Text, TextInput } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
-import { useAuth } from '../../../contexts/AuthContext'
-import * as authService from '../../../services/auth'
-import { OVERLAY_BLUR } from '../../../theme/constants'
+import { useAuth } from '../../../../contexts/AuthContext'
+import * as authService from '../../../../services/auth'
+import { OVERLAY_BLUR } from '../../../../theme/constants'
 
 interface VerifyPendingModalProps {
   opened: boolean

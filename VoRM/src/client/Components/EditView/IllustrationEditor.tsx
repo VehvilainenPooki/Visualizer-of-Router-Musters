@@ -1,11 +1,11 @@
 import { useRef, useState, useSyncExternalStore } from 'react'
 import { Group, Text } from '@mantine/core'
-import type { PlainNetworkGraphData } from '../../common/types/network'
+import type { PlainNetworkGraphData } from '../../../common/types/network'
 import { EditNavbar, type visibilityStatus } from './Navbar/EditNavbar'
 import Graph from './Graph'
 import GraphCodeEditor from './GraphCodeEditor'
-import SplitAdjuster from './Primitives/SplitAdjuster'
-import * as ForceGraph from '../ForceGraph'
+import SplitAdjuster from '../Primitives/SplitAdjuster'
+import * as ForceGraph from '../../ForceGraph'
 
 interface IllustrationEditorProps {
   initialData: PlainNetworkGraphData

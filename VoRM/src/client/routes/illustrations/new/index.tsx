@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Text } from '@mantine/core'
-import { TitleNavbar } from '../../../Components/Navbar/TitleNavbar'
+import { TitleNavbar } from '../../../Components/Primitives/Navbar/TitleNavbar'
 import { TEMPLATE_OPTIONS } from '../../../illustrationTemplates'
 
 export const Route = createFileRoute('/illustrations/new/')({

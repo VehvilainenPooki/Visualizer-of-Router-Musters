@@ -5,7 +5,7 @@ import '@mantine/core/styles.css'
 import '@mantine/notifications/styles.css'
 import '../theme/root.css'
 import { AuthProvider, useAuth } from '../contexts/AuthContext'
-import { VerifyPendingModal } from '../Components/Navbar/Components/AuthModal'
+import { VerifyPendingModal } from '../Components/Primitives/Navbar/Components/AuthModal'
 
 export const Route = createRootRoute({
   component: () => (
