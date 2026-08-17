@@ -1,25 +1,22 @@
 import { useEffect, useState } from 'react'
-import { SegmentedControl, Box, Group } from '@mantine/core'
+import { Box, Group } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useAuth } from '../../../contexts/AuthContext'
 import { AppNavbar } from '../../Primitives/Navbar/AppNavbar'
-import { EditIllustrationInfoModal } from './Components/EditIllustrationInfoModal'
 import { AuthModal } from '../../Primitives/Navbar/Components/AuthModal'
+import { EditIllustrationInfoModal } from './Components/EditIllustrationInfoModal'
 import { SaveModal } from './Components/SaveModal'
 import { SaveStatusButton } from './Components/SaveStatusButton'
 import type { SaveStatus, SaveTarget } from './Components/SaveStatusButton'
 import { TitleButton } from './Components/TitleButton'
+import { VisibilitySelector } from './Components/VisibilitySelector'
+import type { VisibilityStatus } from './Components/VisibilitySelector'
 
-export type visibilityStatus = 'private' | 'public'
 
-const VISIBILITY_OPTIONS: { value: visibilityStatus, label: string }[] = [
-  { value: 'private', label: 'Private' },
-  { value: 'public', label: 'Public' },
-]
 
 interface EditNavbarProps {
-  visibility: visibilityStatus
-  onVisibilityChange: (visibility: visibilityStatus) => void
+  visibility: VisibilityStatus
+  onVisibilityChange: (visibility: VisibilityStatus) => void
   name: string
   description: string | null
   onNameChange: (name: string) => void
@@ -61,10 +58,9 @@ export function EditNavbar({
             <SaveStatusButton saveTarget={saveTarget} saveStatus={saveStatus} onClick={openSaveModal} />
             <TitleButton name={name} onClick={openInfoModal} />
           </Group>
-          <SegmentedControl
-            value={visibility}
-            onChange={value => onVisibilityChange(value as visibilityStatus)}
-            data={VISIBILITY_OPTIONS}
+          <VisibilitySelector 
+            visibility={visibility}
+            onVisibilityChange={onVisibilityChange}
           />
         </Group>
       </AppNavbar>
