@@ -44,3 +44,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 080826 | 9h | Clean up code a bit and do some minor improvements, add name and description editing and saving ui to edit view, Work on selecting a node from graph |
 | 090826 | 6h | Implement node selection, improve subscriptions, code editor Shenanigans |
 | 100826 | 10h | Code base cleanup and edit view E2E work |
+| 170826 | 5h | Reorganization and work on edit saving |
