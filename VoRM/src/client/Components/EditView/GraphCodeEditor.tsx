@@ -8,6 +8,7 @@ import { graphLinter } from './graphLinter'
 import { linkEndpointCompletion } from './linkEndpointCompletion'
 import { graphAddButtons } from './graphAddButtons'
 import { graphDeleteButtons, type PendingGraphDeletion } from './graphDeleteButtons'
+import { nodeIdNavigation } from './nodeIdNavigation'
 import { DeleteGraphItemModal } from './DeleteGraphItemModal'
 import { parseGraphData, hasDuplicateIds } from './graphDataUtils'
 
@@ -74,7 +75,7 @@ export default function GraphCodeEditor({ editorWidth}: { editorWidth: number })
       borderRadius: '0 var(--mantine-radius-default) var(--mantine-radius-default) 0'
       }}>
       <CodeMirror
-        extensions={[protectedJsonValues(selectedNodeId ?? undefined), graphLinter(visibleData, externalData), lintGutter(), linkEndpointCompletion(), graphAddButtons(selectedNodeId ?? undefined, { nodes: externalData.nodes.map(n => n.id), links: externalData.links.map(l => l.id) }), graphDeleteButtons(onRequestDelete)]}
+        extensions={[protectedJsonValues(selectedNodeId ?? undefined), graphLinter(visibleData, externalData), lintGutter(), linkEndpointCompletion(), graphAddButtons(selectedNodeId ?? undefined, { nodes: externalData.nodes.map(n => n.id), links: externalData.links.map(l => l.id) }), graphDeleteButtons(onRequestDelete), nodeIdNavigation()]}
         value={value}
         height='100%'
         style={{ height: '100%', overflow: 'auto' }}

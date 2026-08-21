@@ -28,6 +28,12 @@ export const getSelectedNodeId = () => selectedNodeId
 
 export const getData = () => dataSnapshot
 
+export const selectNode = (id: string | null) => {
+  selectedNodeId = id
+  rendering.setSelectedNode(id)
+  selectionStore.notify()
+}
+
 export const initialize = (svgDOM: SVGSVGElement, viewWidth: number, viewHeight: number) => {
 
   ({ simulation, data } = forceSim.initialize(width, height))
