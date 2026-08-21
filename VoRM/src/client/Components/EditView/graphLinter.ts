@@ -1,4 +1,5 @@
 import { type Extension, type Text } from '@codemirror/state'
+import type { EditorView } from '@codemirror/view'
 import { syntaxTree } from '@codemirror/language'
 import { linter, type Diagnostic } from '@codemirror/lint'
 import type { SyntaxNode } from '@lezer/common'
@@ -46,7 +47,7 @@ const flagDuplicates = (entries: IdEntry[], messageFor: (id: string) => string, 
   }
 }
 
-export const graphLinter = (baseline?: PlainNetworkGraphData, externalData?: PlainNetworkGraphData): Extension => linter(view => {
+export const getGraphDiagnostics = (view: EditorView, baseline?: PlainNetworkGraphData, externalData?: PlainNetworkGraphData): Diagnostic[] => {
   const diagnostics: Diagnostic[] = []
   const doc = view.state.doc
 
@@ -135,4 +136,7 @@ export const graphLinter = (baseline?: PlainNetworkGraphData, externalData?: Pla
   flagDuplicates(linkIdEntries, id => `Duplicate link id ${JSON.stringify(id)}`, diagnostics)
 
   return diagnostics
-})
+}
+
+export const graphLinter = (baseline?: PlainNetworkGraphData, externalData?: PlainNetworkGraphData): Extension =>
+  linter(view => getGraphDiagnostics(view, baseline, externalData))
