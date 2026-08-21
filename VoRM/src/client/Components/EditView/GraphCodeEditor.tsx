@@ -6,6 +6,7 @@ import { lintGutter } from '@codemirror/lint'
 import { protectedJsonValues } from './protectedJsonValues'
 import { linkEndpointLinter } from './linkEndpointLinter'
 import { linkEndpointCompletion } from './linkEndpointCompletion'
+import { graphGapButtons } from './graphGapButtons'
 
 export default function GraphCodeEditor({ editorWidth}: { editorWidth: number }) {
   const data = useSyncExternalStore(ForceGraph.subscribeToData, ForceGraph.getData)
@@ -28,6 +29,7 @@ export default function GraphCodeEditor({ editorWidth}: { editorWidth: number })
     console.log('val:', val)
     setValue(val)
   }, [])
+
   return (
     <Paper style={{
       boxShadow:'var(--shadow-even-xs)',
@@ -39,7 +41,7 @@ export default function GraphCodeEditor({ editorWidth}: { editorWidth: number })
       zIndex: 2,
       borderRadius: '0 var(--mantine-radius-default) var(--mantine-radius-default) 0'
       }}>
-      <CodeMirror extensions={[protectedJsonValues(), linkEndpointLinter(), lintGutter(), linkEndpointCompletion()]} value={value} height='100%' style={{ height: '100%', overflow: 'auto' }} onChange={onChange} />
+      <CodeMirror extensions={[protectedJsonValues(), linkEndpointLinter(), lintGutter(), linkEndpointCompletion(), graphGapButtons()]} value={value} height='100%' style={{ height: '100%', overflow: 'auto' }} onChange={onChange} />
     </Paper>
   )
 }
