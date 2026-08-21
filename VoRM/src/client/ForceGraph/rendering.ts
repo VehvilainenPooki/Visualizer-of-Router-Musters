@@ -28,7 +28,7 @@ let currentViewHeight = 0
 
 const MAX_SCALE = 15
 const PAN_MARGIN_RATIO = 0.9
-const CENTER_VIEW_PADDING_RATIO = 0.9
+const CENTER_VIEW_PADDING_RATIO = 0.5
 
 const calculateMinScale = (viewWidth: number, viewHeight: number) =>
   Math.min(viewWidth / worldWidth, viewHeight / worldHeight)
