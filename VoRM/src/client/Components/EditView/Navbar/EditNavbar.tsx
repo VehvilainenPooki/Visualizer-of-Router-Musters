@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Box, Group } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useAuth } from '../../../contexts/AuthContext'
@@ -21,6 +21,11 @@ interface EditNavbarProps {
   description: string | null
   onNameChange: (name: string) => void
   onDescriptionChange: (description: string | null) => void
+  saveTarget: SaveTarget
+  setSaveTarget: (SaveTarget: SaveTarget) => void
+  saveStatus: SaveStatus
+  saveMetadata: () => void
+  saveVisibility: () => void
 }
 
 export function EditNavbar({
@@ -29,13 +34,16 @@ export function EditNavbar({
   name,
   description,
   onNameChange,
-  onDescriptionChange
+  onDescriptionChange,
+  saveTarget,
+  setSaveTarget,
+  saveStatus,
+  saveMetadata,
+  saveVisibility
 }: EditNavbarProps) {
   const [infoModalOpened, { open: openInfoModal, close: closeInfoModal }] = useDisclosure(false)
   const [saveModalOpened, { open: openSaveModal, close: closeSaveModal }] = useDisclosure(false)
   const [authModalOpened, { open: openAuthModal, close: closeAuthModal }] = useDisclosure(false)
-  const [saveTarget, setSaveTarget] = useState<SaveTarget>('none')
-  const [saveStatus] = useState<SaveStatus>('saved')
   const { token } = useAuth()
 
   useEffect(() => {
@@ -58,9 +66,10 @@ export function EditNavbar({
             <SaveStatusButton saveTarget={saveTarget} saveStatus={saveStatus} onClick={openSaveModal} />
             <TitleButton name={name} onClick={openInfoModal} />
           </Group>
-          <VisibilitySelector 
+          <VisibilitySelector
             visibility={visibility}
             onVisibilityChange={onVisibilityChange}
+            saveVisibility={saveVisibility}
           />
         </Group>
       </AppNavbar>
@@ -71,6 +80,7 @@ export function EditNavbar({
         description={description}
         onNameChange={onNameChange}
         onDescriptionChange={onDescriptionChange}
+        saveInfo={saveMetadata}
       />
       <SaveModal
         opened={saveModalOpened}
