@@ -1,4 +1,4 @@
-import { type EditorState, type Extension, type Range, StateField, type Text } from '@codemirror/state'
+import { type EditorState, type Extension, type Range, StateEffect, StateField, type Text } from '@codemirror/state'
 import { syntaxTree } from '@codemirror/language'
 import { Decoration, type DecorationSet, EditorView, WidgetType } from '@codemirror/view'
 import type { SyntaxNode } from '@lezer/common'
@@ -66,6 +66,74 @@ const buildDeleteRequest = (view: EditorView, kind: ArrayKind, id: string): Pend
   }
 }
 
+// ranges (object node spans) that would be removed if the given item were deleted
+const affectedRanges = (state: EditorState, kind: ArrayKind, id: string): { from: number; to: number }[] => {
+  const doc = state.doc
+  const root = syntaxTree(state).topNode.firstChild
+  if (!root || root.name !== 'Object') return []
+
+  const ranges: { from: number; to: number }[] = []
+  const nodesArray = findProperty(root, 'nodes', doc)?.lastChild
+  const linksArray = findProperty(root, 'links', doc)?.lastChild
+
+  const idOf = (item: SyntaxNode) => {
+    const idNode = findProperty(item, 'id', doc)?.lastChild
+    return idNode && idNode.name === 'String' ? doc.sliceString(idNode.from + 1, idNode.to - 1) : null
+  }
+
+  if (kind === 'nodes') {
+    for (let child = nodesArray?.firstChild; child; child = child.nextSibling) {
+      if (child.name === 'Object' && idOf(child) === id) {
+        ranges.push({ from: child.from, to: child.to })
+        break
+      }
+    }
+    for (let child = linksArray?.firstChild; child; child = child.nextSibling) {
+      if (child.name !== 'Object') continue
+      const sourceNode = findProperty(child, 'source', doc)?.lastChild
+      const targetNode = findProperty(child, 'target', doc)?.lastChild
+      const source = sourceNode && sourceNode.name === 'String' ? doc.sliceString(sourceNode.from + 1, sourceNode.to - 1) : null
+      const target = targetNode && targetNode.name === 'String' ? doc.sliceString(targetNode.from + 1, targetNode.to - 1) : null
+      if (source === id || target === id) ranges.push({ from: child.from, to: child.to })
+    }
+  } else {
+    for (let child = linksArray?.firstChild; child; child = child.nextSibling) {
+      if (child.name === 'Object' && idOf(child) === id) {
+        ranges.push({ from: child.from, to: child.to })
+        break
+      }
+    }
+  }
+
+  return ranges
+}
+
+const setHighlight = StateEffect.define<{ from: number; to: number }[]>()
+const highlightLine = Decoration.line({ class: 'cm-graph-delete-highlight' })
+
+const buildHighlight = (state: EditorState, ranges: { from: number; to: number }[]): DecorationSet => {
+  const doc = state.doc
+  const lines: Range<Decoration>[] = []
+  for (const { from, to } of ranges) {
+    for (let ln = doc.lineAt(from).number; ln <= doc.lineAt(to).number; ln++) {
+      lines.push(highlightLine.range(doc.line(ln).from))
+    }
+  }
+  lines.sort((a, b) => a.from - b.from)
+  return Decoration.set(lines, true)
+}
+
+const highlightField = StateField.define<DecorationSet>({
+  create: () => Decoration.none,
+  update: (deco, tr) => {
+    for (const effect of tr.effects) {
+      if (effect.is(setHighlight)) return buildHighlight(tr.state, effect.value)
+    }
+    return tr.docChanged ? Decoration.none : deco
+  },
+  provide: field => EditorView.decorations.from(field)
+})
+
 class DeleteWidget extends WidgetType {
   constructor(
     private readonly kind: ArrayKind,
@@ -89,6 +157,12 @@ class DeleteWidget extends WidgetType {
     button.textContent = '-'
     button.title = this.kind === 'nodes' ? 'Delete node' : 'Delete link'
     button.addEventListener('mousedown', e => e.preventDefault())
+    button.addEventListener('mouseenter', () => {
+      view.dispatch({ effects: setHighlight.of(affectedRanges(view.state, this.kind, this.id)) })
+    })
+    button.addEventListener('mouseleave', () => {
+      view.dispatch({ effects: setHighlight.of([]) })
+    })
     button.addEventListener('click', e => {
       e.preventDefault()
       e.stopPropagation()
@@ -141,7 +215,11 @@ export const graphDeleteButtons = (onRequestDelete: (request: PendingGraphDeleti
 
   return [
     deleteField,
+    highlightField,
     EditorView.baseTheme({
+      '.cm-graph-delete-highlight': {
+        backgroundColor: 'rgba(224, 49, 49, 0.15)'
+      },
       '.cm-graph-gap': {
         display: 'inline-flex',
         alignItems: 'center',
