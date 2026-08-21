@@ -14,6 +14,9 @@ let simulation: any
 let data: any
 let selectedNodeId: string | null = null
 let dataSnapshot: PlainNetworkGraphData = { nodes: [], links: [] }
+let centerViewPending = false
+
+const CENTER_VIEW_ALPHA_THRESHOLD = 0.1
 
 const dataStore = makeSubscription()
 const selectionStore = makeSubscription()
@@ -62,6 +65,10 @@ export const initialize = (svgDOM: SVGSVGElement, viewWidth: number, viewHeight:
 
     simulation.on("tick", () => {
       rendering.tick()
+      if (centerViewPending && simulation.alpha() < CENTER_VIEW_ALPHA_THRESHOLD) {
+        centerViewPending = false
+        rendering.centerView(data)
+      }
     })
 }
 
@@ -206,5 +213,10 @@ export const applyData = (newData: PlainNetworkGraphData) => {
 
 export const loadData = (newData: PlainNetworkGraphData) => {
   applyData(newData)
+  if (simulation.alpha() < CENTER_VIEW_ALPHA_THRESHOLD) {
+    rendering.centerView(data)
+  } else {
+    centerViewPending = true
+  }
 }
 

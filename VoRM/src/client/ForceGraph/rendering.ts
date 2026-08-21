@@ -28,6 +28,7 @@ let currentViewHeight = 0
 
 const MAX_SCALE = 15
 const PAN_MARGIN_RATIO = 0.9
+const CENTER_VIEW_PADDING_RATIO = 0.9
 
 const calculateMinScale = (viewWidth: number, viewHeight: number) =>
   Math.min(viewWidth / worldWidth, viewHeight / worldHeight)
@@ -174,6 +175,35 @@ export const resize = (viewWidth: number, viewHeight: number) => {
   const minY = viewHeight - scale * worldMaxY
   const maxY = -scale * worldMinY
   const y = Math.min(maxY, Math.max(minY, currentY))
+
+  svgSelection.call(zoomBehavior.transform, d3.zoomIdentity.translate(x, y).scale(scale))
+}
+
+export const centerView = (data: NetworkGraphData) => {
+  if (!svgSelection || !zoomBehavior || data.nodes.length === 0) {
+    return
+  }
+
+  const xs = data.nodes.map((d: any) => d.x)
+  const ys = data.nodes.map((d: any) => d.y)
+  const minX = Math.min(...xs)
+  const maxX = Math.max(...xs)
+  const minY = Math.min(...ys)
+  const maxY = Math.max(...ys)
+
+  const bboxWidth = Math.max(1, maxX - minX)
+  const bboxHeight = Math.max(1, maxY - minY)
+  const centerX = (minX + maxX) / 2
+  const centerY = (minY + maxY) / 2
+
+  const minScale = calculateMinScale(currentViewWidth, currentViewHeight)
+  const fitScale = Math.min(currentViewWidth / bboxWidth, currentViewHeight / bboxHeight) * CENTER_VIEW_PADDING_RATIO
+  const scale = Math.min(MAX_SCALE, Math.max(minScale, fitScale))
+
+  const x = currentViewWidth / 2 - scale * centerX
+  const y = currentViewHeight / 2 - scale * centerY
+
+  zoomBehavior.translateExtent(calculateTranslateExtent(scale))
 
   svgSelection.call(zoomBehavior.transform, d3.zoomIdentity.translate(x, y).scale(scale))
 }
