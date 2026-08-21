@@ -13,7 +13,7 @@ const findProperty = (objectNode: SyntaxNode, propertyName: string, doc: Text): 
   return null
 }
 
-export const linkEndpointLinter = (): Extension => linter(view => {
+export const graphLinter = (): Extension => linter(view => {
   const diagnostics: Diagnostic[] = []
   const doc = view.state.doc
 
@@ -30,6 +30,27 @@ export const linkEndpointLinter = (): Extension => linter(view => {
   const root = syntaxTree(view.state).topNode.firstChild
   if (!root || root.name !== 'Object') return diagnostics
 
+  const nodesArray = findProperty(root, 'nodes', doc)?.lastChild
+  if (nodesArray && nodesArray.name === 'Array') {
+    let nodeIndex = 0
+    for (let nodeNode = nodesArray.firstChild; nodeNode; nodeNode = nodeNode.nextSibling) {
+      if (nodeNode.name !== 'Object') continue
+      const node = data.nodes[nodeIndex++]
+
+      const idProperty = findProperty(nodeNode, 'id', doc)
+      const valueNode = idProperty?.lastChild
+      const value = node?.id
+      if (value == null || value === '') {
+        diagnostics.push({
+          from: valueNode ? valueNode.from : nodeNode.from,
+          to: valueNode ? valueNode.to : nodeNode.to,
+          severity: 'error',
+          message: 'Node is missing an id'
+        })
+      }
+    }
+  }
+
   const linksArray = findProperty(root, 'links', doc)?.lastChild
   if (!linksArray || linksArray.name !== 'Array') return diagnostics
 
@@ -37,6 +58,17 @@ export const linkEndpointLinter = (): Extension => linter(view => {
   for (let linkNode = linksArray.firstChild; linkNode; linkNode = linkNode.nextSibling) {
     if (linkNode.name !== 'Object') continue
     const link = data.links[index++]
+
+    const idProperty = findProperty(linkNode, 'id', doc)
+    const idValueNode = idProperty?.lastChild
+    if (link?.id == null || link.id === '') {
+      diagnostics.push({
+        from: idValueNode ? idValueNode.from : linkNode.from,
+        to: idValueNode ? idValueNode.to : linkNode.to,
+        severity: 'error',
+        message: 'Link is missing an id'
+      })
+    }
 
     for (const key of ['source', 'target'] as const) {
       const valueNode = findProperty(linkNode, key, doc)?.lastChild

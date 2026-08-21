@@ -4,7 +4,7 @@ import * as ForceGraph from '../../ForceGraph'
 import CodeMirror from '@uiw/react-codemirror'
 import { lintGutter } from '@codemirror/lint'
 import { protectedJsonValues } from './protectedJsonValues'
-import { linkEndpointLinter } from './linkEndpointLinter'
+import { graphLinter } from './graphLinter'
 import { linkEndpointCompletion } from './linkEndpointCompletion'
 import { graphGapButtons } from './graphGapButtons'
 import { graphDeleteButtons, type PendingGraphDeletion } from './graphDeleteButtons'
@@ -65,7 +65,7 @@ export default function GraphCodeEditor({ editorWidth}: { editorWidth: number })
       borderRadius: '0 var(--mantine-radius-default) var(--mantine-radius-default) 0'
       }}>
       <CodeMirror
-        extensions={[protectedJsonValues(), linkEndpointLinter(), lintGutter(), linkEndpointCompletion(), graphGapButtons(), graphDeleteButtons(onRequestDelete)]}
+        extensions={[protectedJsonValues(), graphLinter(), lintGutter(), linkEndpointCompletion(), graphGapButtons(), graphDeleteButtons(onRequestDelete)]}
         value={value}
         height='100%'
         style={{ height: '100%', overflow: 'auto' }}
