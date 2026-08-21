@@ -1,4 +1,4 @@
-import type { PlainNetworkGraphData } from '../../../common/types/network'
+import type { PlainNetworkGraphData } from '../../../../common/types/network'
 
 export const parseGraphData = (value: string): PlainNetworkGraphData | null => {
   try {

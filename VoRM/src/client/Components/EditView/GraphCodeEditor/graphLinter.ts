@@ -3,7 +3,7 @@ import type { EditorView } from '@codemirror/view'
 import { syntaxTree } from '@codemirror/language'
 import { linter, type Diagnostic } from '@codemirror/lint'
 import type { SyntaxNode } from '@lezer/common'
-import type { PlainNetworkGraphData } from '../../../common/types/network'
+import type { PlainNetworkGraphData } from '../../../../common/types/network'
 
 const findProperty = (objectNode: SyntaxNode, propertyName: string, doc: Text): SyntaxNode | null => {
   for (let child = objectNode.firstChild; child; child = child.nextSibling) {

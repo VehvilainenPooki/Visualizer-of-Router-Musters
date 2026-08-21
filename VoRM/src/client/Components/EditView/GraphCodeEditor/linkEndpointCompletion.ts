@@ -1,7 +1,7 @@
 import { type Extension } from '@codemirror/state'
 import { syntaxTree } from '@codemirror/language'
 import { autocompletion, type CompletionContext, type CompletionResult } from '@codemirror/autocomplete'
-import * as ForceGraph from '../../ForceGraph'
+import * as ForceGraph from '../../../ForceGraph'
 
 const sourceOrTarget = (context: CompletionContext): CompletionResult | null => {
   let node = syntaxTree(context.state).resolveInner(context.pos, -1)

@@ -1,7 +1,7 @@
 import { type Extension, StateEffect, StateField } from '@codemirror/state'
 import { syntaxTree } from '@codemirror/language'
 import { Decoration, type DecorationSet, EditorView } from '@codemirror/view'
-import * as ForceGraph from '../../ForceGraph'
+import * as ForceGraph from '../../../ForceGraph'
 
 type Match = { from: number; to: number; id: string; color: string }
 

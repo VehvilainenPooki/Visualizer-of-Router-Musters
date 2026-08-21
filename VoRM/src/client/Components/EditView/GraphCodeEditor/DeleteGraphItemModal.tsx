@@ -1,5 +1,5 @@
 import { Button, Group, List, Modal, Text } from '@mantine/core'
-import { OVERLAY_BLUR } from '../../theme/constants'
+import { OVERLAY_BLUR } from '../../../theme/constants'
 import type { PendingGraphDeletion } from './graphDeleteButtons'
 
 interface DeleteGraphItemModalProps {
