@@ -1,5 +1,5 @@
 import { useRef, useState, useSyncExternalStore } from 'react'
-import { Group, Text } from '@mantine/core'
+import { Group } from '@mantine/core'
 import type { PlainNetworkGraphData } from '../../../common/types/network'
 import { EditNavbar } from './Navbar/EditNavbar'
 import type { VisibilityStatus } from './Navbar/Components/VisibilitySelector'
@@ -21,7 +21,6 @@ export function IllustrationEditor({ initialData, initialName, initialDescriptio
   const [editorWidth, setEditorWidth] = useState<number>(30)
   const [name, setName] = useState(initialName ?? 'Untitled')
   const [description, setDescription] = useState(initialDescription ?? null)
-  const selectedNodeId = useSyncExternalStore(ForceGraph.subscribeToSelection, ForceGraph.getSelectedNodeId)
   const splitContainerRef = useRef<HTMLDivElement>(null)
   const [saveTarget, setSaveTarget] = useState<SaveTarget>('none')
   const data = useSyncExternalStore(ForceGraph.subscribeToData, ForceGraph.getData)
@@ -47,14 +46,6 @@ export function IllustrationEditor({ initialData, initialName, initialDescriptio
         <SplitAdjuster containerRef={splitContainerRef} width={editorWidth} onWidthChange={setEditorWidth} />
         <div style={{ flex: 1, minWidth: 0, position: 'relative' }}>
           <Graph data={initialData} />
-          {selectedNodeId && (
-            <Text
-              size="sm"
-              style={{ position: 'absolute', top: 8, right: 8, background: 'var(--mantine-color-body)', padding: '4px 8px', borderRadius: 4 }}
-            >
-              Selected node: {selectedNodeId}
-            </Text>
-          )}
         </div>
       </Group>
     </div>
