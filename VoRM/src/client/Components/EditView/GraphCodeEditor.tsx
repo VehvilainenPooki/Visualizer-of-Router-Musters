@@ -6,7 +6,7 @@ import { lintGutter } from '@codemirror/lint'
 import { protectedJsonValues } from './protectedJsonValues'
 import { graphLinter } from './graphLinter'
 import { linkEndpointCompletion } from './linkEndpointCompletion'
-import { graphGapButtons } from './graphGapButtons'
+import { graphAddButtons } from './graphAddButtons'
 import { graphDeleteButtons, type PendingGraphDeletion } from './graphDeleteButtons'
 import { DeleteGraphItemModal } from './DeleteGraphItemModal'
 import { parseGraphData, hasDuplicateIds } from './graphDataUtils'
@@ -65,7 +65,7 @@ export default function GraphCodeEditor({ editorWidth}: { editorWidth: number })
       borderRadius: '0 var(--mantine-radius-default) var(--mantine-radius-default) 0'
       }}>
       <CodeMirror
-        extensions={[protectedJsonValues(), graphLinter(visibleData), lintGutter(), linkEndpointCompletion(), graphGapButtons(), graphDeleteButtons(onRequestDelete)]}
+        extensions={[protectedJsonValues(), graphLinter(visibleData), lintGutter(), linkEndpointCompletion(), graphAddButtons(), graphDeleteButtons(onRequestDelete)]}
         value={value}
         height='100%'
         style={{ height: '100%', overflow: 'auto' }}

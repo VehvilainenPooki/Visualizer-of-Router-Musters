@@ -40,18 +40,18 @@ const insertAt = (view: EditorView, kind: ArrayKind, insertIndex: number) => {
   })
 }
 
-class GapWidget extends WidgetType {
+class AddWidget extends WidgetType {
   constructor(private readonly kind: ArrayKind, private readonly insertIndex: number) {
     super()
   }
 
-  eq(other: GapWidget) {
+  eq(other: AddWidget) {
     return other.kind === this.kind && other.insertIndex === this.insertIndex
   }
 
   toDOM(view: EditorView) {
     const wrap = document.createElement('span')
-    wrap.className = 'cm-graph-gap'
+    wrap.className = 'cm-graph-gap cm-graph-add-gap'
 
     const button = document.createElement('button')
     button.type = 'button'
@@ -74,7 +74,7 @@ class GapWidget extends WidgetType {
   }
 }
 
-const buildGaps = (state: EditorState): DecorationSet => {
+const buildAdditions = (state: EditorState): DecorationSet => {
   const doc = state.doc
   const root = syntaxTree(state).topNode.firstChild
   if (!root || root.name !== 'Object') return Decoration.none
@@ -92,7 +92,7 @@ const buildGaps = (state: EditorState): DecorationSet => {
 
     if (items.length === 0) {
       widgets.push(
-        Decoration.widget({ widget: new GapWidget(kind, 0), side: 1 }).range(array.from + 1)
+        Decoration.widget({ widget: new AddWidget(kind, 0), side: 1 }).range(array.from + 1)
       )
       continue
     }
@@ -102,7 +102,7 @@ const buildGaps = (state: EditorState): DecorationSet => {
       const comma = item.nextSibling && item.nextSibling.name === ',' ? item.nextSibling : null
       const pos = comma ? comma.to : item.to
       widgets.push(
-        Decoration.widget({ widget: new GapWidget(kind, i + 1), side: 1 }).range(pos)
+        Decoration.widget({ widget: new AddWidget(kind, i + 1), side: 1 }).range(pos)
       )
     })
   }
@@ -111,20 +111,22 @@ const buildGaps = (state: EditorState): DecorationSet => {
   return Decoration.set(widgets, true)
 }
 
-const gapField = StateField.define<DecorationSet>({
-  create: state => buildGaps(state),
-  update: (deco, tr) => (tr.docChanged ? buildGaps(tr.state) : deco),
+const additionField = StateField.define<DecorationSet>({
+  create: state => buildAdditions(state),
+  update: (deco, tr) => (tr.docChanged ? buildAdditions(tr.state) : deco),
   provide: field => EditorView.decorations.from(field)
 })
 
-export const graphGapButtons = (): Extension => [
-  gapField,
+export const graphAddButtons = (): Extension => [
+  additionField,
   EditorView.baseTheme({
     '.cm-graph-gap': {
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
-      verticalAlign: 'middle',
+      verticalAlign: 'middle'
+    },
+    '.cm-graph-add-gap': {
       marginLeft: '6px'
     },
     '.cm-graph-gap-button': {
