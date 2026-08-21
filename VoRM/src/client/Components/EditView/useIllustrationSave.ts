@@ -1,19 +1,19 @@
-import { useCallback, useState } from "react"
+import { useCallback, useState, useSyncExternalStore } from "react"
 import type { SaveStatus, SaveTarget } from "./Navbar/Components/SaveStatusButton"
-import type { PlainNetworkGraphData } from "../../../common/types/network"
 import { Illustration } from "../../../common/types/illustration"
+import * as ForceGraph from '../../ForceGraph'
 
 interface Props {
   name: string
   description: string | null
   public: boolean
-  graphData: PlainNetworkGraphData
   saveTarget: SaveTarget
 }
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-export function useSaveHandler({ name, description, public: isPublic, graphData: graphcode, saveTarget }: Props) {
+export function useSaveHandler({ name, description, public: isPublic, saveTarget }: Props) {
+  const graphcode = useSyncExternalStore(ForceGraph.subscribeToData, ForceGraph.getData)
   const [statusOfSave, setStatusOfSave] = useState<SaveStatus>('saved')
   const [timeoutId, setTimeoutId] = useState<number>(-1)
 

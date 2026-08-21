@@ -4,7 +4,7 @@ import * as ForceGraph from '../../ForceGraph'
 import CodeMirror from '@uiw/react-codemirror'
 import { lintGutter } from '@codemirror/lint'
 import { protectedJsonValues } from './protectedJsonValues'
-import { graphLinter } from './graphLinter'
+import { graphLinter, getGraphDiagnostics } from './graphLinter'
 import { linkEndpointCompletion } from './linkEndpointCompletion'
 import { graphAddButtons } from './graphAddButtons'
 import { graphDeleteButtons, type PendingGraphDeletion } from './graphDeleteButtons'
@@ -12,7 +12,7 @@ import { nodeIdNavigation } from './nodeIdNavigation'
 import { DeleteGraphItemModal } from './DeleteGraphItemModal'
 import { parseGraphData, hasDuplicateIds } from './graphDataUtils'
 
-export default function GraphCodeEditor({ editorWidth}: { editorWidth: number }) {
+export default function GraphCodeEditor({ editorWidth, saveGraph }: { editorWidth: number, saveGraph: () => void }) {
   const data = useSyncExternalStore(ForceGraph.subscribeToData, ForceGraph.getData)
   const selectedNodeId = useSyncExternalStore(ForceGraph.subscribeToSelection, ForceGraph.getSelectedNodeId)
 
@@ -38,14 +38,17 @@ export default function GraphCodeEditor({ editorWidth}: { editorWidth: number })
     setValue(JSON.stringify(visibleData, null, 2))
   }, [data, selectedNodeId])
 
-  const onChange = useCallback((val: any, _viewUpdate: any) => {
+  const onChange = useCallback((val: any, viewUpdate: any) => {
     setValue(val)
 
     const parsed = parseGraphData(val)
     if (!parsed || hasDuplicateIds(parsed)) return
 
+    const noErrors = getGraphDiagnostics(viewUpdate.view, visibleData, externalData).length === 0
+
     if (!selectedNodeId) {
       ForceGraph.applyData(parsed)
+      if (noErrors) saveGraph()
       return
     }
 
@@ -58,7 +61,8 @@ export default function GraphCodeEditor({ editorWidth}: { editorWidth: number })
       nodes: [...otherNodes, ...parsed.nodes],
       links: [...otherLinks, ...parsed.links]
     })
-  }, [selectedNodeId])
+    if (noErrors) saveGraph()
+  }, [selectedNodeId, visibleData, externalData])
 
   const [pendingDeletion, setPendingDeletion] = useState<PendingGraphDeletion | null>(null)
   const onRequestDelete = useCallback((request: PendingGraphDeletion) => setPendingDeletion(request), [])

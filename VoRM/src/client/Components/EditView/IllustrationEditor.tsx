@@ -1,4 +1,4 @@
-import { useRef, useState, useSyncExternalStore } from 'react'
+import { useRef, useState } from 'react'
 import { Group } from '@mantine/core'
 import type { PlainNetworkGraphData } from '../../../common/types/network'
 import { EditNavbar } from './Navbar/EditNavbar'
@@ -6,7 +6,6 @@ import type { VisibilityStatus } from './Navbar/Components/VisibilitySelector'
 import Graph from './Graph'
 import GraphCodeEditor from './GraphCodeEditor'
 import SplitAdjuster from '../Primitives/SplitAdjuster'
-import * as ForceGraph from '../../ForceGraph'
 import type { SaveTarget } from './Navbar/Components/SaveStatusButton'
 import { useSaveHandler } from './useIllustrationSave'
 
@@ -23,8 +22,7 @@ export function IllustrationEditor({ initialData, initialName, initialDescriptio
   const [description, setDescription] = useState(initialDescription ?? null)
   const splitContainerRef = useRef<HTMLDivElement>(null)
   const [saveTarget, setSaveTarget] = useState<SaveTarget>('none')
-  const data = useSyncExternalStore(ForceGraph.subscribeToData, ForceGraph.getData)
-  const { statusOfSave, saveMetadata, saveVisibility, saveGraph } = useSaveHandler({name, description, public:visibility=="public", graphData: data, saveTarget})
+  const { statusOfSave, saveMetadata, saveVisibility, saveGraph } = useSaveHandler({name, description, public:visibility=="public", saveTarget})
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', overflow: 'hidden' }}>
