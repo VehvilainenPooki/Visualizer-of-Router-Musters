@@ -65,7 +65,7 @@ export default function GraphCodeEditor({ editorWidth}: { editorWidth: number })
       borderRadius: '0 var(--mantine-radius-default) var(--mantine-radius-default) 0'
       }}>
       <CodeMirror
-        extensions={[protectedJsonValues(), graphLinter(), lintGutter(), linkEndpointCompletion(), graphGapButtons(), graphDeleteButtons(onRequestDelete)]}
+        extensions={[protectedJsonValues(), graphLinter(visibleData), lintGutter(), linkEndpointCompletion(), graphGapButtons(), graphDeleteButtons(onRequestDelete)]}
         value={value}
         height='100%'
         style={{ height: '100%', overflow: 'auto' }}
