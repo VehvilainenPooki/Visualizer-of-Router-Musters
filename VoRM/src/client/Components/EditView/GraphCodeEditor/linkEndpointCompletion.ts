@@ -18,7 +18,27 @@ const sourceOrTarget = (context: CompletionContext): CompletionResult | null => 
   const key = context.state.sliceDoc(propertyName.from + 1, propertyName.to - 1)
   if (key !== 'source' && key !== 'target') return null
 
-  const nodeIds = ForceGraph.getData().nodes.map(n => String(n.id))
+  const otherKey = key === 'source' ? 'target' : 'source'
+  let otherValue: string | null = null
+  const property = propertyName.parent
+  const object = property?.parent
+  if (object) {
+    for (let child = object.firstChild; child; child = child.nextSibling) {
+      if (child.name !== 'Property' || child === property) continue
+      const childPropertyName = child.firstChild
+      if (!childPropertyName || childPropertyName.name !== 'PropertyName') continue
+      const childKey = context.state.sliceDoc(childPropertyName.from + 1, childPropertyName.to - 1)
+      if (childKey !== otherKey) continue
+      const childValue = child.lastChild
+      if (childValue && childValue.name === 'String') {
+        otherValue = context.state.sliceDoc(childValue.from + 1, childValue.to - 1)
+      }
+    }
+  }
+
+  const nodeIds = ForceGraph.getData().nodes
+    .map(n => String(n.id))
+    .filter(id => id !== otherValue)
 
   return {
     from,
