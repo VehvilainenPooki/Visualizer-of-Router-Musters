@@ -201,7 +201,7 @@ export const tick = () => {
 export const updateElements = (data: NetworkGraphData) => {
   console.log(data)
 
-  nodeSelection = nodeSelection.data(data.nodes)
+  nodeSelection = nodeSelection.data(data.nodes, (d: any) => d.id)
     .join("circle")
     .attr("cx", (d: any) => d.x)
     .attr("cy", (d: any) => d.y)
@@ -218,14 +218,14 @@ export const updateElements = (data: NetworkGraphData) => {
       onNodeClick(d.id === selectedNodeId ? null : d.id)
     })
 
-  textSelection = textSelection.data(data.nodes)
+  textSelection = textSelection.data(data.nodes, (d: any) => d.id)
     .join("text")
     .text((d: any) => d.label ?? d.id)
     .attr("font-size", "12px")
     .attr("dx", 12)
     .attr("dy", 4)
 
-  linkSelection = linkSelection.data(data.links)
+  linkSelection = linkSelection.data(data.links, (d: any) => d.id)
     .join("line")
     .attr("x1", (d: any) => d.source.x)
     .attr("y1", (d: any) => d.source.y)
@@ -233,7 +233,7 @@ export const updateElements = (data: NetworkGraphData) => {
     .attr("y2", (d: any) => d.target.y)
     .attr("stroke-width", 1)
 
-  linkLabelSelection = linkLabelSelection.data(data.links)
+  linkLabelSelection = linkLabelSelection.data(data.links, (d: any) => d.id)
     .join("text")
     .text((d: any) => d.label ?? d.id)
     .attr("font-size", "10px")

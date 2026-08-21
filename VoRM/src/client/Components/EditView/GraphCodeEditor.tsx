@@ -9,6 +9,7 @@ import { linkEndpointCompletion } from './linkEndpointCompletion'
 import { graphGapButtons } from './graphGapButtons'
 import { graphDeleteButtons, type PendingGraphDeletion } from './graphDeleteButtons'
 import { DeleteGraphItemModal } from './DeleteGraphItemModal'
+import { parseGraphData } from './graphDataUtils'
 
 export default function GraphCodeEditor({ editorWidth}: { editorWidth: number }) {
   const data = useSyncExternalStore(ForceGraph.subscribeToData, ForceGraph.getData)
@@ -27,10 +28,27 @@ export default function GraphCodeEditor({ editorWidth}: { editorWidth: number })
     setValue(JSON.stringify(visibleData, null, 2))
   }, [data, selectedNodeId])
 
-  const onChange = useCallback((val:any, _viewUpdate:any) => {
-    console.log('val:', val)
+  const onChange = useCallback((val: any, _viewUpdate: any) => {
     setValue(val)
-  }, [])
+
+    const parsed = parseGraphData(val)
+    if (!parsed) return
+
+    if (!selectedNodeId) {
+      ForceGraph.applyData(parsed)
+      return
+    }
+
+    // editor shows only the selected node + its incident links; merge that
+    // edited subset back into the full graph, leaving everything else untouched
+    const fullData = ForceGraph.getData()
+    const otherNodes = fullData.nodes.filter(n => n.id !== selectedNodeId)
+    const otherLinks = fullData.links.filter(l => l.source !== selectedNodeId && l.target !== selectedNodeId)
+    ForceGraph.applyData({
+      nodes: [...otherNodes, ...parsed.nodes],
+      links: [...otherLinks, ...parsed.links]
+    })
+  }, [selectedNodeId])
 
   const [pendingDeletion, setPendingDeletion] = useState<PendingGraphDeletion | null>(null)
   const onRequestDelete = useCallback((request: PendingGraphDeletion) => setPendingDeletion(request), [])

@@ -126,16 +126,25 @@ export const addLink = (source: String, target: string, name?: string) => {
   return true
 }
 
-export const loadData = (newData: PlainNetworkGraphData) => {
+export const applyData = (newData: PlainNetworkGraphData) => {
   if (!simulation) {
     return
   }
 
-  data.nodes.length = 0
-  data.links.length = 0
+  const existingNodesById = new Map<string, any>(data.nodes.map((n: any) => [n.id, n]))
+  const nextIds = new Set(newData.nodes.map(n => n.id))
+  const nodesChanged =
+    data.nodes.length !== newData.nodes.length ||
+    data.nodes.some((n: any) => !nextIds.has(n.id))
 
-  newData.nodes.forEach((n, i) => {
-    data.nodes.push({
+  const nextNodes = newData.nodes.map((n, i) => {
+    const existing = existingNodesById.get(n.id)
+    if (existing) {
+      existing.label = n.label
+      existing.index = i
+      return existing
+    }
+    return {
       id: n.id,
       label: n.label,
       nodeR,
@@ -144,24 +153,57 @@ export const loadData = (newData: PlainNetworkGraphData) => {
       y: height / 2 + Math.random() * 100 - 50,
       vx: 0,
       vy: 0
-    })
+    }
   })
 
-  newData.links.forEach((l, i) => {
-    const sourceNode = data.nodes.find((d: any) => d.id === l.source)
-    const targetNode = data.nodes.find((d: any) => d.id === l.target)
-    if (!sourceNode || !targetNode) {
-      return
+  const nextNodesById = new Map<string, any>(nextNodes.map(n => [n.id, n]))
+
+  const existingLinksById = new Map<string, any>(data.links.map((l: any) => [l.id, l]))
+  const validLinks = newData.links.filter(l => nextNodesById.has(l.source) && nextNodesById.has(l.target))
+  const validLinkIds = new Set(validLinks.map(l => l.id))
+  const linksChanged =
+    data.links.length !== validLinks.length ||
+    data.links.some((l: any) => !validLinkIds.has(l.id))
+
+  const nextLinks = validLinks.map((l, i) => {
+    const sourceNode = nextNodesById.get(l.source)
+    const targetNode = nextNodesById.get(l.target)
+    const existing = existingLinksById.get(l.id)
+    if (existing) {
+      existing.label = l.label
+      existing.index = i
+      existing.source = sourceNode
+      existing.target = targetNode
+      return existing
     }
-    data.links.push({ id: l.id, label: l.label, index: i, source: sourceNode, target: targetNode })
+    return { id: l.id, label: l.label, index: i, source: sourceNode, target: targetNode }
   })
+
+  data.nodes.length = 0
+  data.nodes.push(...nextNodes)
+  data.links.length = 0
+  data.links.push(...nextLinks)
 
   simulation.nodes(data.nodes)
     .force("link", d3.forceLink(data.links).id((d: any) => d.id).distance(50))
-    .alpha(1)
-    .restart()
+
+  if (nodesChanged || linksChanged) {
+    simulation.alpha(1).restart()
+  }
 
   rendering.updateElements(data)
-  notifyDataChanged()
+
+  // preserve authored (possibly dangling) links in the published snapshot so the
+  // editor text isn't clobbered while a link's source/target is still being typed;
+  // only the simulation/rendering-facing `data.links` above is filtered to valid links
+  dataSnapshot = {
+    nodes: nextNodes.map(n => ({ id: n.id, label: n.label ?? n.id })),
+    links: newData.links.map(l => ({ id: l.id, label: l.label ?? l.id, source: l.source, target: l.target }))
+  }
+  dataStore.notify()
+}
+
+export const loadData = (newData: PlainNetworkGraphData) => {
+  applyData(newData)
 }
 
