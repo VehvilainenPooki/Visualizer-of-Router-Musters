@@ -46,7 +46,7 @@ const flagDuplicates = (entries: IdEntry[], messageFor: (id: string) => string, 
   }
 }
 
-export const graphLinter = (baseline?: PlainNetworkGraphData): Extension => linter(view => {
+export const graphLinter = (baseline?: PlainNetworkGraphData, externalData?: PlainNetworkGraphData): Extension => linter(view => {
   const diagnostics: Diagnostic[] = []
   const doc = view.state.doc
 
@@ -58,7 +58,12 @@ export const graphLinter = (baseline?: PlainNetworkGraphData): Extension => lint
   }
   if (!data || !Array.isArray(data.nodes) || !Array.isArray(data.links)) return diagnostics
 
-  const nodeIds = new Set(data.nodes.map((n: any) => n?.id))
+  // ids that exist elsewhere in the graph but aren't shown in this editor,
+  // so edits here can still be checked against the whole graph
+  const externalNodeIds = new Set(externalData?.nodes.map(n => n.id) ?? [])
+  const externalLinkIds = new Set(externalData?.links.map(l => l.id) ?? [])
+
+  const nodeIds = new Set([...data.nodes.map((n: any) => n?.id), ...externalNodeIds])
 
   const root = syntaxTree(view.state).topNode.firstChild
   if (!root || root.name !== 'Object') return diagnostics
@@ -79,6 +84,8 @@ export const graphLinter = (baseline?: PlainNetworkGraphData): Extension => lint
       const to = valueNode ? valueNode.to : nodeNode.to
       if (value == null || value === '') {
         diagnostics.push({ from, to, severity: 'error', message: 'Node is missing an id' })
+      } else if (externalNodeIds.has(value) || externalLinkIds.has(value)) {
+        diagnostics.push({ from, to, severity: 'error', message: `Duplicate node id ${JSON.stringify(value)}: already used elsewhere in the graph` })
       } else {
         nodeIdEntries.push({ id: value, from, to, isUnchanged: baseline?.nodes[idx]?.id === value })
       }
@@ -104,6 +111,8 @@ export const graphLinter = (baseline?: PlainNetworkGraphData): Extension => lint
       diagnostics.push({ from, to, severity: 'error', message: 'Link is missing an id' })
     } else if (nodeIds.has(link.id)) {
       diagnostics.push({ from, to, severity: 'error', message: `Duplicate id ${JSON.stringify(link.id)}: already used by a node` })
+    } else if (externalLinkIds.has(link.id)) {
+      diagnostics.push({ from, to, severity: 'error', message: `Duplicate link id ${JSON.stringify(link.id)}: already used elsewhere in the graph` })
     } else {
       linkIdEntries.push({ id: link.id, from, to, isUnchanged: baseline?.links[idx]?.id === link.id })
     }

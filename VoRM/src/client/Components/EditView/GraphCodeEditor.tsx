@@ -22,6 +22,15 @@ export default function GraphCodeEditor({ editorWidth}: { editorWidth: number })
       }
     : data
 
+  // the rest of the graph, not shown in the editor when a node is selected,
+  // kept around so the linter can still validate ids and link endpoints against it
+  const externalData = selectedNodeId
+    ? {
+        nodes: data.nodes.filter(n => n.id !== selectedNodeId),
+        links: data.links.filter(l => l.source !== selectedNodeId && l.target !== selectedNodeId)
+      }
+    : { nodes: [], links: [] }
+
   const [value, setValue] = useState(() => JSON.stringify(visibleData, null, 2))
 
   useEffect(() => {
@@ -65,7 +74,7 @@ export default function GraphCodeEditor({ editorWidth}: { editorWidth: number })
       borderRadius: '0 var(--mantine-radius-default) var(--mantine-radius-default) 0'
       }}>
       <CodeMirror
-        extensions={[protectedJsonValues(), graphLinter(visibleData), lintGutter(), linkEndpointCompletion(), graphAddButtons(), graphDeleteButtons(onRequestDelete)]}
+        extensions={[protectedJsonValues(selectedNodeId ?? undefined), graphLinter(visibleData, externalData), lintGutter(), linkEndpointCompletion(), graphAddButtons(), graphDeleteButtons(onRequestDelete)]}
         value={value}
         height='100%'
         style={{ height: '100%', overflow: 'auto' }}
