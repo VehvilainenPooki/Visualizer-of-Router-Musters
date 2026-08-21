@@ -1,13 +1,12 @@
 import { useState, useEffect, useCallback, useSyncExternalStore } from 'react'
 import { Paper } from '@mantine/core'
 import * as ForceGraph from '../../ForceGraph'
-import CodeMirror from '@uiw/react-codemirror';
+import CodeMirror from '@uiw/react-codemirror'
+import { lintGutter } from '@codemirror/lint'
 import { protectedJsonValues } from './protectedJsonValues'
+import { linkEndpointLinter } from './linkEndpointLinter'
 
-
-
-
-export default function GraphCodeEditor({ editorWidth }: { editorWidth: number }) {
+export default function GraphCodeEditor({ editorWidth}: { editorWidth: number }) {
   const data = useSyncExternalStore(ForceGraph.subscribeToData, ForceGraph.getData)
   const selectedNodeId = useSyncExternalStore(ForceGraph.subscribeToSelection, ForceGraph.getSelectedNodeId)
 
@@ -18,16 +17,16 @@ export default function GraphCodeEditor({ editorWidth }: { editorWidth: number }
       }
     : data
 
-  const [value, setValue] = useState(() => JSON.stringify(visibleData, null, 2));
+  const [value, setValue] = useState(() => JSON.stringify(visibleData, null, 2))
 
   useEffect(() => {
     setValue(JSON.stringify(visibleData, null, 2))
   }, [data, selectedNodeId])
 
   const onChange = useCallback((val:any, _viewUpdate:any) => {
-    console.log('val:', val);
-    setValue(val);
-  }, []);
+    console.log('val:', val)
+    setValue(val)
+  }, [])
   return (
     <Paper style={{
       boxShadow:'var(--shadow-even-xs)',
@@ -39,7 +38,7 @@ export default function GraphCodeEditor({ editorWidth }: { editorWidth: number }
       zIndex: 2,
       borderRadius: '0 var(--mantine-radius-default) var(--mantine-radius-default) 0'
       }}>
-      <CodeMirror extensions={[protectedJsonValues()]} value={value} height='100%' style={{ height: '100%', overflow: 'auto' }} onChange={onChange} />
+      <CodeMirror extensions={[protectedJsonValues(), linkEndpointLinter(), lintGutter()]} value={value} height='100%' style={{ height: '100%', overflow: 'auto' }} onChange={onChange} />
     </Paper>
   )
 }
