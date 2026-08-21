@@ -28,21 +28,6 @@ export const getSelectedNodeId = () => selectedNodeId
 
 export const getData = () => dataSnapshot
 
-const computeDataSnapshot = (): PlainNetworkGraphData => ({
-  nodes: (data?.nodes ?? []).map((n: any) => ({ id: n.id, label: n.label ?? n.id })),
-  links: (data?.links ?? []).map((l: any) => ({
-    id: l.id ?? `${l.source?.id ?? l.source}-${l.target?.id ?? l.target}`,
-    label: l.label ?? l.id ?? `${l.source?.id ?? l.source}-${l.target?.id ?? l.target}`,
-    source: l.source?.id ?? l.source,
-    target: l.target?.id ?? l.target
-  }))
-})
-
-const notifyDataChanged = () => {
-  dataSnapshot = computeDataSnapshot()
-  dataStore.notify()
-}
-
 export const initialize = (svgDOM: SVGSVGElement, viewWidth: number, viewHeight: number) => {
 
   ({ simulation, data } = forceSim.initialize(width, height))
@@ -82,59 +67,6 @@ export const centerView = () => {
 
 export const stop = () => {
   simulation.stop()
-}
-
-//TODO: update to current spec
-export const addNode = (nodename: string) => {
-  data.nodes.push({
-    id: nodename,
-    label: nodename,
-    nodeR: nodeR,
-    index: data.nodes.length + 1,
-    x: width / 2 + Math.random() * 100 - 50,
-    y: height / 2 + Math.random() * 100 - 50,
-    vx: 0,
-    vy: 0
-  })
-  console.log(data)
-  simulation.nodes(data.nodes)
-  rendering.updateElements(data)
-  simulation.alpha(1).restart()
-  console.log(nodename, data.nodes)
-  notifyDataChanged()
-}
-
-//TODO: update to current spec
-export const addLink = (source: String, target: string, name?: string) => {
-  if (!simulation) {
-    return false
-  }
-  const sourceNode = data.nodes.find((d: any) => d.id === source)
-  const targetNode = data.nodes.find((d: any) => d.id === target)
-
-  if (!sourceNode || !targetNode) {
-    console.log("Given nodenames didn't match", source, target)
-    return false
-  } else {
-    console.log(data.links, source, sourceNode, target, targetNode)
-    const linkName = name ?? `${source}-${target}`
-    data.links.push({
-      id: `${source}-${target}-${data.links.length}`,
-      label: linkName,
-      index: data.links.length,
-      source: sourceNode,
-      target: targetNode
-    })
-
-    simulation.nodes(data.nodes)
-      .force("link", d3.forceLink(data.links).id(d => (d as any).id).distance(50))
-      .alpha(1)
-      .restart()
-
-    rendering.updateElements(data)
-    notifyDataChanged()
-  }
-  return true
 }
 
 export const applyData = (newData: PlainNetworkGraphData) => {
