@@ -9,7 +9,7 @@ import { linkEndpointCompletion } from './linkEndpointCompletion'
 import { graphGapButtons } from './graphGapButtons'
 import { graphDeleteButtons, type PendingGraphDeletion } from './graphDeleteButtons'
 import { DeleteGraphItemModal } from './DeleteGraphItemModal'
-import { parseGraphData } from './graphDataUtils'
+import { parseGraphData, hasDuplicateIds } from './graphDataUtils'
 
 export default function GraphCodeEditor({ editorWidth}: { editorWidth: number }) {
   const data = useSyncExternalStore(ForceGraph.subscribeToData, ForceGraph.getData)
@@ -32,7 +32,7 @@ export default function GraphCodeEditor({ editorWidth}: { editorWidth: number })
     setValue(val)
 
     const parsed = parseGraphData(val)
-    if (!parsed) return
+    if (!parsed || hasDuplicateIds(parsed)) return
 
     if (!selectedNodeId) {
       ForceGraph.applyData(parsed)

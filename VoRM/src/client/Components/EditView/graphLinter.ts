@@ -33,6 +33,7 @@ export const graphLinter = (): Extension => linter(view => {
   const nodesArray = findProperty(root, 'nodes', doc)?.lastChild
   if (nodesArray && nodesArray.name === 'Array') {
     let nodeIndex = 0
+    const seenNodeIds = new Set<string>()
     for (let nodeNode = nodesArray.firstChild; nodeNode; nodeNode = nodeNode.nextSibling) {
       if (nodeNode.name !== 'Object') continue
       const node = data.nodes[nodeIndex++]
@@ -47,6 +48,15 @@ export const graphLinter = (): Extension => linter(view => {
           severity: 'error',
           message: 'Node is missing an id'
         })
+      } else if (seenNodeIds.has(value)) {
+        diagnostics.push({
+          from: valueNode ? valueNode.from : nodeNode.from,
+          to: valueNode ? valueNode.to : nodeNode.to,
+          severity: 'error',
+          message: `Duplicate node id ${JSON.stringify(value)}`
+        })
+      } else {
+        seenNodeIds.add(value)
       }
     }
   }
@@ -55,6 +65,7 @@ export const graphLinter = (): Extension => linter(view => {
   if (!linksArray || linksArray.name !== 'Array') return diagnostics
 
   let index = 0
+  const seenLinkIds = new Set<string>()
   for (let linkNode = linksArray.firstChild; linkNode; linkNode = linkNode.nextSibling) {
     if (linkNode.name !== 'Object') continue
     const link = data.links[index++]
@@ -68,6 +79,15 @@ export const graphLinter = (): Extension => linter(view => {
         severity: 'error',
         message: 'Link is missing an id'
       })
+    } else if (seenLinkIds.has(link.id) || nodeIds.has(link.id)) {
+      diagnostics.push({
+        from: idValueNode ? idValueNode.from : linkNode.from,
+        to: idValueNode ? idValueNode.to : linkNode.to,
+        severity: 'error',
+        message: `Duplicate id ${JSON.stringify(link.id)}: already used by a node`
+      })
+    } else {
+      seenLinkIds.add(link.id)
     }
 
     for (const key of ['source', 'target'] as const) {

@@ -15,3 +15,21 @@ export const nextUniqueId = (prefix: string, taken: Set<string>) => {
   while (taken.has(`${prefix}-${i}`)) i++
   return `${prefix}-${i}`
 }
+
+export const hasDuplicateIds = (data: PlainNetworkGraphData): boolean => {
+  const nodeIds = new Set<string>()
+  for (const node of data.nodes) {
+    if (node?.id == null) continue
+    if (nodeIds.has(node.id)) return true
+    nodeIds.add(node.id)
+  }
+
+  const linkIds = new Set<string>()
+  for (const link of data.links) {
+    if (link?.id == null) continue
+    if (linkIds.has(link.id) || nodeIds.has(link.id)) return true
+    linkIds.add(link.id)
+  }
+
+  return false
+}
