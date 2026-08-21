@@ -76,6 +76,10 @@ export const resize = (viewWidth: number, viewHeight: number) => {
   rendering.resize(viewWidth, viewHeight)
 }
 
+export const centerView = () => {
+  rendering.centerView(data)
+}
+
 export const stop = () => {
   simulation.stop()
 }

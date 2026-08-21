@@ -2,6 +2,8 @@ import {useEffect, useRef} from 'react'
 
 import type { FC } from 'react'
 
+import { Scan, Share2 } from 'lucide-react'
+
 import type { PlainNetworkGraphData } from '../../../common/types/network'
 
 import * as ForceGraph from '../../ForceGraph'
@@ -43,6 +45,7 @@ const Graph: FC<GraphProps> = ({ data }) => {
     <div
       ref={containerRef}
       style={{
+        position: 'relative',
         flex: 1,
         minWidth: 0,
         minHeight: 0,
@@ -55,6 +58,39 @@ const Graph: FC<GraphProps> = ({ data }) => {
       }}
     >
       <svg ref={svgRef} />
+      <button
+        type="button"
+        onClick={() => ForceGraph.centerView()}
+        title="Center view"
+        style={{
+          position: 'absolute',
+          top: 12,
+          right: 12,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: 32,
+          height: 32,
+          padding: 0,
+          border: '1px solid #ccc',
+          borderRadius: 4,
+          backgroundColor: '#fff',
+          cursor: 'pointer'
+        }}
+      >
+        <span style={{ position: 'relative', width: 22, height: 22 }}>
+          <Scan size={22} style={{ position: 'absolute', top: 0, left: 0 }} />
+          <Share2
+            size={12}
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)'
+            }}
+          />
+        </span>
+      </button>
     </div>
   )
 }
