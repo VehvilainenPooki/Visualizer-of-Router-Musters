@@ -14,8 +14,6 @@ const SELECTED_STROKE = d3.schemeCategory10[3]
 const SELECTED_FILL = d3.schemeCategory10[1]
 
 const CLICK_MAX_DISTANCE_PX = 5
-const CLICK_MAX_DURATION_MS = 300
-let backgroundPointerDown: { x: number, y: number, time: number } | null = null
 let selectedNodeId: string | null = null
 let onNodeClick: (id: string | null) => void = () => {}
 
@@ -69,19 +67,8 @@ export const initialize = (
     .attr("height", viewHeight)
     .attr("viewBox", [0, 0, viewWidth, viewHeight])
     .attr("style", "display: block; width: 100%; height: 100%;")
-    .on("mousedown", (event: MouseEvent) => {
-      backgroundPointerDown = { x: event.clientX, y: event.clientY, time: Date.now() }
-    })
-    .on("mouseup", (event: MouseEvent) => {
-      if (!backgroundPointerDown) return
-      const dx = event.clientX - backgroundPointerDown.x
-      const dy = event.clientY - backgroundPointerDown.y
-      const distance = Math.hypot(dx, dy)
-      const duration = Date.now() - backgroundPointerDown.time
-      backgroundPointerDown = null
-      if (distance <= CLICK_MAX_DISTANCE_PX && duration <= CLICK_MAX_DURATION_MS) {
-        onNodeClick(null)
-      }
+    .on("click", () => {
+      onNodeClick(null)
     })
 
   const viewport = svg.append("g").attr("class", "viewport")
@@ -106,6 +93,7 @@ export const initialize = (
     .scaleExtent([calculateMinScale(viewWidth, viewHeight), MAX_SCALE])
     .extent([[0, 0], [viewWidth, viewHeight]])
     .translateExtent(calculateTranslateExtent(1))
+    .clickDistance(CLICK_MAX_DISTANCE_PX)
     .on("zoom", (event: d3.D3ZoomEvent<SVGSVGElement, unknown>) => {
       const { k: scale } = event.transform
       viewport.attr("transform", event.transform.toString())
