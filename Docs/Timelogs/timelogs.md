@@ -45,3 +45,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 090826 | 6h | Implement node selection, improve subscriptions, code editor Shenanigans |
 | 100826 | 10h | Code base cleanup and edit view E2E work |
 | 170826 | 5h | Reorganization and work on edit saving |
+| 180826 | 3h | Edit view work continues |
