@@ -132,12 +132,13 @@ export const applyData = (newData: PlainNetworkGraphData) => {
   }
 
   const existingNodesById = new Map<string, any>(data.nodes.map((n: any) => [n.id, n]))
-  const nextIds = new Set(newData.nodes.map(n => n.id))
+  const validNodes = newData.nodes.filter(n => n.id != null)
+  const nextIds = new Set(validNodes.map(n => n.id))
   const nodesChanged =
-    data.nodes.length !== newData.nodes.length ||
+    data.nodes.length !== validNodes.length ||
     data.nodes.some((n: any) => !nextIds.has(n.id))
 
-  const nextNodes = newData.nodes.map((n, i) => {
+  const nextNodes = validNodes.map((n, i) => {
     const existing = existingNodesById.get(n.id)
     if (existing) {
       existing.label = n.label
