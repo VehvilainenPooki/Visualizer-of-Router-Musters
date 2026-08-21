@@ -130,6 +130,13 @@ export const getGraphDiagnostics = (view: EditorView, baseline?: PlainNetworkGra
           severity: 'error',
           message: `No node with id ${JSON.stringify(value)} exists`
         })
+      } else if (value != null && value !== '' && link?.source === link?.target) {
+        diagnostics.push({
+          from: valueNode.from,
+          to: valueNode.to,
+          severity: 'error',
+          message: 'Link source and target must not be the same node'
+        })
       }
     }
   }
