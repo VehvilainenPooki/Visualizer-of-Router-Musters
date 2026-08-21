@@ -155,7 +155,7 @@ class DeleteWidget extends WidgetType {
     button.type = 'button'
     button.className = 'cm-graph-gap-button cm-graph-delete-button'
     button.textContent = '-'
-    button.title = this.kind === 'nodes' ? 'Delete node' : 'Delete link'
+    button.title = `Delete ${this.kind === 'nodes' ? 'node' : 'link'} "${this.id}"`
     button.addEventListener('mousedown', e => e.preventDefault())
     button.addEventListener('mouseenter', () => {
       view.dispatch({ effects: setHighlight.of(affectedRanges(view.state, this.kind, this.id)) })
