@@ -17,22 +17,38 @@ const findProperty = (objectNode: SyntaxNode, propertyName: string, doc: Text): 
   return null
 }
 
-const newNode = (data: any) => {
-  const id = nextUniqueId('node', new Set(data.nodes.map((n: any) => n.id)))
+const newNode = (data: any, externalIds: string[] = []) => {
+  const id = nextUniqueId('node', new Set([...data.nodes.map((n: any) => n.id), ...externalIds]))
   return { id, label: id }
 }
 
-const newLink = (data: any) => {
-  const id = nextUniqueId('link', new Set(data.links.map((l: any) => l.id)))
-  return { id, label: id, source: '', target: '' }
+const newLink = (data: any, externalIds: string[] = [], source = '') => {
+  const id = nextUniqueId('link', new Set([...data.links.map((l: any) => l.id), ...externalIds]))
+  return { id, label: id, source, target: '' }
 }
 
-const insertAt = (view: EditorView, kind: ArrayKind, insertIndex: number) => {
+const insertAt = (
+  view: EditorView,
+  kind: ArrayKind,
+  insertIndex: number,
+  selectedNodeId?: string,
+  externalIds?: { nodes: string[]; links: string[] }
+) => {
   const data = parseGraphData(view.state.doc.toString())
   if (!data) return
 
-  const item = kind === 'nodes' ? newNode(data) : newLink(data)
-  ;(data[kind] as any[]).splice(insertIndex, 0, item)
+  if (kind === 'nodes') {
+    const node = newNode(data, externalIds?.nodes)
+    data.nodes.splice(insertIndex, 0, node)
+    if (selectedNodeId) {
+      const link = newLink(data, externalIds?.links, selectedNodeId)
+      link.target = node.id
+      data.links.push(link)
+    }
+  } else {
+    const link = newLink(data, externalIds?.links, selectedNodeId ?? '')
+    data.links.splice(insertIndex, 0, link)
+  }
 
   view.dispatch({
     changes: { from: 0, to: view.state.doc.length, insert: JSON.stringify(data, null, 2) },
@@ -41,12 +57,22 @@ const insertAt = (view: EditorView, kind: ArrayKind, insertIndex: number) => {
 }
 
 class AddWidget extends WidgetType {
-  constructor(private readonly kind: ArrayKind, private readonly insertIndex: number) {
+  constructor(
+    private readonly kind: ArrayKind,
+    private readonly insertIndex: number,
+    private readonly selectedNodeId?: string,
+    private readonly externalIds?: { nodes: string[]; links: string[] }
+  ) {
     super()
   }
 
   eq(other: AddWidget) {
-    return other.kind === this.kind && other.insertIndex === this.insertIndex
+    return (
+      other.kind === this.kind &&
+      other.insertIndex === this.insertIndex &&
+      other.selectedNodeId === this.selectedNodeId &&
+      other.externalIds === this.externalIds
+    )
   }
 
   toDOM(view: EditorView) {
@@ -62,7 +88,7 @@ class AddWidget extends WidgetType {
     button.addEventListener('click', e => {
       e.preventDefault()
       e.stopPropagation()
-      insertAt(view, this.kind, this.insertIndex)
+      insertAt(view, this.kind, this.insertIndex, this.selectedNodeId, this.externalIds)
     })
 
     wrap.appendChild(button)
@@ -74,7 +100,11 @@ class AddWidget extends WidgetType {
   }
 }
 
-const buildAdditions = (state: EditorState): DecorationSet => {
+const buildAdditions = (
+  state: EditorState,
+  selectedNodeId?: string,
+  externalIds?: { nodes: string[]; links: string[] }
+): DecorationSet => {
   const doc = state.doc
   const root = syntaxTree(state).topNode.firstChild
   if (!root || root.name !== 'Object') return Decoration.none
@@ -92,7 +122,7 @@ const buildAdditions = (state: EditorState): DecorationSet => {
 
     if (items.length === 0) {
       widgets.push(
-        Decoration.widget({ widget: new AddWidget(kind, 0), side: 1 }).range(array.from + 1)
+        Decoration.widget({ widget: new AddWidget(kind, 0, selectedNodeId, externalIds), side: 1 }).range(array.from + 1)
       )
       continue
     }
@@ -102,7 +132,7 @@ const buildAdditions = (state: EditorState): DecorationSet => {
       const comma = item.nextSibling && item.nextSibling.name === ',' ? item.nextSibling : null
       const pos = comma ? comma.to : item.to
       widgets.push(
-        Decoration.widget({ widget: new AddWidget(kind, i + 1), side: 1 }).range(pos)
+        Decoration.widget({ widget: new AddWidget(kind, i + 1, selectedNodeId, externalIds), side: 1 }).range(pos)
       )
     })
   }
@@ -111,14 +141,18 @@ const buildAdditions = (state: EditorState): DecorationSet => {
   return Decoration.set(widgets, true)
 }
 
-const additionField = StateField.define<DecorationSet>({
-  create: state => buildAdditions(state),
-  update: (deco, tr) => (tr.docChanged ? buildAdditions(tr.state) : deco),
-  provide: field => EditorView.decorations.from(field)
-})
+const additionField = (selectedNodeId?: string, externalIds?: { nodes: string[]; links: string[] }) =>
+  StateField.define<DecorationSet>({
+    create: state => buildAdditions(state, selectedNodeId, externalIds),
+    update: (deco, tr) => (tr.docChanged ? buildAdditions(tr.state, selectedNodeId, externalIds) : deco),
+    provide: field => EditorView.decorations.from(field)
+  })
 
-export const graphAddButtons = (): Extension => [
-  additionField,
+export const graphAddButtons = (
+  selectedNodeId?: string,
+  externalIds?: { nodes: string[]; links: string[] }
+): Extension => [
+  additionField(selectedNodeId, externalIds),
   EditorView.baseTheme({
     '.cm-graph-gap': {
       display: 'inline-flex',
