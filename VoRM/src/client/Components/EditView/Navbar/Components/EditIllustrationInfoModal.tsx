@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { Button, Group, Modal, Stack, Textarea, TextInput } from '@mantine/core'
+import { Group, Modal, Stack, Textarea, TextInput } from '@mantine/core'
 import { OVERLAY_BLUR } from '../../../../theme/constants'
 
 interface EditIllustrationInfoModalProps {
@@ -9,6 +8,7 @@ interface EditIllustrationInfoModalProps {
   description: string | null
   onNameChange: (name: string) => void
   onDescriptionChange: (description: string | null) => void
+  saveInfo: () => void
 }
 
 export function EditIllustrationInfoModal({
@@ -17,32 +17,21 @@ export function EditIllustrationInfoModal({
   name,
   description,
   onNameChange,
-  onDescriptionChange
+  onDescriptionChange,
+  saveInfo
 }: EditIllustrationInfoModalProps) {
-  const [draftName, setDraftName] = useState(name)
-  const [draftDescription, setDraftDescription] = useState(description ?? '')
 
-  useEffect(() => {
-    if (opened) {
-      setDraftName(name)
-      setDraftDescription(description ?? '')
-    }
-  }, [opened, name, description])
-
-  const handleSave = () => {
-    onNameChange(draftName)
-    onDescriptionChange(draftDescription === '' ? null : draftDescription)
+  function handleClose(): void {
     onClose()
+    saveInfo()
   }
 
   return (
-    <Modal opened={opened} onClose={onClose} title="Edit illustration info" centered overlayProps={{ blur: OVERLAY_BLUR }}>
+    <Modal opened={opened} onClose={handleClose} title="Edit illustration info" centered overlayProps={{ blur: OVERLAY_BLUR }}>
       <Stack>
-        <TextInput label="Name" value={draftName} onChange={e => setDraftName(e.target.value)} />
-        <Textarea label="Description" value={draftDescription} onChange={e => setDraftDescription(e.target.value)} autosize minRows={2} />
+        <TextInput label="Name" value={name} onChange={e => onNameChange(e.target.value)} />
+        <Textarea label="Description" value={description ? description : ""} onChange={e => onDescriptionChange(e.target.value)} autosize minRows={2} />
         <Group justify="flex-end">
-          <Button variant="subtle" onClick={onClose}>Cancel</Button>
-          <Button onClick={handleSave}>Save</Button>
         </Group>
       </Stack>
     </Modal>
