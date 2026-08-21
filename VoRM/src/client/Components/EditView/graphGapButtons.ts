@@ -55,7 +55,7 @@ class GapWidget extends WidgetType {
 
     const button = document.createElement('button')
     button.type = 'button'
-    button.className = 'cm-graph-gap-button'
+    button.className = 'cm-graph-gap-button cm-graph-add-button'
     button.textContent = '+'
     button.title = this.kind === 'nodes' ? 'Add node here' : 'Add link here'
     button.addEventListener('mousedown', e => e.preventDefault())
@@ -140,7 +140,7 @@ export const graphGapButtons = (): Extension => [
       padding: '0',
       transition: 'background 120ms ease'
     },
-    '.cm-graph-gap-button:hover, .cm-graph-gap-button:focus-visible': {
+    '.cm-graph-gap-button.cm-graph-add-button:hover, .cm-graph-gap-button.cm-graph-add-button:focus-visible': {
       background: '#228be6'
     }
   })

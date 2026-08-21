@@ -7,6 +7,8 @@ import { protectedJsonValues } from './protectedJsonValues'
 import { linkEndpointLinter } from './linkEndpointLinter'
 import { linkEndpointCompletion } from './linkEndpointCompletion'
 import { graphGapButtons } from './graphGapButtons'
+import { graphDeleteButtons, type PendingGraphDeletion } from './graphDeleteButtons'
+import { DeleteGraphItemModal } from './DeleteGraphItemModal'
 
 export default function GraphCodeEditor({ editorWidth}: { editorWidth: number }) {
   const data = useSyncExternalStore(ForceGraph.subscribeToData, ForceGraph.getData)
@@ -30,6 +32,9 @@ export default function GraphCodeEditor({ editorWidth}: { editorWidth: number })
     setValue(val)
   }, [])
 
+  const [pendingDeletion, setPendingDeletion] = useState<PendingGraphDeletion | null>(null)
+  const onRequestDelete = useCallback((request: PendingGraphDeletion) => setPendingDeletion(request), [])
+
   return (
     <Paper style={{
       boxShadow:'var(--shadow-even-xs)',
@@ -41,7 +46,21 @@ export default function GraphCodeEditor({ editorWidth}: { editorWidth: number })
       zIndex: 2,
       borderRadius: '0 var(--mantine-radius-default) var(--mantine-radius-default) 0'
       }}>
-      <CodeMirror extensions={[protectedJsonValues(), linkEndpointLinter(), lintGutter(), linkEndpointCompletion(), graphGapButtons()]} value={value} height='100%' style={{ height: '100%', overflow: 'auto' }} onChange={onChange} />
+      <CodeMirror
+        extensions={[protectedJsonValues(), linkEndpointLinter(), lintGutter(), linkEndpointCompletion(), graphGapButtons(), graphDeleteButtons(onRequestDelete)]}
+        value={value}
+        height='100%'
+        style={{ height: '100%', overflow: 'auto' }}
+        onChange={onChange}
+      />
+      <DeleteGraphItemModal
+        pendingDeletion={pendingDeletion}
+        onCancel={() => setPendingDeletion(null)}
+        onConfirm={() => {
+          pendingDeletion?.apply()
+          setPendingDeletion(null)
+        }}
+      />
     </Paper>
   )
 }
