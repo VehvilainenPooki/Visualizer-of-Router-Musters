@@ -167,7 +167,9 @@ class DeleteWidget extends WidgetType {
       e.preventDefault()
       e.stopPropagation()
       const request = buildDeleteRequest(view, this.kind, this.id)
-      if (request) this.onRequestDelete(request)
+      if (!request) return
+      if (e.shiftKey) request.apply()
+      else this.onRequestDelete(request)
     })
 
     wrap.appendChild(button)

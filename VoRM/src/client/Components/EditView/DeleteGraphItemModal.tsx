@@ -19,6 +19,7 @@ export function DeleteGraphItemModal({ pendingDeletion, onCancel, onConfirm }: D
         <Button variant="default" onClick={onCancel}>Cancel</Button>
         <Button color="red" onClick={onConfirm}>Delete</Button>
       </Group>
+      <Text size="xs" c="dimmed" mt="sm">Tip: hold Shift while clicking - to skip this confirmation.</Text>
     </Modal>
   )
 }
