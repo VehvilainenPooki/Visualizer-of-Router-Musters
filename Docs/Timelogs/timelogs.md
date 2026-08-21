@@ -46,3 +46,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 100826 | 10h | Code base cleanup and edit view E2E work |
 | 170826 | 5h | Reorganization and work on edit saving |
 | 180826 | 3h | Edit view work continues |
+| 210826 | 7h | Whole lot of llm driven development of graph code editor and graph save hook and some artisan code. tomorrow things will save and load from database |
