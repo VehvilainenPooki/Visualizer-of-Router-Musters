@@ -4,6 +4,7 @@ import { Decoration, type DecorationSet, EditorView, WidgetType } from '@codemir
 import type { SyntaxNode } from '@lezer/common'
 import { AllowStructuralChange } from './protectedJsonValues'
 import { nextUniqueId, parseGraphData } from './graphDataUtils'
+import * as ForceGraph from '../../../ForceGraph'
 
 type ArrayKind = 'nodes' | 'links'
 
@@ -31,11 +32,19 @@ const insertAt = (
   view: EditorView,
   kind: ArrayKind,
   insertIndex: number,
-  selectedNodeId?: string,
-  externalIds?: { nodes: string[]; links: string[] }
+  selectedNodeId?: string
 ) => {
   const data = parseGraphData(view.state.doc.toString())
   if (!data) return
+
+  // always read ids fresh from the live graph rather than the (possibly stale)
+  // externalIds captured when this widget's decorations were last built, so a
+  // rapid second click can't reuse an id the first click already committed
+  const fullData = ForceGraph.getData()
+  const externalIds = {
+    nodes: fullData.nodes.filter(n => n.id !== selectedNodeId).map(n => n.id),
+    links: fullData.links.filter(l => l.source !== selectedNodeId && l.target !== selectedNodeId).map(l => l.id)
+  }
 
   if (kind === 'nodes') {
     const node = newNode(data, externalIds?.nodes)
@@ -60,8 +69,7 @@ class AddWidget extends WidgetType {
   constructor(
     private readonly kind: ArrayKind,
     private readonly insertIndex: number,
-    private readonly selectedNodeId?: string,
-    private readonly externalIds?: { nodes: string[]; links: string[] }
+    private readonly selectedNodeId?: string
   ) {
     super()
   }
@@ -70,8 +78,7 @@ class AddWidget extends WidgetType {
     return (
       other.kind === this.kind &&
       other.insertIndex === this.insertIndex &&
-      other.selectedNodeId === this.selectedNodeId &&
-      other.externalIds === this.externalIds
+      other.selectedNodeId === this.selectedNodeId
     )
   }
 
@@ -88,7 +95,7 @@ class AddWidget extends WidgetType {
     button.addEventListener('click', e => {
       e.preventDefault()
       e.stopPropagation()
-      insertAt(view, this.kind, this.insertIndex, this.selectedNodeId, this.externalIds)
+      insertAt(view, this.kind, this.insertIndex, this.selectedNodeId)
     })
 
     wrap.appendChild(button)
@@ -102,8 +109,7 @@ class AddWidget extends WidgetType {
 
 const buildAdditions = (
   state: EditorState,
-  selectedNodeId?: string,
-  externalIds?: { nodes: string[]; links: string[] }
+  selectedNodeId?: string
 ): DecorationSet => {
   const doc = state.doc
   const root = syntaxTree(state).topNode.firstChild
@@ -122,7 +128,7 @@ const buildAdditions = (
 
     if (items.length === 0) {
       widgets.push(
-        Decoration.widget({ widget: new AddWidget(kind, 0, selectedNodeId, externalIds), side: 1 }).range(array.from + 1)
+        Decoration.widget({ widget: new AddWidget(kind, 0, selectedNodeId), side: 1 }).range(array.from + 1)
       )
       continue
     }
@@ -132,7 +138,7 @@ const buildAdditions = (
       const comma = item.nextSibling && item.nextSibling.name === ',' ? item.nextSibling : null
       const pos = comma ? comma.to : item.to
       widgets.push(
-        Decoration.widget({ widget: new AddWidget(kind, i + 1, selectedNodeId, externalIds), side: 1 }).range(pos)
+        Decoration.widget({ widget: new AddWidget(kind, i + 1, selectedNodeId), side: 1 }).range(pos)
       )
     })
   }
@@ -141,18 +147,15 @@ const buildAdditions = (
   return Decoration.set(widgets, true)
 }
 
-const additionField = (selectedNodeId?: string, externalIds?: { nodes: string[]; links: string[] }) =>
+const additionField = (selectedNodeId?: string) =>
   StateField.define<DecorationSet>({
-    create: state => buildAdditions(state, selectedNodeId, externalIds),
-    update: (deco, tr) => (tr.docChanged ? buildAdditions(tr.state, selectedNodeId, externalIds) : deco),
+    create: state => buildAdditions(state, selectedNodeId),
+    update: (deco, tr) => (tr.docChanged ? buildAdditions(tr.state, selectedNodeId) : deco),
     provide: field => EditorView.decorations.from(field)
   })
 
-export const graphAddButtons = (
-  selectedNodeId?: string,
-  externalIds?: { nodes: string[]; links: string[] }
-): Extension => [
-  additionField(selectedNodeId, externalIds),
+export const graphAddButtons = (selectedNodeId?: string): Extension => [
+  additionField(selectedNodeId),
   EditorView.baseTheme({
     '.cm-graph-gap': {
       display: 'inline-flex',

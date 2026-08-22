@@ -53,13 +53,20 @@ export default function GraphCodeEditor({ editorWidth, saveGraph }: { editorWidt
     }
 
     // editor shows only the selected node + its incident links; merge that
-    // edited subset back into the full graph, leaving everything else untouched
+    // edited subset back into the full graph, leaving everything else untouched.
+    // parsed.nodes can still contain a just-added target node that hasn't been
+    // trimmed back out of the visible doc yet, so dedupe by id (parsed wins)
+    // rather than concatenating, or that node ends up counted twice
     const fullData = ForceGraph.getData()
-    const otherNodes = fullData.nodes.filter(n => n.id !== selectedNodeId)
-    const otherLinks = fullData.links.filter(l => l.source !== selectedNodeId && l.target !== selectedNodeId)
+    const nodeMap = new Map(fullData.nodes.filter(n => n.id !== selectedNodeId).map(n => [n.id, n]))
+    for (const n of parsed.nodes) nodeMap.set(n.id, n)
+    const linkMap = new Map(
+      fullData.links.filter(l => l.source !== selectedNodeId && l.target !== selectedNodeId).map(l => [l.id, l])
+    )
+    for (const l of parsed.links) linkMap.set(l.id, l)
     ForceGraph.applyData({
-      nodes: [...otherNodes, ...parsed.nodes],
-      links: [...otherLinks, ...parsed.links]
+      nodes: [...nodeMap.values()],
+      links: [...linkMap.values()]
     })
     if (noErrors) saveGraph()
   }, [selectedNodeId, visibleData, externalData])
@@ -79,7 +86,7 @@ export default function GraphCodeEditor({ editorWidth, saveGraph }: { editorWidt
       borderRadius: '0 var(--mantine-radius-default) var(--mantine-radius-default) 0'
       }}>
       <CodeMirror
-        extensions={[protectedJsonValues(selectedNodeId ?? undefined), graphLinter(visibleData, externalData), lintGutter(), linkEndpointCompletion(), graphAddButtons(selectedNodeId ?? undefined, { nodes: externalData.nodes.map(n => n.id), links: externalData.links.map(l => l.id) }), graphDeleteButtons(onRequestDelete), nodeIdNavigation()]}
+        extensions={[protectedJsonValues(selectedNodeId ?? undefined), graphLinter(visibleData, externalData), lintGutter(), linkEndpointCompletion(), graphAddButtons(selectedNodeId ?? undefined), graphDeleteButtons(onRequestDelete), nodeIdNavigation()]}
         value={value}
         height='100%'
         style={{ height: '100%', overflow: 'auto' }}
