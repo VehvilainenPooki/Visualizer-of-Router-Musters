@@ -1,7 +1,11 @@
-import { useCallback, useState, useSyncExternalStore } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
+import { debounce } from "lodash-es"
 import type { SaveStatus, SaveTarget } from "./Navbar/Components/SaveStatusButton"
 import { Illustration } from "../../../common/types/illustration"
 import * as ForceGraph from '../../ForceGraph'
+
+const DEBOUNCE_MS = 3_000
+const MAX_WAIT_MS = 30_000
 
 interface Props {
   name: string
@@ -9,8 +13,6 @@ interface Props {
   public: boolean
   saveTarget: SaveTarget
 }
-
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export function useSaveHandler({ name, description, public: isPublic, saveTarget }: Props) {
   const graphcode = useSyncExternalStore(ForceGraph.subscribeToData, ForceGraph.getData)
@@ -26,10 +28,7 @@ export function useSaveHandler({ name, description, public: isPublic, saveTarget
       console.log(saveTarget, payload)
       return
     }
-    setStatusOfSave('failed')
     try {
-      setStatusOfSave('saving')
-      await wait(50)
       console.log(saveTarget, payload)
       setStatusOfSave('success')
       setTimeoutId(setTimeout(() => {
@@ -40,10 +39,28 @@ export function useSaveHandler({ name, description, public: isPublic, saveTarget
     }
   }, [saveTarget])
 
-  const saveMetadata = useCallback(() => runSave({ name, description }), [runSave, name, description])
-  const saveVisibility = useCallback(() => runSave({ public: isPublic }), [runSave, isPublic])
-  const saveGraph = useCallback(() => runSave({ graphcode }), [runSave, graphcode])
-  const saveAll = useCallback(() => runSave({ name, description, public: isPublic, graphcode }), [runSave, name, description, isPublic, graphcode])
+  const runSaveRef = useRef(runSave)
+  runSaveRef.current = runSave
 
-  return { statusOfSave, saveMetadata, saveVisibility, saveGraph, saveAll }
+  const pendingPayload = useRef<Partial<Illustration>>({})
+
+  const debouncedSave = useMemo(() => debounce(() => {
+    const payload = pendingPayload.current
+    pendingPayload.current = {}
+    runSaveRef.current(payload)
+  }, DEBOUNCE_MS, { maxWait: MAX_WAIT_MS }), [])
+
+  useEffect(() => () => debouncedSave.cancel(), [debouncedSave])
+
+  const queueSave = useCallback((payload: Partial<Illustration>) => {
+    pendingPayload.current = { ...pendingPayload.current, ...payload }
+    setStatusOfSave('saving')
+    debouncedSave()
+  }, [debouncedSave])
+
+  const saveMetadata = useCallback(() => queueSave({ name, description }), [queueSave, name, description])
+  const saveVisibility = useCallback(() => queueSave({ public: isPublic }), [queueSave, isPublic])
+  const saveGraph = useCallback(() => queueSave({ graphcode }), [queueSave, graphcode])
+
+  return { statusOfSave, saveMetadata, saveVisibility, saveGraph }
 }
