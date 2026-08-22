@@ -45,7 +45,7 @@ router.delete('/:id', authenticateToken, requireVerified, async (req, res) => {
   res.status(204).end()
 })
 
-router.put('/:id', authenticateToken, requireVerified, async (req, res) => {
+router.patch('/:id', authenticateToken, requireVerified, async (req, res) => {
   const illustration = await Illustration.findByPk(Number(req.params.id))
 
   if (!illustration) {
@@ -63,63 +63,6 @@ router.put('/:id', authenticateToken, requireVerified, async (req, res) => {
   if (graphcode !== undefined) illustration.graphcode = graphcode
   if (isPublic !== undefined) illustration.public = isPublic
 
-  await illustration.save()
-  res.json(illustration)
-})
-
-router.patch('/:id/metadata', authenticateToken, requireVerified, async (req, res) => {
-  const illustration = await Illustration.findByPk(Number(req.params.id))
-
-  if (!illustration) {
-    res.status(404).json({ error: 'illustration not found' })
-    return
-  }
-  if (illustration.userId !== req.user!.id) {
-    res.status(403).json({ error: 'not authorized' })
-    return
-  }
-
-  const { name, description } = req.body as Pick<IllustrationDto, 'name' | 'description'>
-  if (name !== undefined) illustration.name = name
-  if (description !== undefined) illustration.description = description
-
-  await illustration.save()
-  res.json(illustration)
-})
-
-router.patch('/:id/graphcode', authenticateToken, requireVerified, async (req, res) => {
-  const illustration = await Illustration.findByPk(Number(req.params.id))
-
-  if (!illustration) {
-    res.status(404).json({ error: 'illustration not found' })
-    return
-  }
-  if (illustration.userId !== req.user!.id) {
-    res.status(403).json({ error: 'not authorized' })
-    return
-  }
-
-  const { graphcode } = req.body as Pick<IllustrationDto, 'graphcode'>
-  illustration.graphcode = graphcode
-
-  await illustration.save()
-  res.json(illustration)
-})
-
-router.patch('/:id/toggle-visibility', authenticateToken, requireVerified, async (req, res) => {
-  const illustration = await Illustration.findByPk(Number(req.params.id))
-
-  if (!illustration) {
-    res.status(404).json({ error: 'illustration not found' })
-    return
-  }
-
-  if (illustration.userId !== req.user!.id) {
-    res.status(403).json({ error: 'not authorized' })
-    return
-  }
-
-  illustration.public = !illustration.public
   await illustration.save()
   res.json(illustration)
 })
