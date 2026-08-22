@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
 import { debounce } from "lodash-es"
+import { notifications } from '@mantine/notifications'
 import type { SaveStatus, SaveTarget } from "./Navbar/Components/SaveStatusButton"
 import { Illustration } from "../../../common/types/illustration"
 import * as ForceGraph from '../../ForceGraph'
 
 const DEBOUNCE_MS = 3_000
 const MAX_WAIT_MS = 30_000
+const RETRY_BASE_MS = 1_000
+const RETRY_MAX_MS = 180_000
 
 interface Props {
   name: string
@@ -17,43 +20,61 @@ interface Props {
 export function useSaveHandler({ name, description, public: isPublic, saveTarget }: Props) {
   const graphcode = useSyncExternalStore(ForceGraph.subscribeToData, ForceGraph.getData)
   const [statusOfSave, setStatusOfSave] = useState<SaveStatus>('saved')
-  const [timeoutId, setTimeoutId] = useState<number>(-1)
+  const statusRef = useRef(statusOfSave)
+  statusRef.current = statusOfSave
 
-  const runSave = useCallback(async (payload: Partial<Illustration>) => {
-    if (timeoutId !== -1) {
-      clearTimeout(timeoutId)
-      setTimeoutId(-1)
+  const pendingPayload = useRef<Partial<Illustration>>({})
+  const retryTimeoutId = useRef<number>(-1)
+  const retryAttempt = useRef(0)
+
+  const cancelRetry = useCallback(() => {
+    if (retryTimeoutId.current !== -1) {
+      clearTimeout(retryTimeoutId.current)
+      retryTimeoutId.current = -1
     }
+  }, [])
+
+  const attemptSave = useCallback(async (payload: Partial<Illustration>) => {
+    cancelRetry()
     if (saveTarget === 'none') {
       console.log(saveTarget, payload)
       return
     }
     try {
       console.log(saveTarget, payload)
+      retryAttempt.current = 0
       setStatusOfSave('success')
-      setTimeoutId(setTimeout(() => {
-        setStatusOfSave('saved')
-      }, 300, ))
     } catch {
+      pendingPayload.current = { ...payload, ...pendingPayload.current }
       setStatusOfSave('failed')
+      notifications.show({ color: 'red', title: 'Save failed', message: 'Your changes could not be saved. Retrying...' })
+      const delay = Math.min(RETRY_BASE_MS * 2 ** retryAttempt.current, RETRY_MAX_MS)
+      retryAttempt.current += 1
+      retryTimeoutId.current = setTimeout(() => {
+        const retryPayload = pendingPayload.current
+        pendingPayload.current = {}
+        attemptSaveRef.current(retryPayload)
+      }, delay)
     }
-  }, [saveTarget])
+  }, [saveTarget, cancelRetry])
 
-  const runSaveRef = useRef(runSave)
-  runSaveRef.current = runSave
-
-  const pendingPayload = useRef<Partial<Illustration>>({})
+  const attemptSaveRef = useRef(attemptSave)
+  attemptSaveRef.current = attemptSave
 
   const debouncedSave = useMemo(() => debounce(() => {
     const payload = pendingPayload.current
     pendingPayload.current = {}
-    runSaveRef.current(payload)
+    attemptSaveRef.current(payload)
   }, DEBOUNCE_MS, { maxWait: MAX_WAIT_MS }), [])
 
-  useEffect(() => () => debouncedSave.cancel(), [debouncedSave])
+  useEffect(() => () => {
+    debouncedSave.cancel()
+    cancelRetry()
+  }, [debouncedSave, cancelRetry])
 
   const queueSave = useCallback((payload: Partial<Illustration>) => {
     pendingPayload.current = { ...pendingPayload.current, ...payload }
+    if (statusRef.current === 'failed' && retryTimeoutId.current !== -1) return
     setStatusOfSave('saving')
     debouncedSave()
   }, [debouncedSave])

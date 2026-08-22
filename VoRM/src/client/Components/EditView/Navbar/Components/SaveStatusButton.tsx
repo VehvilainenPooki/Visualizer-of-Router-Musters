@@ -1,8 +1,11 @@
+import { useEffect, useState } from 'react'
 import { Save, SaveCheck, SaveOff, type LucideIcon } from 'lucide-react'
 import { Tooltip, UnstyledButton } from '@mantine/core'
 
 export type SaveTarget = 'none' | 'server' | 'local'
 export type SaveStatus = 'saving' | 'saved' | 'success' | 'failed'
+
+const SUCCESS_DISPLAY_MS = 300
 
 interface SaveStatusIconProps {
   saveTarget: SaveTarget
@@ -55,7 +58,16 @@ function getVariant(saveTarget: SaveTarget, saveStatus: SaveStatus): Variant {
 }
 
 export function SaveStatusButton({ saveTarget, saveStatus, onClick }: SaveStatusIconProps) {
-  const { label, icon: Icon, color, pulse } = getVariant(saveTarget, saveStatus)
+  const [displayStatus, setDisplayStatus] = useState(saveStatus)
+
+  useEffect(() => {
+    setDisplayStatus(saveStatus)
+    if (saveStatus !== 'success') return
+    const id = setTimeout(() => setDisplayStatus('saved'), SUCCESS_DISPLAY_MS)
+    return () => clearTimeout(id)
+  }, [saveStatus])
+
+  const { label, icon: Icon, color, pulse } = getVariant(saveTarget, displayStatus)
 
   return (
     <>
