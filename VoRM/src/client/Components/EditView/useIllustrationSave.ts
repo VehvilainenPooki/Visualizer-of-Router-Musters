@@ -87,7 +87,7 @@ export function useSaveHandler({ id, token, name, description, public: isPublic,
     cancelRetry()
   }, [debouncedSave, cancelRetry])
 
-  const queueSave = useCallback((payload: Partial<Illustration>) => {
+  const queueSave = useCallback((payload: SavePayload) => {
     pendingPayload.current = { ...pendingPayload.current, ...payload }
     if (statusRef.current === 'failed' && retryTimeoutId.current !== -1) return
     setStatusOfSave('saving')
