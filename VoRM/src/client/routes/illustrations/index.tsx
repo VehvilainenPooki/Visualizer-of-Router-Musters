@@ -1,15 +1,22 @@
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
 import { BrowseView } from '../../Components/BrowseView'
+import * as illustrationsService from '../../services/illustrations'
 
 export const Route = createFileRoute('/illustrations/')({
   validateSearch: (search: Record<string, unknown>) => ({
     q: typeof search.q === 'string' ? search.q : ''
   }),
+  staleTime: 0,
+  loader: async () => {
+    const result = await illustrationsService.getPublicIllustrations()
+    if (!result.ok) throw new Error(result.error)
+    return result.data
+  },
   component: IllustrationsIndex
 })
 
 function IllustrationsIndex() {
-  const publicIllustrations = useLoaderData({ from: '/illustrations' })
+  const publicIllustrations = useLoaderData({ from: '/illustrations/' })
   const { q } = Route.useSearch()
   const navigate = Route.useNavigate()
 

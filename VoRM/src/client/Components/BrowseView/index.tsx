@@ -55,7 +55,7 @@ function IllustrationList({
 }
 
 export function BrowseView({
-  publicIllustrations,
+  publicIllustrations: initialPublicIllustrations,
   q,
   onSearchChange
 }: {
@@ -65,9 +65,17 @@ export function BrowseView({
 }) {
   const { token } = useAuth()
   const [scope, setScope] = useState<Scope>('public')
+  const [publicIllustrations, setPublicIllustrations] = useState(initialPublicIllustrations)
   const [myIllustrations, setMyIllustrations] = useState<Illustration[] | null>(null)
   const [authModalOpened, { open: openAuthModal, close: closeAuthModal }] = useDisclosure(false)
   const [pendingDeletion, setPendingDeletion] = useState<Illustration | null>(null)
+
+  useEffect(() => {
+    if (scope !== 'public') return
+    illustrationsService.getPublicIllustrations().then(result => {
+      if (result.ok) setPublicIllustrations(result.data)
+    })
+  }, [scope])
 
   useEffect(() => {
     if (scope !== 'mine' || !token) return
