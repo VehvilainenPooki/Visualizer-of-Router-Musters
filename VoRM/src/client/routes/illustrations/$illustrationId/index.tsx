@@ -1,5 +1,5 @@
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
-import { ViewNavbar } from '../../../Components/Primitives/Navbar/ViewNavbar'
+import { InspectView } from '../../../Components/InspectView'
 
 export const Route = createFileRoute('/illustrations/$illustrationId/')({
   component: IllustrationView
@@ -11,20 +11,10 @@ function IllustrationView() {
   if (!illustration) {
     return (
       <div>
-        <ViewNavbar />
-        <p>Illustration not found.</p>
+        <InspectView />
       </div>
     )
   }
 
-  return (
-    <div>
-      <ViewNavbar />
-      <p>id: {illustration.id}</p>
-      <p>userId: {illustration.userId}</p>
-      <p>name: {illustration.name}</p>
-      <p>description: {illustration.description ?? ''}</p>
-      <pre>{JSON.stringify(illustration.graphcode, null, 2)}</pre>
-    </div>
-  )
+  return <InspectView illustration={illustration} />
 }
