@@ -30,6 +30,7 @@ function IllustrationEdit() {
         nodes: illustration!.graphcode.nodes ?? [],
         links: illustration!.graphcode.links ?? []
       }}
+      initialIsPublic={illustration!.public}
       initialName={illustration!.name}
       initialDescription={illustration!.description}
     />

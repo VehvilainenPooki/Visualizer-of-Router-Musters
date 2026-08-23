@@ -13,14 +13,15 @@ import { useAuth } from '../../contexts/AuthContext'
 interface IllustrationEditorProps {
   id: number | null
   initialData: PlainNetworkGraphData
+  initialIsPublic?: boolean
   initialName?: string
   initialDescription?: string | null
   onCreated?: (id: number) => void
 }
 
-export function IllustrationEditor({ id, initialData, initialName, initialDescription, onCreated }: IllustrationEditorProps) {
+export function IllustrationEditor({ id, initialData, initialIsPublic, initialName, initialDescription, onCreated }: IllustrationEditorProps) {
   const { token } = useAuth()
-  const [visibility, setVisibility] = useState<VisibilityStatus>('private')
+  const [visibility, setVisibility] = useState<VisibilityStatus>(initialIsPublic ? 'public' : 'private')
   const [editorWidth, setEditorWidth] = useState<number>(30)
   const [name, setName] = useState(initialName ?? 'Untitled')
   const [description, setDescription] = useState(initialDescription ?? null)
@@ -28,6 +29,7 @@ export function IllustrationEditor({ id, initialData, initialName, initialDescri
   const [saveTarget, setSaveTarget] = useState<SaveTarget>('none')
   const { statusOfSave, saveMetadata, saveVisibility, saveGraph } = useSaveHandler({id, token: token ?? '', name, description, public:visibility=="public", saveTarget, onCreated})
 
+  console.log("initial data:", {graph:initialData, visibility:visibility})
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', overflow: 'hidden' }}>
       <EditNavbar
