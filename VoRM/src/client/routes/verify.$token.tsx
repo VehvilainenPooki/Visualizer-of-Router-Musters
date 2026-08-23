@@ -23,7 +23,7 @@ function VerifyEmailPage() {
         setStatus('error')
         return
       }
-      login(result.data.token, result.data.username, result.data.isVerified)
+      login(result.data.token, result.data.username, result.data.isVerified, result.data.userId)
       setStatus('success')
     })
   }, [token])
