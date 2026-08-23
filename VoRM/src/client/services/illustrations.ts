@@ -38,7 +38,7 @@ export const getIllustration = async (token: string | null, id: number): Promise
   }
 }
 
-export const createIllustration = async (token: string, jsonCode: Illustration): Promise<Result<Illustration>> => {
+export const createIllustration = async (token: string, jsonCode: Partial<Omit<Illustration, 'id' | 'userId'>>): Promise<Result<Illustration>> => {
   try {
     const response = await fetch(baseUrl, {
       method: 'POST',

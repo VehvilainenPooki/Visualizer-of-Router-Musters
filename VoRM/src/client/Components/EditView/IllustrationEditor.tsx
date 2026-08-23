@@ -8,21 +8,25 @@ import GraphCodeEditor from './GraphCodeEditor'
 import SplitAdjuster from '../Primitives/SplitAdjuster'
 import type { SaveTarget } from './Navbar/Components/SaveStatusButton'
 import { useSaveHandler } from './useIllustrationSave'
+import { useAuth } from '../../contexts/AuthContext'
 
 interface IllustrationEditorProps {
+  id: number | null
   initialData: PlainNetworkGraphData
   initialName?: string
   initialDescription?: string | null
+  onCreated?: (id: number) => void
 }
 
-export function IllustrationEditor({ initialData, initialName, initialDescription }: IllustrationEditorProps) {
+export function IllustrationEditor({ id, initialData, initialName, initialDescription, onCreated }: IllustrationEditorProps) {
+  const { token } = useAuth()
   const [visibility, setVisibility] = useState<VisibilityStatus>('private')
   const [editorWidth, setEditorWidth] = useState<number>(30)
   const [name, setName] = useState(initialName ?? 'Untitled')
   const [description, setDescription] = useState(initialDescription ?? null)
   const splitContainerRef = useRef<HTMLDivElement>(null)
   const [saveTarget, setSaveTarget] = useState<SaveTarget>('none')
-  const { statusOfSave, saveMetadata, saveVisibility, saveGraph } = useSaveHandler({name, description, public:visibility=="public", saveTarget})
+  const { statusOfSave, saveMetadata, saveVisibility, saveGraph } = useSaveHandler({id, token: token ?? '', name, description, public:visibility=="public", saveTarget, onCreated})
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', overflow: 'hidden' }}>

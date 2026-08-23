@@ -1,21 +1,37 @@
-import { createFileRoute, useLoaderData } from '@tanstack/react-router'
+import { createFileRoute, useLoaderData, useNavigate } from '@tanstack/react-router'
 import { IllustrationEditor } from '../../../Components/EditView/IllustrationEditor'
+import { illustrationTemplates, type TemplateId } from '../../../illustrationTemplates'
 
 export const Route = createFileRoute('/illustrations/$illustrationId/edit')({
+  validateSearch: (search: Record<string, unknown>): { template?: TemplateId } =>
+    (typeof search.template === 'string' && search.template in illustrationTemplates)
+      ? { template: search.template as TemplateId }
+      : {},
   component: IllustrationEdit
 })
 
 function IllustrationEdit() {
+  const { illustrationId } = Route.useParams()
+  const { template } = Route.useSearch()
   const illustration = useLoaderData({ from: '/illustrations/$illustrationId' })
+  const navigate = useNavigate()
+
+  if (illustrationId === 'new') {
+    const handleCreated = (id: number) => {
+      navigate({ to: '/illustrations/$illustrationId/edit', params: { illustrationId: String(id) }, replace: true })
+    }
+    return <IllustrationEditor id={null} initialData={illustrationTemplates[template ?? 'blank']} onCreated={handleCreated} />
+  }
 
   return (
     <IllustrationEditor
+      id={illustration!.id}
       initialData={{
-        nodes: illustration.graphcode.nodes ?? [],
-        links: illustration.graphcode.links ?? []
+        nodes: illustration!.graphcode.nodes ?? [],
+        links: illustration!.graphcode.links ?? []
       }}
-      initialName={illustration.name}
-      initialDescription={illustration.description}
+      initialName={illustration!.name}
+      initialDescription={illustration!.description}
     />
   )
 }

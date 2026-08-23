@@ -15,7 +15,8 @@ function NewIllustrationPicker() {
         {TEMPLATE_OPTIONS.map(option => (
           <Link
             key={option.id}
-            to="/illustrations/new/edit"
+            to="/illustrations/$illustrationId/edit"
+            params={{ illustrationId: 'new' }}
             search={{ template: option.id }}
             style={cardStyle}
           >

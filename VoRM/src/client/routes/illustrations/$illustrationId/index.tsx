@@ -8,6 +8,15 @@ export const Route = createFileRoute('/illustrations/$illustrationId/')({
 function IllustrationView() {
   const illustration = useLoaderData({ from: '/illustrations/$illustrationId' })
 
+  if (!illustration) {
+    return (
+      <div>
+        <ViewNavbar />
+        <p>Illustration not found.</p>
+      </div>
+    )
+  }
+
   return (
     <div>
       <ViewNavbar />

@@ -4,6 +4,7 @@ import * as illustrationsService from '../../../services/illustrations'
 
 export const Route = createFileRoute('/illustrations/$illustrationId')({
   loader: async ({ params }) => {
+    if (params.illustrationId === 'new') return null
     const token = localStorage.getItem('auth_token')
     const result = await illustrationsService.getIllustration(token, Number(params.illustrationId))
     if (!result.ok) {
