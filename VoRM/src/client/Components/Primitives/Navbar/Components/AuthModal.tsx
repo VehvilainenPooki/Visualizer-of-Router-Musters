@@ -33,7 +33,7 @@ export function VerifyPendingModal({ opened }: VerifyPendingModalProps) {
       notifications.show({ color: 'red', title: 'Check failed', message: result.error })
       return
     }
-    login(result.data.token, result.data.username, result.data.isVerified)
+    login(result.data.token, result.data.username, result.data.isVerified, result.data.userId)
     if (result.data.isVerified) {
       notifications.show({ color: 'green', title: 'Email verified', message: 'Your email has been verified.' })
     } else {
@@ -114,7 +114,7 @@ export function AuthModal({ opened, onClose }: AuthModalProps) {
       })
       return
     }
-    login(result.data.token, result.data.username, result.data.isVerified)
+    login(result.data.token, result.data.username, result.data.isVerified, result.data.userId)
     notifications.show({
       color: 'green',
       title: mode === 'login' ? 'Logged in' : 'Account created',

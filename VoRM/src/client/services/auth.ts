@@ -1,18 +1,14 @@
 import type { Result } from '../../common/types/result'
+import type { AuthPayload } from '../../common/types/auth'
+
 
 const baseUrl = '/api/users'
-
-export interface AuthResponse {
-  token: string
-  username: string
-  isVerified: boolean
-}
 
 const authHeaders = (token: string) => ({
   Authorization: `Bearer ${token}`
 })
 
-export const login = async (username: string, password: string): Promise<Result<AuthResponse>> => {
+export const login = async (username: string, password: string): Promise<Result<AuthPayload>> => {
   try {
     const response = await fetch(`${baseUrl}/login`, {
       method: 'POST',
@@ -29,7 +25,7 @@ export const login = async (username: string, password: string): Promise<Result<
   }
 }
 
-export const register = async (username: string, email: string, password: string): Promise<Result<AuthResponse>> => {
+export const register = async (username: string, email: string, password: string): Promise<Result<AuthPayload>> => {
   try {
     const response = await fetch(baseUrl, {
       method: 'POST',
@@ -46,7 +42,7 @@ export const register = async (username: string, email: string, password: string
   }
 }
 
-export const verifyEmail = async (token: string): Promise<Result<AuthResponse>> => {
+export const verifyEmail = async (token: string): Promise<Result<AuthPayload>> => {
   try {
     const response = await fetch(`${baseUrl}/verify/${token}`)
     if (!response.ok) {
@@ -75,7 +71,7 @@ export const sendVerificationEmail = async (token: string): Promise<Result<void>
   }
 }
 
-export const refreshToken = async (token: string): Promise<Result<AuthResponse>> => {
+export const refreshToken = async (token: string): Promise<Result<AuthPayload>> => {
   try {
     const response = await fetch(`${baseUrl}/refresh-token`, {
       method: 'POST',
