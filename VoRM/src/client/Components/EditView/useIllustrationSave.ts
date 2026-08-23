@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
 import { debounce } from "lodash-es"
 import { notifications } from '@mantine/notifications'
-import type { SaveStatus, SaveTarget } from "./Navbar/Components/SaveStatusButton"
+import type { SaveStatus, SaveTarget } from "./EditNavbar/Components/SaveStatusButton"
 import { Illustration } from "../../../common/types/illustration"
 import * as ForceGraph from '../../ForceGraph'
 import { createIllustration, updateIllustration } from "../../services/illustrations"
