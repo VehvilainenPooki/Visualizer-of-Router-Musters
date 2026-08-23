@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { createFileRoute, Link, useLoaderData } from '@tanstack/react-router'
-import { Button, SegmentedControl, Stack, Text } from '@mantine/core'
+import { Button, Card, SegmentedControl, SimpleGrid, Stack, Text, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { SearchNavbar } from '../../Components/BrowseView/Navbar/SearchNavbar'
 import { AuthModal } from '../../Components/Primitives/Navbar/Components/AuthModal'
@@ -19,18 +19,23 @@ export const Route = createFileRoute('/illustrations/')({
 
 function IllustrationList({ illustrations }: { illustrations: Illustration[] }) {
   return (
-    <ul>
+    <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} mt="md">
       {illustrations.map(illustration => (
-        <li key={illustration.id}>
-          <Link
-            to="/illustrations/$illustrationId"
-            params={{ illustrationId: String(illustration.id) }}
-          >
-            Illustration #{illustration.id}
-          </Link>
-        </li>
+        <Link
+          key={illustration.id}
+          to="/illustrations/$illustrationId"
+          params={{ illustrationId: String(illustration.id) }}
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          <Card withBorder shadow="sm" padding="lg">
+            <Title order={4}>{illustration.name}</Title>
+            <Text size="sm" c="dimmed" lineClamp={3}>
+              {illustration.description}
+            </Text>
+          </Card>
+        </Link>
       ))}
-    </ul>
+    </SimpleGrid>
   )
 }
 

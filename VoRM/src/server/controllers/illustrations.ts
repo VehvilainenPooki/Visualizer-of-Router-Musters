@@ -69,7 +69,8 @@ router.patch('/:id', authenticateToken, requireVerified, async (req, res) => {
 
 router.get('/public', async (_req, res) => {
   const illustrations = await Illustration.findAll({
-    where: { public: true }
+    where: { public: true },
+    limit: 30
   })
   res.json(illustrations)
 })
