@@ -25,9 +25,9 @@ export function NavDrawer({ defaultOpened = false }: NavDrawerProps) {
     openAuthModal()
   }
 
-  const handleAboutClick = () => {
+  const handleNavigation = (url:string): void => {
     close()
-    navigate({ to: '/' })
+    navigate({to: url})
   }
 
   return (
@@ -54,9 +54,9 @@ export function NavDrawer({ defaultOpened = false }: NavDrawerProps) {
           </Button>
         </Group>
         <Stack>
-          <Button variant="subtle" fullWidth>Browse</Button>
-          <Button variant="subtle" fullWidth>Create</Button>
-          <Button variant="subtle" fullWidth onClick={handleAboutClick}>About</Button>
+          <Button variant="subtle" fullWidth onClick={() => handleNavigation('/illustrations')}>Browse</Button>
+          <Button variant="subtle" fullWidth onClick={() => handleNavigation('/illustrations/new')}>Create</Button>
+          <Button variant="subtle" fullWidth onClick={() => handleNavigation('/')}>About</Button>
         </Stack>
       </Drawer>
 
