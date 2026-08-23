@@ -10,6 +10,7 @@ import { AuthModal } from '../Primitives/Navbar/Components/AuthModal'
 import { useAuth } from '../../contexts/AuthContext'
 import * as illustrationsService from '../../services/illustrations'
 import type { Illustration } from '../../../common/types/illustration'
+import { NewIllustrationCard } from './Components/NewIllustrationCard'
 
 type Scope = 'public' | 'mine'
 
@@ -23,7 +24,8 @@ function IllustrationList({
   onRequestDelete?: (illustration: Illustration, event: React.MouseEvent) => void
 }) {
   return (
-    <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} mt="md">
+    <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} mt="md" px="md">
+      {isMine && <NewIllustrationCard/>}
       {illustrations.map(illustration => (
         <Link
           key={illustration.id}
