@@ -218,7 +218,6 @@ export const tick = () => {
 }
 
 export const updateElements = (data: NetworkGraphData) => {
-  console.log(data)
 
   nodeSelection = nodeSelection.data(data.nodes, (d: any) => d.id)
     .join("circle")

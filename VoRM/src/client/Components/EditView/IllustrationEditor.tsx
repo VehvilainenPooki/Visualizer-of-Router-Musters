@@ -29,7 +29,6 @@ export function IllustrationEditor({ id, initialData, initialIsPublic, initialNa
   const [saveTarget, setSaveTarget] = useState<SaveTarget>('none')
   const { statusOfSave, saveMetadata, saveVisibility, saveGraph } = useSaveHandler({id, token: token ?? '', name, description, public:visibility=="public", saveTarget, onCreated})
 
-  console.log("initial data:", {graph:initialData, visibility:visibility})
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', overflow: 'hidden' }}>
       <EditNavbar
