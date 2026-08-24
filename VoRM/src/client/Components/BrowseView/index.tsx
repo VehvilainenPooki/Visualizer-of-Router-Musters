@@ -109,6 +109,16 @@ export function BrowseView({
     setPendingDeletion(illustration)
   }
 
+  const filterIllustrations = (illustrations: Illustration[]) => {
+    const query = q.trim().toLowerCase()
+    if (!query) return illustrations
+    return illustrations.filter(
+      illustration =>
+        illustration.name.toLowerCase().includes(query) ||
+        (illustration.description ?? '').toLowerCase().includes(query)
+    )
+  }
+
   return (
     <div>
       <SearchNavbar
@@ -125,10 +135,14 @@ export function BrowseView({
           />
         }
       />
-      {scope === 'public' && <IllustrationList illustrations={publicIllustrations} />}
+      {scope === 'public' && <IllustrationList illustrations={filterIllustrations(publicIllustrations)} />}
       {scope === 'mine' && (
         token ? (
-          <IllustrationList illustrations={myIllustrations ?? []} isMine={true} onRequestDelete={handleRequestDelete} />
+          <IllustrationList
+            illustrations={filterIllustrations(myIllustrations ?? [])}
+            isMine={true}
+            onRequestDelete={handleRequestDelete}
+          />
         ) : (
           <Stack align="center" mt="md">
             <Text>Log in to see your illustrations</Text>
