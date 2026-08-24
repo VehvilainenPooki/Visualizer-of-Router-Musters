@@ -48,3 +48,4 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 180826 | 3h | Edit view work continues |
 | 210826 | 7h | Whole lot of llm driven development of graph code editor and graph save hook and some artisan code. tomorrow things will save and load from database |
 | 220826 | 4h | Fix editor bug, work on save, get save to work somewhat but not working yet. damn you llmdd |
+| 230826 | 8h | Troubleshooting and fixing save staleness bugs, refactor the ai mess into more readable content (still eh), Build all of browse and inspect views mantine ui and make the business logic, try memoization on editview -- it is now a sliver faster :) |
