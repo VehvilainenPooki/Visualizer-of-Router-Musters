@@ -34,12 +34,17 @@ The application implements a user management system with email verification, gra
 ### Database
 - `PostgreSQL`
 
+## Glaring Shortcomings
+- No password reset
+- Browse public illustrations only shows the first 30 entries from the database ever -> search doesn't fetch more illustrations and no "next page" or infinite scroll
+- Edit lacks features and is barely passable
+
 ## Current Goals
+- Fix glaring shortcomings
 - Network simulation that can be advanced in step and ran at different speeds
 - Multiple routing protocols
 - website where one can select number of routers and some options for protocols, connections and router failure rates
 - Visualization where it is clear when a packet is dropped and what caused it
-- Password reset using email (password reseting currently not implemented)
 
 ## Pipe dream Goals
 - Multiple transport layer protocols

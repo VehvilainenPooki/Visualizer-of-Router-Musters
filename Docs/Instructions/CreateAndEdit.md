@@ -22,3 +22,18 @@ In the editor you can currently only edit the values of the data due to time con
 
 **When a node is selected** the code editor shows only that node and all links connected to it. Plus buttons now create nodes and links that automatically are linked to the selected node. Selecting a node and then adding a node to it is definitely the easiest way to build linked nodes.
 
+### NavBar
+**Visibility:** The visibility toggle shows is your illustration public or private. Public illustrations are visible to everyone on the browse page. Clicking the deactice option changes the visibility to it.
+
+**Title and Description:** In the middle of the navbar there is the title of you illustration. Clicking it allows you to edit the title and the description.
+
+**The Save Indicator:** This icon shows the current save status and clicking it allows you to change the save destination. Currently there are two destinations:
+- server, which saves it under your account
+- local, which is not yet implemented but would allow you to save a file to your device and then load it later. This option would be available even without a user
+
+Understanding the indicator colors:
+- flashing red, no save location
+- flashing orange, save failed
+- blue, queueing a save
+- green, successful save
+- black with checkmark, save up to date
