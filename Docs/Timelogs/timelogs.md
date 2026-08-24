@@ -17,7 +17,7 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 100326 | 2h | Finally figuring out the node ts situation (lies) |
 | 150326 | 1h | Looking for hosting options and setting up hosting on hetzner |
 | 160326 | 2h | Continuing hetzner setup with ssh, docker and looking through old ci and what to use for deployment |
-| 170326 |2h | fighting with node ts, starting to build the prod docker compose and learning traefik |
+| 170326 | 2h | fighting with node ts, starting to build the prod docker compose and learning traefik |
 | 290326 | 4h | Fighting with node and ts and finally finding a totally working configuration for dev, build and docker |
 | 300326 | 4h | prod docker and putting the app into hetzner |
 | 020426 | 4h | Domain setup and ssl sertificate, Optimized dockerfile, start of ci |
@@ -49,3 +49,5 @@ This is for [fullstack project](https://github.com/fullstack-hy2020/misc/blob/ma
 | 210826 | 7h | Whole lot of llm driven development of graph code editor and graph save hook and some artisan code. tomorrow things will save and load from database |
 | 220826 | 4h | Fix editor bug, work on save, get save to work somewhat but not working yet. damn you llmdd |
 | 230826 | 8h | Troubleshooting and fixing save staleness bugs, refactor the ai mess into more readable content (still eh), Build all of browse and inspect views mantine ui and make the business logic, try memoization on editview -- it is now a sliver faster :) |
+| 240826 | 5h | Documentation, Browse search and Illustration limit handling for frontend |
+| in total | 221h | |
