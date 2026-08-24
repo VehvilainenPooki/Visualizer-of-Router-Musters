@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react'
+import {useEffect, useRef, memo} from 'react'
 
 import type { FC } from 'react'
 
@@ -95,4 +95,4 @@ const Graph: FC<GraphProps> = ({ data }) => {
   )
 }
 
-export default Graph
+export default memo(Graph)

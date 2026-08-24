@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useSyncExternalStore } from 'react'
+import { useState, useEffect, useCallback, useSyncExternalStore, memo } from 'react'
 import { Paper } from '@mantine/core'
 import * as ForceGraph from '../../../ForceGraph'
 import CodeMirror from '@uiw/react-codemirror'
@@ -12,7 +12,7 @@ import { nodeIdNavigation } from './nodeIdNavigation'
 import { DeleteGraphItemModal } from './DeleteGraphItemModal'
 import { parseGraphData, hasDuplicateIds } from './graphDataUtils'
 
-export default function GraphCodeEditor({ editorWidth, saveGraph }: { editorWidth: number, saveGraph: () => void }) {
+function GraphCodeEditor({ editorWidth, saveGraph }: { editorWidth: number, saveGraph: () => void }) {
   const data = useSyncExternalStore(ForceGraph.subscribeToData, ForceGraph.getData)
   const selectedNodeId = useSyncExternalStore(ForceGraph.subscribeToSelection, ForceGraph.getSelectedNodeId)
 
@@ -103,3 +103,5 @@ export default function GraphCodeEditor({ editorWidth, saveGraph }: { editorWidt
     </Paper>
   )
 }
+
+export default memo(GraphCodeEditor)

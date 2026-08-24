@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, memo } from 'react'
 import { useDrag } from '@mantine/hooks'
 import { Paper } from '@mantine/core'
 import { GripVertical } from 'lucide-react'
@@ -11,7 +11,7 @@ interface SplitAdjusterProps {
   max?: number
 }
 
-export default function SplitAdjuster({ containerRef, width, onWidthChange, min = 5, max = 80 }: SplitAdjusterProps) {
+function SplitAdjuster({ containerRef, width, onWidthChange, min = 5, max = 80 }: SplitAdjusterProps) {
   const startWidthRef = useRef(width)
 
   const { ref, active } = useDrag(
@@ -51,3 +51,5 @@ export default function SplitAdjuster({ containerRef, width, onWidthChange, min 
     </Paper>
   )
 }
+
+export default memo(SplitAdjuster)

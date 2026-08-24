@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, memo } from 'react'
 import { Box, Group } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useAuth } from '../../../contexts/AuthContext'
@@ -28,7 +28,7 @@ interface EditNavbarProps {
   saveVisibility: () => void
 }
 
-export function EditNavbar({
+function EditNavbarComponent({
   visibility,
   onVisibilityChange,
   name,
@@ -94,3 +94,5 @@ export function EditNavbar({
     </Box>
   )
 }
+
+export const EditNavbar = memo(EditNavbarComponent)
