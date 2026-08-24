@@ -10,6 +10,7 @@ const SUCCESS_DISPLAY_MS = 300
 interface SaveStatusIconProps {
   saveTarget: SaveTarget
   saveStatus: SaveStatus
+  isFull: boolean
   onClick: () => void
 }
 
@@ -41,7 +42,10 @@ interface Variant {
   pulse?: boolean
 }
 
-function getVariant(saveTarget: SaveTarget, saveStatus: SaveStatus): Variant {
+function getVariant(saveTarget: SaveTarget, saveStatus: SaveStatus, isFull: boolean): Variant {
+  if (isFull && saveTarget === 'server') {
+    return { label: "Illustration limit reached — can't save to server", icon: SaveOff, color: 'var(--mantine-color-yellow-6)', pulse: true }
+  }
   if (saveTarget === 'none') {
     return { label: 'No save option selected', icon: Save, color: 'var(--mantine-color-red-6)', pulse: true }
   }
@@ -57,7 +61,7 @@ function getVariant(saveTarget: SaveTarget, saveStatus: SaveStatus): Variant {
   return { label: 'All changes saved', icon: SaveCheck}
 }
 
-export function SaveStatusButton({ saveTarget, saveStatus, onClick }: SaveStatusIconProps) {
+export function SaveStatusButton({ saveTarget, saveStatus, isFull, onClick }: SaveStatusIconProps) {
   const [displayStatus, setDisplayStatus] = useState(saveStatus)
 
   useEffect(() => {
@@ -67,7 +71,7 @@ export function SaveStatusButton({ saveTarget, saveStatus, onClick }: SaveStatus
     return () => clearTimeout(id)
   }, [saveStatus])
 
-  const { label, icon: Icon, color, pulse } = getVariant(saveTarget, displayStatus)
+  const { label, icon: Icon, color, pulse } = getVariant(saveTarget, displayStatus, isFull)
 
   return (
     <>

@@ -3,8 +3,11 @@ import { debounce } from "lodash-es"
 import { notifications } from '@mantine/notifications'
 import type { SaveStatus, SaveTarget } from "./EditNavbar/Components/SaveStatusButton"
 import { Illustration } from "../../../common/types/illustration"
+import { MAX_ILLUSTRATIONS_PER_USER } from "../../../common/constants/illustration"
 import * as ForceGraph from '../../ForceGraph'
-import { createIllustration, updateIllustration } from "../../services/illustrations"
+import { createIllustration, getIllustrations, updateIllustration } from "../../services/illustrations"
+
+const ILLUSTRATION_LIMIT_ERROR = 'illustration limit reached'
 
 const DEBOUNCE_MS = 3_000
 const MAX_WAIT_MS = 30_000
@@ -49,7 +52,9 @@ function useBackoffTimer(base: number, max: number) {
   return useMemo(() => ({ cancel, reset, isPending, schedule }), [cancel, reset, isPending, schedule])
 }
 
-function useDebouncedRetrySave(performSave: (fields: Set<SaveField>) => Promise<boolean | undefined>) {
+type SaveOutcome = 'ok' | 'fail' | 'skip'
+
+function useDebouncedRetrySave(performSave: (fields: Set<SaveField>) => Promise<SaveOutcome>) {
   const [status, setStatus] = useState<SaveStatus>('saved')
   const statusRef = useLatest(status)
   const performSaveRef = useLatest(performSave)
@@ -58,9 +63,12 @@ function useDebouncedRetrySave(performSave: (fields: Set<SaveField>) => Promise<
 
   const attempt = useCallback(async (fields: Set<SaveField>) => {
     retry.cancel()
-    const ok = await performSaveRef.current(fields)
-    if (ok === undefined) return
-    if (ok) {
+    const outcome = await performSaveRef.current(fields)
+    if (outcome === 'skip') {
+      setStatus('saved')
+      return
+    }
+    if (outcome === 'ok') {
       retry.reset()
       setStatus('success')
       return
@@ -110,20 +118,50 @@ export function useSaveHandler({ id, token, name, description, public: isPublic,
   const onCreatedRef = useLatest(onCreated)
   const valuesRef = useLatest<SavePayload>({ name, description, public: isPublic, graphcode })
   const idRef = useRef(id)
+  const [isFull, setIsFull] = useState(false)
+  const isFullRef = useLatest(isFull)
 
-  const performSave = useCallback(async (fields: Set<SaveField>) => {
+  useEffect(() => {
+    if (id !== null || !token) return
+    let cancelled = false
+    getIllustrations(token).then(result => {
+      if (!cancelled && result.ok) setIsFull(result.data.length >= MAX_ILLUSTRATIONS_PER_USER)
+    })
+    return () => { cancelled = true }
+  }, [id, token])
+
+  useEffect(() => {
+    if (!isFull) return
+    notifications.show({
+      color: 'yellow',
+      title: 'Illustration limit reached',
+      message: `You have ${MAX_ILLUSTRATIONS_PER_USER} saved illustrations, the maximum allowed. Delete one to save new illustrations on the server, or save this one on your device instead.`
+    })
+  }, [isFull])
+
+  const performSave = useCallback(async (fields: Set<SaveField>): Promise<SaveOutcome> => {
     if (saveTarget === 'none') {
       console.log('No save target:', saveTarget, buildPayload(fields, valuesRef.current))
-      return undefined
+      return 'skip'
     }
-    const result = idRef.current === null
+    if (saveTarget === 'local') {
+      notifications.show({ color: 'yellow', title: 'Not implemented', message: 'Saving on this device is not implemented yet.' })
+      return 'skip'
+    }
+    const creating = idRef.current === null
+    if (saveTarget === 'server' && creating && isFullRef.current) return 'skip'
+    const result = creating
       ? await createIllustration(token, valuesRef.current as Required<SavePayload>)
-      : await updateIllustration(token, idRef.current, buildPayload(fields, valuesRef.current))
-    if (result.ok && idRef.current === null) {
+      : await updateIllustration(token, idRef.current!, buildPayload(fields, valuesRef.current))
+    if (result.ok && creating) {
       idRef.current = result.data.id
       onCreatedRef.current?.(result.data.id)
     }
-    return result.ok
+    if (!result.ok && creating && result.error === ILLUSTRATION_LIMIT_ERROR) {
+      setIsFull(true)
+      return 'skip'
+    }
+    return result.ok ? 'ok' : 'fail'
   }, [saveTarget, token])
 
   const { status: statusOfSave, queueSave } = useDebouncedRetrySave(performSave)
@@ -132,5 +170,5 @@ export function useSaveHandler({ id, token, name, description, public: isPublic,
   const saveVisibility = useCallback(() => queueSave(['public']), [queueSave])
   const saveGraph = useCallback(() => queueSave(['graphcode']), [queueSave])
 
-  return { statusOfSave, saveMetadata, saveVisibility, saveGraph }
+  return { statusOfSave, saveMetadata, saveVisibility, saveGraph, isFull }
 }

@@ -26,6 +26,7 @@ interface EditNavbarProps {
   saveStatus: SaveStatus
   saveMetadata: () => void
   saveVisibility: () => void
+  isFull: boolean
 }
 
 function EditNavbarComponent({
@@ -39,7 +40,8 @@ function EditNavbarComponent({
   setSaveTarget,
   saveStatus,
   saveMetadata,
-  saveVisibility
+  saveVisibility,
+  isFull
 }: EditNavbarProps) {
   const [infoModalOpened, { open: openInfoModal, close: closeInfoModal }] = useDisclosure(false)
   const [saveModalOpened, { open: openSaveModal, close: closeSaveModal }] = useDisclosure(false)
@@ -47,8 +49,8 @@ function EditNavbarComponent({
   const { token } = useAuth()
 
   useEffect(() => {
-    if (token && saveTarget === 'none') setSaveTarget('server')
-  }, [token, saveTarget])
+    if (token && saveTarget === 'none') setSaveTarget(isFull ? 'local' : 'server')
+  }, [token, saveTarget, isFull])
 
   const handleSelectServer = () => {
     setSaveTarget('server')
@@ -63,7 +65,7 @@ function EditNavbarComponent({
       <AppNavbar>
         <Group justify="space-between" wrap="nowrap" gap="md">
           <Group gap="xs" wrap="nowrap">
-            <SaveStatusButton saveTarget={saveTarget} saveStatus={saveStatus} onClick={openSaveModal} />
+            <SaveStatusButton saveTarget={saveTarget} saveStatus={saveStatus} isFull={isFull} onClick={openSaveModal} />
             <TitleButton name={name} onClick={openInfoModal} />
           </Group>
           <VisibilitySelector
@@ -86,6 +88,7 @@ function EditNavbarComponent({
         opened={saveModalOpened}
         onClose={closeSaveModal}
         saveTarget={saveTarget}
+        isFull={isFull}
         onLogin={openAuthModal}
         onSelectServer={handleSelectServer}
         onSelectLocal={handleSelectLocal}

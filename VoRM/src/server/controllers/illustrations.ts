@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { Illustration } from '../models/index.js'
 import { authenticateToken, optionalAuth, requireVerified } from '../middleware/auth.js'
 import type { Illustration as IllustrationDto } from '../../common/types/illustration.js'
+import { MAX_ILLUSTRATIONS_PER_USER } from '../../common/constants/illustration.js'
 
 const router = Router()
 
@@ -15,7 +16,7 @@ router.get('/', authenticateToken, requireVerified, async (req, res) => {
 router.post('/', authenticateToken, requireVerified, async (req, res) => {
   if (!req.user!.isAdmin) {
     const count = await Illustration.count({ where: { userId: req.user!.id } })
-    if (count >= 5) {
+    if (count >= MAX_ILLUSTRATIONS_PER_USER) {
       res.status(403).json({ error: 'illustration limit reached' })
       return
     }
