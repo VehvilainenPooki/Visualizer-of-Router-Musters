@@ -1,0 +1,1 @@
+export const MAX_ILLUSTRATIONS_PER_USER = 5
