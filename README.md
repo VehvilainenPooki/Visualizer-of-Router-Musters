@@ -81,3 +81,6 @@ During development I have tried to commit LLM-generated code separately with com
 56% of the LLM-attributed lines were in the 25 files that were mostly LLM-generated.
 
 And now that I look at the files I see some patterns like file moved using llm that inflate the percentages but I won't refine the numbers more. I find the numbers fascinating and a bit horrifying. But in reality most of that llm code is something that I quite intentionally prompted and audited. The exception to that rule are the CodeMirror adjacent files which I'm not as familiar with.
+
+## Going forward
+In the last weeks I have started wishing the code had linting and tests. Before that the code still felt manageable and I didn't want to take time to implement them. I think the issues started arising when I worked on the code editor and so on code that I didn't understand as well. The next issues arose when frontend and backend logic started to be integrated. It wasn't as easy to trace the code as it spanned the entire codebase. When I return to this project my next steps will be oxlint and tests. And probably totally rewriting the code editor.
